@@ -8,4 +8,4 @@ var app = http.createServer(function(req,res){
     res.writeHead(200);
     res.end(fs.readFileSync(__dirname + url));
 });
-app.listen(80);
+app.listen(8080);
