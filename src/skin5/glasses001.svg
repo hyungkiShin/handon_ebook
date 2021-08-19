@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="svgroot" onload="onload_func()" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<script type="application/ecmascript"><![CDATA[
+var selfName = "glasses001.svg", winCnt = "glasses";
+var svgWidth, svgHeight, p;
+
+var encObj, decoObj, clipccObj;
+var leftImgObj, leftUrl, leftName, leftDir;
+var rightImgObj, rightUrl, rightName, rightDir;
+
+var radCircle = 125;
+var encX, encY, encclipccX, encclipccY;
+var gripX, gripendX, closeX, closeY, decoX, decoY;
+
+var befX, befY, diffX, diffY;
+var downKind = 0;						// 0:nothing, 1:self, 2:size
+var mouseDragged = false;
+
+var loadto = 0, loaded = 0;
+var blankNum;
+
+function onload_func(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+	p.glassesSvg = this;
+	window.parent.objLoaded2('glasses', this, false);
+
+	encObj = document.getElementById('glass_enc');
+	decoObj = document.getElementById('glass_deco');
+	clipccObj = document.getElementById('glass_encclip_cc');
+
+	var leftLoad = false, rightLoad = false;
+	blankNum = p.PageInfo.blank_imageFromLeft(p.PageInfo.currentPage);
+	if(p.ScreenInfo.onesmc === true || (blankNum === 1 || blankNum === 2)){
+		leftLoad = true;
+
+		var aaa = p.FileInfo.cimgFilePath(p.PageInfo.currentPage,"","","*");
+		leftUrl = aaa[0], leftName = aaa[1], leftDir = aaa[2];
+
+		if(leftUrl !== "") loadto++;
+	}
+	if(p.ScreenInfo.onesmc === false && (blankNum === 0 || blankNum === 2)){
+		rightLoad = true;
+
+		var bbb = p.FileInfo.cimgFilePath(p.PageInfo.currentPage+1,"","","*");
+		rightUrl = bbb[0], rightName = bbb[1], rightDir = bbb[2];
+
+		if(rightUrl !== "") loadto++;
+	}
+
+	if(leftLoad === true){
+		if(leftUrl !== ""){
+			if(p.ServerInfo.applyCipher === true) p.load_cataImageCipher('glasses', 0, leftUrl, 11);
+			else load_bigimgLeft(leftUrl);
+		}
+	}
+	if(rightLoad === true){
+		if(rightUrl !== ""){
+			if(p.ServerInfo.applyCipher === true) p.load_cataImageCipher('glasses', 0, rightUrl, 12);
+			else load_bigimgRight(rightUrl);
+		}
+	}
+
+	var atitle = document.createElementNS("http://www.w3.org/2000/svg","title");
+	if(p.CataInfo.cataLang === "en") atitle.textContent = "Close Glasses";
+	else atitle.textContent = "돋보기 닫기";
+	document.getElementById('glass_close').appendChild(atitle);
+}
+function load_bigimgLeft(urlsrc){
+	leftImgObj = document.createElementNS("http://www.w3.org/2000/svg","image");
+	if(p.CataInfo.cdmake === true) urlsrc = "." + urlsrc;
+	leftImgObj.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", urlsrc);
+	leftImgObj.setAttribute("load", leftImgObjLoad());
+	leftImgObj.setAttribute("width", p.ScreenInfo.bigImageOriWidth);
+	leftImgObj.setAttribute("height", p.ScreenInfo.bigImageOriHeight);
+	encObj.appendChild(leftImgObj);
+}
+function load_bigimgRight(urlsrc){
+	rightImgObj = document.createElementNS("http://www.w3.org/2000/svg","image");
+	if(p.CataInfo.cdmake === true) urlsrc = "." + urlsrc;
+	rightImgObj.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", urlsrc);
+	rightImgObj.setAttribute("load", rightImgObjLoad());
+	rightImgObj.setAttribute("width", p.ScreenInfo.bigImageOriWidth);
+	rightImgObj.setAttribute("height", p.ScreenInfo.bigImageOriHeight);
+	encObj.appendChild(rightImgObj);
+	if(blankNum === 2) rightImgObj.setAttribute('x', p.ScreenInfo.bigImageOriWidth);
+}
+
+function leftImgObjLoad(){
+	console.log(selfName+" : "+leftUrl+" : loaded");
+	loadComplete();
+}
+function rightImgObjLoad(){
+	console.log(selfName+" : "+rightUrl+" : loaded");
+	loadComplete();
+}
+function loadComplete(){
+	loaded++;
+	if(loaded == loadto){
+		encclipccX = 0;
+		encclipccY = 0;
+		if(p.ScreenInfo.onesmc == true){
+			encX = p.smRect.x;
+			encY = p.smRect.y;
+			encObj.setAttribute('transform','translate('+p.smRect.x+','+p.smRect.y+')');
+			befX = p.smRect.x;
+			befY = p.smRect.y;
+			decoObj.setAttribute('transform','translate('+p.smRect.x+','+p.smRect.y+')');
+		}
+		else if(blankNum == 0){
+			encX = p.smRect.centerPt.x;
+			encY = p.smRect.y;
+			encObj.setAttribute('transform','translate('+p.smRect.centerPt.x+','+p.smRect.y+')');
+			befX = p.smRect.centerPt.x;
+			befY = p.smRect.y;
+			decoObj.setAttribute('transform','translate('+p.smRect.centerPt.x+','+p.smRect.y+')');
+		}
+		else{
+			encX = p.smRect.centerPt.x-p.ScreenInfo.bigImageOriWidth;
+			encY = p.smRect.y;
+			encObj.setAttribute('transform','translate('+encX+','+encY+')');
+			befX = p.smRect.centerPt.x;
+			befY = p.smRect.y;
+			decoObj.setAttribute('transform','translate('+befX+','+befY+')');
+			encclipccX = p.ScreenInfo.bigImageOriWidth;
+			clipccObj.setAttribute("cx",encclipccX);
+		}
+
+		gripX = 125;
+		gripendX = 160;
+		closeX = 135;
+
+		p.glassesDiv.style.visibility = "visible";
+	}
+}
+
+function onresize_func(){
+}
+
+function newin_close(){
+	p.unload_glasses();
+}
+function grip_mouseDown(e){				// self
+	downKind = 1;
+	p.clickX = e.clientX;
+	p.clickY = e.clientY;
+}
+function gripend_mouseDown(e){				// size
+	downKind = 2;
+	p.clickX = e.clientX;
+	p.clickY = e.clientY;
+}
+document.addEventListener("mousemove", function(e){
+	if(downKind == 1){
+		if(mouseDragged == false) mouseDragged = true;
+
+		diffX = e.clientX - p.clickX;
+		diffY = e.clientY - p.clickY;
+
+		// glasses shape
+		decoX = befX + diffX;
+		decoY = befY + diffY;
+
+		if(blankNum == 0){
+			if(decoX < p.smRect.centerPt.x) decoX = p.smRect.centerPt.x;
+			else if(decoX > p.smRect.right) decoX = p.smRect.right;
+		}
+		else if(blankNum == 1){
+			if(decoX < p.smRect.x) decoX = p.smRect.x;
+			else if(decoX > p.smRect.centerPt.x) decoX = p.smRect.centerPt.x;
+		}
+		else{
+			if(decoX < p.smRect.x) decoX = p.smRect.x;
+			else if(decoX > p.smRect.right) decoX = p.smRect.right;
+		}
+
+		if(decoY < p.smRect.y) decoY = p.smRect.y;
+		else if(decoY > p.smRect.bottom) decoY = p.smRect.bottom;
+
+		decoObj.setAttribute('transform','translate('+decoX+','+decoY+')');
+
+		// enc image
+		var encX;
+		if(p.ScreenInfo.onesmc == true) encX = decoX - (decoX-p.smRect.x)*p.ScreenInfo.ratioBS;
+		else if(blankNum == 0) encX = decoX - (decoX-p.smRect.centerPt.x)*p.ScreenInfo.ratioBS;
+		else encX = decoX - (decoX-p.smRect.x)*p.ScreenInfo.ratioBS;
+
+		var encY = decoY - (decoY-p.smRect.y)*p.ScreenInfo.ratioBS;
+
+		encObj.setAttribute('transform','translate('+encX+','+encY+')');
+
+		// clip circle
+		encclipccX = decoX - encX;
+		encclipccY = decoY - encY;
+
+		clipccObj.setAttribute('cx',encclipccX);
+		clipccObj.setAttribute('cy',encclipccY);
+	}
+	else if(downKind == 2){
+		if(mouseDragged == false) mouseDragged = true;
+
+		diffX = e.clientX - p.clickX;
+
+		if(radCircle+diffX > p.ScreenInfo.smImageWidth) diffX = p.ScreenInfo.smImageWidth - radCircle;
+		else if(radCircle+diffX < 125) diffX = 0;
+
+		clipccObj.setAttribute('r',radCircle+diffX);
+
+		document.getElementById('glass_deco_cc').setAttribute('r',radCircle+diffX);
+		document.getElementById('glass_deco_cc').setAttribute('cx',0);
+		document.getElementById('glass_deco_cc').setAttribute('cy',0);
+
+		document.getElementById('glass_rect_grip').setAttribute('x',gripX+diffX);
+		document.getElementById('glass_rect_gripend').setAttribute('x',gripendX+diffX);
+		document.getElementById('glass_close').setAttribute('x',closeX+diffX);
+	}
+}, false);
+document.addEventListener("mouseup", function(e){
+	if(mouseDragged == true){
+		mouseDragged = false;
+
+		if(downKind == 1){
+			befX = decoX;
+			befY = decoY;
+		}
+		else if(downKind == 2){
+			radCircle += diffX;
+			gripX += diffX;
+			gripendX += diffX;
+			closeX += diffX;
+		}
+	}
+	downKind = 0;
+}, false);
+]]></script>
+
+<defs>
+<clipPath id="glass_encclip" clipPathUnits="userSpaceOnUse" transform="translate(0,0)">
+	<circle id="glass_encclip_cc" r="125" cx="0" cy="0" />
+</clipPath>
+<linearGradient id="glass_ccgrad" gradientTransform="rotate(30)">
+	<stop offset="0%" stop-color="#CCCCCC" />
+	<stop offset="100%" stop-color="#333333" />
+</linearGradient>
+<linearGradient id="glass_gripgrad" gradientTransform="rotate(90)">
+	<stop offset="0%" stop-color="#CCCCCC" />
+	<stop offset="100%" stop-color="#333333" />
+</linearGradient>
+<linearGradient id="glass_gripendgrad" gradientTransform="rotate(90)">
+	<stop offset="0%" stop-color="#999999" />
+	<stop offset="100%" stop-color="#000000" />
+</linearGradient>
+</defs>
+
+<g id="glass_enc" transform="translate(0,0)" clip-path="url(#glass_encclip)">
+</g>
+
+<g id="glass_deco" transform="translate(0,0)">
+<circle id="glass_deco_cc" cx="0" cy="0" r="125" fill="none" stroke="url(#glass_ccgrad)" stroke-width="3" /><!-- outer border -->
+<rect id="glass_rect_grip" x="125" y="-9" width="35" height="18" stroke="#000000;" stroke-width="0.5" cursor="move" fill="url(#glass_gripgrad)"
+  transform="rotate(45)" onmousedown="grip_mouseDown(evt)" /><!-- grip -->
+<rect id="glass_rect_gripend" x="160" y="-9" width="5" height="18" stroke="#000000" stroke-width="0.5" cursor="nw-resize" fill="url(#glass_gripendgrad)"
+  transform="rotate(45)" onmousedown="gripend_mouseDown(evt)" /><!-- the end of grip -->
+<a xlink:href="javascript:newin_close();"><image id="glass_close" x="135" y="-4.5" width="9" height="9" xlink:href="./etc/close_9.png" transform="rotate(45)" cursor="pointer" opacity="0.7">
+</image></a>
+</g>
+</svg>

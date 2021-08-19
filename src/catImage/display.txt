@@ -1,0 +1,1481 @@
+
+[461b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:461b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[463b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:463b
+newin:001
+bookdeco:016
+nwcolor1_d:#499d8c
+nwcolor2_d:#492020-07-219d8c
+nwcolor_m:#499d8c
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[469]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:469
+newin:001
+bookdeco:016
+nwcolor1_d:#6d9a00
+nwcolor2_d:#6d9a00
+nwcolor_m:#6d9a00
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[483a]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:483a
+newin:001
+bookdeco:016
+nwcolor1_d:#494b98
+nwcolor2_d:#494b98
+nwcolor_m:#494b98
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[472a]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:472a
+newin:001
+bookdeco:016
+nwcolor1_d:#373a3e
+nwcolor2_d:#373a3e
+nwcolor_m:#373a3e
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[473]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:473
+newin:001
+bookdeco:016
+nwcolor1_d:#d684df
+nwcolor2_d:#d684df
+nwcolor_m:#d684df
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[490]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:490
+newin:001
+bookdeco:016
+nwcolor1_d:#5abdf5
+nwcolor2_d:#5abdf5
+nwcolor_m:#5abdf5
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[486a]
+skinc_d:017
+skinc_m:041
+dim_d:0, 0, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:486a
+newin:001
+bookdeco:016
+nwcolor1_d:#383b3f
+nwcolor2_d:#383b3f
+nwcolor_m:#383b3f
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:none
+
+[472b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:472b
+newin:001
+bookdeco:016
+nwcolor1_d:#565656
+nwcolor2_d:#565656
+nwcolor_m:#565656
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[479]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:479
+newin:001
+bookdeco:016
+nwcolor1_d:#84c33b
+nwcolor2_d:#84c33b
+nwcolor_m:#84c33b
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[473b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:473b
+newin:001
+bookdeco:016
+nwcolor1_d:#467e21
+nwcolor2_d:#467e21
+nwcolor_m:#467e21
+cpskin:001
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[474b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 80, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:474b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#222222,#222222,#ffffff,#ffffff,#868686
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[475b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:475b
+newin:001
+bookdeco:016
+nwcolor1_d:#467e21
+nwcolor2_d:#467e21
+nwcolor_m:#467e21
+cpskin:012
+cpcolor_d:#71ad47,#71ad47,#ffffff,#ffffff,#467e21
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[476b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 63, 0, 63, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:476b
+newin:001
+bookdeco:016
+nwcolor1_d:#a66904
+nwcolor2_d:#a66904
+nwcolor_m:#a66904
+cpskin:012
+cpcolor_d:#101b12,#101b12,#a66904,#a66904,#252e26
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[477b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 63, 0, 63, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:477b
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[478b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:478b
+newin:001
+bookdeco:016
+nwcolor1_d:#a29970
+nwcolor2_d:#a29970
+nwcolor_m:#a29970
+cpskin:012
+cpcolor_d:#a29970,#a29970,#ffffff,#ffffff,#887f56
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[479b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 70, 0, 63, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:479b
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[480b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 80, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:480b
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+
+[481b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 80, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:481b
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[482b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 78, 0, 80, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:482b
+newin:001
+bookdeco:016
+nwcolor1_d:#875b4c
+nwcolor2_d:#875b4c
+nwcolor_m:#875b4c
+cpskin:012
+cpcolor_d:#875b4c,#875b4c,#FFFFFF,#FFFFFF,#9e7567
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[483b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 40, 0, 0, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:483b
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+
+[452]
+skinc_d:017
+skinc_m:041
+dim_d:0, 54, 0, 70, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:452
+newin:001
+bookdeco:016
+nwcolor1_d:#283b53
+nwcolor2_d:#283b53
+nwcolor_m:#283b53
+cpskin:012
+cpcolor_d:#222222,#222222,#ffffff,#ffffff,#868686
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[484b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:484b
+newin:001
+bookdeco:016
+nwcolor1_d:#876039
+nwcolor2_d:#876039
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#876039,#876039,#FFFFFF,#FFFFFF,#997B5E
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[481a]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600
+newin:001
+bookdeco:016
+nwcolor1_d:#009900
+nwcolor2_d:#009900
+nwcolor_m:#009900
+cpskin:012
+cpcolor_d:#009900,#009900,#FFFFFF,#FFFFFF,#009900
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+
+[461]
+skinc_d:017
+skinc_m:041
+dim_d:0, 70, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600
+newin:001
+bookdeco:016
+nwcolor1_d:#f37904
+nwcolor2_d:#f37904
+nwcolor_m:#f37904
+cpskin:012
+cpcolor_d:#f37904,#f37904,#FFFFFF,#FFFFFF,#f37904
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[460]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600
+newin:001
+bookdeco:016
+nwcolor1_d:#FF6600
+nwcolor2_d:#FF6600
+nwcolor_m:#FF6600
+cpskin:012
+cpcolor_d:#FF6600,#FF6600,#FFFFFF,#FFFFFF,#FF6600
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[465]
+skinc_d:017
+skinc_m:041
+dim_d:0, 66, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600
+newin:001
+bookdeco:016
+nwcolor1_d:#009900
+nwcolor2_d:#009900
+nwcolor_m:#009900
+cpskin:012
+cpcolor_d:#009900,#009900,#FFFFFF,#FFFFFF,#009900
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[456b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0, 82
+onsmimage:463b
+newin:001
+bookdeco:016
+nwcolor1_d:#499d8c
+nwcolor2_d:#499d8c
+nwcolor_m:#499d8c
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[651]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:478b
+newin:001
+bookdeco:016
+nwcolor1_d:#697163
+nwcolor2_d:#697163
+nwcolor_m:#697163
+cpskin:012
+cpcolor_d:#697163,#697163,#ffffff,#ffffff,#887f56
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[486b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 35, 0, 50, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:486b
+newin:001
+bookdeco:016
+nwcolor1_d:#000
+nwcolor2_d:#000
+nwcolor_m:#000
+cpskin:012
+cpcolor_d:#000,#000,#fff,#fff,#fff
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[485b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 50, 0, 50, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:485b
+newin:001
+bookdeco:016
+nwcolor1_d:#262948
+nwcolor2_d:#262948
+nwcolor_m:#262948
+cpskin:012
+cpcolor_d:#262948,#262948,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[487b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 61, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:487b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#4c4c4c,#4c4c4c,#FFFFFF,#FFFFFF,#000000
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[488b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 60, 0, 55, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:488b
+newin:001
+bookdeco:016
+nwcolor1_d:#8d699b
+nwcolor2_d:#8d699b
+nwcolor_m:#8d699b
+cpskin:012
+cpcolor_d:#40bec6,#40bec6,#FFFFFF,#FFFFFF,#5e8199
+bgcolor:color-#c0ced2-
+help:
+logo:
+
+[489b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 70, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:489b
+newin:001
+bookdeco:001
+nwcolor1_d:#50312e
+nwcolor2_d:#50312e
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#50312e,#50312e,#999999,#999999,#50312e
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[489c]
+skinc_d:017
+skinc_m:041
+dim_d:0, 70, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:489b
+newin:001
+bookdeco:001
+nwcolor1_d:#002b0a
+nwcolor2_d:#002b0a
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#50312e,#50312e,#999999,#999999,#50312e
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[489d]
+skinc_d:017
+skinc_m:041
+dim_d:0, 70, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:489b
+newin:001
+bookdeco:001
+nwcolor1_d:#50312e
+nwcolor2_d:#50312e
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#50312e,#50312e,#999999,#999999,#50312e
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[491b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 60, 0, 55, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:491b
+newin:001
+bookdeco:016
+nwcolor1_d:#40bec6
+nwcolor2_d:#40bec6
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#40bec6,#40bec6,#FFFFFF,#FFFFFF,#5e8199
+bgcolor:color-#c0ced2-#ffffff
+help:
+logo:
+
+[492b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 60, 0, 55, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:492b
+newin:001
+bookdeco:016
+nwcolor1_d:#40bec6
+nwcolor2_d:#40bec6
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#40bec6,#40bec6,#FFFFFF,#FFFFFF,#5e8199
+bgcolor:color-#c0ced2-#ffffff
+help:
+logo:
+
+[493b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 60, 0, 55, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:493b
+newin:001
+bookdeco:016
+nwcolor1_d:#df7b5b
+nwcolor2_d:#df7b5b
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#df7b5b,#df7b5b,#000000,#000000,#5e8199
+bgcolor:color-#c0ced2-#000
+help:
+logo:
+
+[494b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 60, 0, 55, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:494b
+newin:001
+bookdeco:016
+nwcolor1_d:#83a4b8
+nwcolor2_d:#83a4b8
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#83a4b8,#83a4b8,#FFFFFF,#FFFFFF,#5e8199
+bgcolor:color-#c0ced2-#ffffff
+help:
+logo:
+
+[490b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:490b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[496b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 50, 0, 50, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:495b
+newin:001
+bookdeco:016
+nwcolor1_d:#2f6f78
+nwcolor2_d:#2f6f78
+nwcolor_m:#2f6f78
+cpskin:012
+cpcolor_d:#2f6f78,#ffffff,#ffffff,#2f6f78,#2f6f78
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[495b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 60, 0, 50, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:495b
+newin:001
+bookdeco:016
+nwcolor1_d:#074d77
+nwcolor2_d:#074d77
+nwcolor_m:#074d77
+cpskin:012
+cpcolor_d:#074d77,#074d77,#ffffff,#000000,#ebebeb
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[498b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 40, 0, 60, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:498b
+newin:001
+bookdeco:016
+nwcolor1_d:#482f2c
+nwcolor2_d:#482f2c
+nwcolor_m:#482f2c
+cpskin:012
+cpcolor_d:#482f2c,#482f2c,#b8a29d,#fff,#482f2c
+bgcolor:color-#482f2c-#482f2c
+help:
+logo:
+
+[499b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:499b
+newin:001
+bookdeco:016
+nwcolor1_d:#1e1a19
+nwcolor2_d:#1e1a19
+nwcolor_m:#1e1a19
+cpskin:012
+cpcolor_d:#1e1a19,#1e1a19,#FFFFFF,#FFFFFF,#1e1a19
+bgcolor:color-#1e1a19-#ffffff
+help:
+logo:
+
+[450c]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:450c
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[600a]
+skinc_d:017
+skinc_m:042
+dim_d:0, 60, 0, 80, 0, 0, 0, 0
+dim_m:0, 42, 0, 60, 0, 0, 0, 0
+onsmimage:600a
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#222222,#222222,#ffffff,#ffffff,#868686
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[600b]
+skinc_d:017
+skinc_m:042
+dim_d:0, 60, 0, 80, 0, 0, 0, 0
+dim_m:0, 42, 0, 60, 0, 0, 0, 0
+onsmimage:600a
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#222222,#222222,#ffffff,#ffffff,#868686
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[483c]
+skinc_d:001
+skinc_m:041
+dim_d:0, 40, 0, 0, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:483c
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+
+[655b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 45, 0, 65, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:655b
+newin:001
+bookdeco:016
+nwcolor1_d:#7f8898
+nwcolor2_d:#7f8898
+nwcolor_m:#7f8898
+cpskin:001
+cpcolor_d:#343434,#343434,#41414b,#41414b,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[499b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:499b
+newin:001
+bookdeco:016
+nwcolor1_d:#1e1a19
+nwcolor2_d:#1e1a19
+nwcolor_m:#1e1a19
+cpskin:012
+cpcolor_d:#1e1a19,#1e1a19,#FFFFFF,#FFFFFF,#1e1a19
+bgcolor:color-#1e1a19-#ffffff
+help:
+logo:
+
+[601b]
+skinc_d:001
+skinc_m:041
+dim_d:0, 70, 0,10, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:495b
+newin:016
+bookdeco:016
+nwcolor1_d:#000
+nwcolor2_d:#000
+nwcolor_m:#000
+cpskin:012
+cpcolor_d:#000,#ffffff,#ffffff,#000,#000
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[465]
+skinc_d:017
+skinc_m:041
+dim_d:0, 66, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600
+newin:001
+bookdeco:016
+nwcolor1_d:#009900
+nwcolor2_d:#009900
+nwcolor_m:#009900
+cpskin:012
+cpcolor_d:#009900,#009900,#FFFFFF,#FFFFFF,#009900
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[602]
+skinc_d:017
+skinc_m:041
+dim_d:0, 66, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600
+newin:001
+bookdeco:016
+nwcolor1_d:#009900
+nwcolor2_d:#009900
+nwcolor_m:#009900
+spacerbutton:602
+cpskin:012
+cpcolor_d:#009900,#009900,#FFFFFF,#FFFFFF,#009900
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[648]
+skinc_d:017
+skinc_m:041
+dim_d:0, 54, 0, 5, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:461b
+newin:001
+bookdeco:016
+nwcolor1_d:#005295
+nwcolor2_d:#005295
+nwcolor_m:#005295
+cpskin:012
+cpcolor_d:#005295,#005295,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:skin5/mm648/help648.png,500,550,false
+logo:
+
+
+[657]
+skinc_d:016
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 40, 0, 43, 0, 0, 0, 0
+onsmimage:008
+newin:001
+bookdeco:016
+nwcolor1_d:#418600
+nwcolor2_d:#418600
+nwcolor_m:#418600
+cpskin:012
+cpcolor_d:#418600,#418600,#fff,#fff,#418600
+bgcolor:color-#f5f5f5-#fff
+help:
+logo:
+
+[481z]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600
+newin:001
+bookdeco:016
+nwcolor1_d:#009900
+nwcolor2_d:#009900
+nwcolor_m:#009900
+cpskin:012
+cpcolor_d:#009900,#009900,#FFFFFF,#FFFFFF,#009900
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[600]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:461b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+spacerbutton:600
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[460]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600
+newin:001
+bookdeco:016
+nwcolor1_d:#FF6600
+nwcolor2_d:#FF6600
+nwcolor_m:#FF6600
+cpskin:012
+cpcolor_d:#FF6600,#FF6600,#FFFFFF,#FFFFFF,#FF6600
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[656b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 45, 0, 60, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:461b
+newin:001
+bookdeco:016
+nwcolor1_d:#ef0087
+nwcolor2_d:#ef0087
+nwcolor_m:#ef0087
+cpskin:012
+cpcolor_d:#ef0087,#ef0087,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[658]
+skinc_d:001
+skinc_m:041
+dim_d:0, 40, 0, 0, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:483c
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[610b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:499b
+newin:001
+bookdeco:016
+nwcolor1_d:#1e1a19
+nwcolor2_d:#1e1a19
+nwcolor_m:#1e1a19
+spacerbutton:610b
+cpskin:012
+cpcolor_d:#1e1a19,#1e1a19,#FFFFFF,#FFFFFF,#1e1a19
+bgcolor:color-#1e1a19-#ffffff
+help:
+logo:
+
+
+[659b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:659b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+spacerbutton:659b
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[660b]
+skinc_d:017
+skinc_m:041
+dim_d:0, 80, 0, 60, 0, 0, 0, 0
+dim_m:0, 70, 0, 0, 0, 0, 0, 0
+onsmimage:461b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+spacerbutton:660b
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[603]
+skinc_d:001
+skinc_m:041
+dim_d:0, 0, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:008
+newin:001
+bookdeco:016
+nwcolor1_d:#0a4a9b
+nwcolor2_d:#0a4a9b
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[451c]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:490b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[609]
+skinc_d:001
+skinc_m:041
+dim_d:0, 40, 0, 0, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:609
+newin:001
+bookdeco:016
+nwcolor1_d:#8fc21f
+nwcolor2_d:#8fc21f
+nwcolor_m:#8fc21f
+cpskin:012
+cpcolor_d:#8fc21f,#8fc21f,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[611]
+skinc_d:016
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 40, 0, 37, 0, 0, 0, 0
+onsmimage:008
+newin:001
+bookdeco:016
+nwcolor1_d:#002855
+nwcolor2_d:#002855
+nwcolor_m:#002855
+cpskin:012
+cpcolor_d:#002855,#002855,#fff,#fff,#002855
+bgcolor:color-#f5f5f5-#fff
+help:
+logo:none
+
+[451c]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:451c
+newin:001
+bookdeco:016
+nwcolor1_d:#a57420
+nwcolor2_d:#a57420
+nwcolor_m:#a574200
+cpskin:012
+cpcolor_d:#a57420,#a57420,#ffffff,#ffffff,#887f56
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[612]
+skinc_d:017
+skinc_m:041
+dim_d:0, 70, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:489b
+newin:001
+bookdeco:001
+nwcolor1_d:#002b0a
+nwcolor2_d:#002b0a
+nwcolor_m:#222222
+cpskin:012
+spacerbutton:612
+cpcolor_d:#50312e,#50312e,#999999,#999999,#50312e
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[613]
+skinc_d:017
+skinc_m:041
+dim_d:0, 70, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:489b
+newin:001
+bookdeco:001
+nwcolor1_d:#002b0a
+nwcolor2_d:#002b0a
+nwcolor_m:#222222
+cpskin:012
+spacerbutton:613
+cpcolor_d:#50312e,#50312e,#999999,#999999,#50312e
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[614]
+skinc_d:017
+skinc_m:041
+dim_d:0, 75, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:473
+newin:001
+bookdeco:016
+nwcolor1_d:#82ba79
+nwcolor2_d:#82ba79
+nwcolor_m:#82ba79
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[619h]
+skinc_d:017
+skinc_m:041
+dim_d:0, 65, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:001
+newin:001
+bookdeco:016
+nwcolor1_d:#0086d5
+nwcolor2_d:#0086d5
+nwcolor_m:#0086d5
+spacerbutton:619h
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[615d]
+skinc_d:001
+skinc_m:042
+dim_d:0, 65, 0, 50, 0, 0, 0, 0
+dim_m:0, 80, 0, 38, 0, 0, 0, 0
+onsmimage:486b
+newin:001
+bookdeco:016
+nwcolor1_d:#4a4a4a
+nwcolor2_d:#4a4a4a
+nwcolor_m:#4a4a4a
+cpskin:012
+cpcolor_d:#000,#000,#fff,#fff,#fff
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[670]
+skinc_d:001
+skinc_m:041
+dim_d:0, 40, 0, 0, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:670
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+spacerbutton:670
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[616]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:616
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+spacerbutton:616
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[600c]
+skinc_d:017
+skinc_m:041
+dim_d:0, 70, 0, 63, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:479b
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[614a]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 70, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:472a
+newin:001
+bookdeco:016
+nwcolor1_d:#373a3e
+nwcolor2_d:#373a3e
+nwcolor_m:#373a3e
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[604]
+skinc_d:017
+skinc_m:041
+dim_d:0, 0, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:604
+newin:001
+bookdeco:016
+nwcolor1_d:#383b3f
+nwcolor2_d:#383b3f
+nwcolor_m:#383b3f
+spacerbutton:604
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:none
+
+[605]
+skinc_d:017
+skinc_m:041
+dim_d:0, 86, 0, 60, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600
+newin:001
+bookdeco:016
+nwcolor1_d:#2ab0ed
+nwcolor2_d:#2ab0ed
+nwcolor_m:#2ab0ed
+spacerbutton:605
+cpskin:012
+cpcolor_d:#2ab0ed,#2ab0ed,#FFFFFF,#FFFFFF,#2ab0ed
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[600d]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:600d
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[667a]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:461b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+spacerbutton:667a
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[600m]
+skinc_d:001
+skinc_m:041
+dim_d:0, 40, 0, 0, 0, 0, 0, 0
+dim_m:0, 40, 0, 40, 0, 0, 0, 0
+onsmimage:600m
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[610]
+skinc_d:001
+skinc_m:041
+dim_d:0, 80, 0, 55, 0, 0, 0, 0
+dim_m:0, 0, 0, 0, 0, 0, 0, 0
+onsmimage:610
+newin:001
+bookdeco:016
+nwcolor1_d:#000
+nwcolor2_d:#000
+nwcolor_m:#000
+cpskin:012
+cpcolor_d:#000,#000,#fff,#fff,#fff
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[600h]
+skinc_d:001
+skinc_m:041
+dim_d:0, 40, 0, 0, 0, 0, 0, 0
+dim_m:0, 41, 0, 0, 0, 0, 0, 0, 82
+onsmimage:483b
+newin:001
+bookdeco:016
+nwcolor1_d:#222222
+nwcolor2_d:#222222
+nwcolor_m:#222222
+cpskin:012
+cpcolor_d:#1b1d1c,#1b1d1c,#999999,#999999,#444444
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:
+
+[600c]
+skinc_d:017
+skinc_m:041
+dim_d:0, 60, 0, 40, 0, 0, 0, 0
+dim_m:0, 42, 0, 0, 0, 0, 0, 0
+onsmimage:461b
+newin:001
+bookdeco:016
+nwcolor1_d:#343434
+nwcolor2_d:#343434
+nwcolor_m:#343434
+cpskin:012
+cpcolor_d:#343434,#343434,#FFFFFF,#FFFFFF,#545454
+bgcolor:color-#f5f5f5-#ffffff
+help:
+logo:

@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - alert001</title>
+<link rel="stylesheet" type="text/css" href="../main.css">
+<style>
+	html, body{width:100%;height:100%;margin:0;overflow:hidden;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}
+	.body016{background-color:none;}
+	.body016n{background-color:#f7f7f7;}
+
+	#newin_bodybtn{display:block;z-index:4;position:absolute;cursor:pointer;}
+	.newin_bodybtn001{left:123px;top:110px;}
+	.newin_bodyclosebtn012{left:163px;top:90px;}
+	.newin_bodysendbtn012{left:163px;top:90px;}
+	.newin_bodybtn016, .newin_bodybtn018{left:133px;top:90px;}
+	.newin_bodybtn014, .newin_bodybtn041{left:123px;top:90px;}
+
+	.alert_div_ani{z-index:2;display:block;position:absolute;left:25px;top:35px;width:60px;height:51px;background:url('./etc/alert_back.png');}
+	#alert_div_text{z-index:3;display:block;position:absolute;left:95px;top:45px;width:175px;height:50px;overflow:visible;text-align:center;}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "alert001.html", winCnt = "alert";
+var newin_titletext = "알 림";
+var svgObj = "alertSvg";
+var plusID = "Alert";
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "close";
+
+// for exclamation mark's up/down animation
+var cntx, aniTimer, exclamImg1, exclamImg2;
+var loaded, loadto, SEQ;
+var dragGap = 0;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	if(eclang === "en") newin_titletext = "Alert";
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.alertSvg = this;
+	window.parent.objLoaded2('alert', this, false);
+	dragGap = p.WinInfo.get_dragGap(nw2class);
+
+	document.body.className = (nw2class == "016") ? "body016" : "body016n";
+
+	p.document.getElementById('newin_frame'+plusID).innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+	document.body.insertAdjacentHTML('afterend', getNewinButton(nw2class));
+
+	document.getElementById("alert_div_text").innerHTML = p.DebugMan.strTitle;
+	cntx = document.getElementById("alert_div_cnv").getContext("2d");
+
+	document.getElementById("alertaudio").innerHTML = "<audio id='alert_autoctrl'>"+get_textNewin(eclang,"audio")+"</audio>";
+
+	loaded = 0;
+	loadto = 2;
+
+	exclamImg1 = new Image();
+	exclamImg1.src = './etc/alert_exclam1.png';
+	exclamImg1.onload = exclamImgLoaded;
+
+	exclamImg2 = new Image();
+	exclamImg2.src = './etc/alert_exclam2.png';
+	exclamImg2.onload = exclamImgLoaded;
+
+	if(p.SoundInfo.sndplayInAlert === true){
+		var audioPlayer = document.getElementById("alert_autoctrl");
+		audioPlayer.setAttribute("src", "./sound/chord.mp3");
+		audioPlayer.load();
+		audioPlayer.play();
+	}
+}
+function exclamImgLoaded(){
+	loaded++;
+	if(loaded != loadto) return;
+	SEQ = 0;
+	aniTimer = setInterval(exclam_animate, 30);
+}
+function exclam_animate(){
+	cntx.clearRect(0, 0, 60, 51);
+
+	var seq = SEQ%41;
+	if(seq <= 15){
+		cntx.drawImage(exclamImg1, 24, 9, 10, 22-seq);
+		cntx.drawImage(exclamImg2, 26, 37, 8, 8);
+	}
+	else if(seq > 15 && seq <= 25){
+		cntx.drawImage(exclamImg1, 24, 9, 10, 7);
+		seq = seq - 15;
+		cntx.drawImage(exclamImg2, 26, 37-seq, 8, 8);
+	}
+	else if(seq > 25){
+		seq = 40 - seq;
+		cntx.drawImage(exclamImg1, 24, 9, 10, 22-seq);
+		if(seq > 5){
+			seq = seq - 5;
+			cntx.drawImage(exclamImg2, 26, 37-seq, 8, 8);
+		}
+		else{
+			cntx.drawImage(exclamImg2, 26, 37, 8, 8);
+		}
+	}
+
+	SEQ++;
+}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.unload_alert();
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.alertbefX;
+	var posY = e.clientY - p.clickY + p.alertbefY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.alertDiv.style.transform = "translate("+posX+"px,"+posY+"px)";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.alertbefX += e.clientX - p.clickX;
+	p.alertbefY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func();">
+
+<div class="alert_div_ani"><canvas id="alert_div_cnv" width="60" height="51"></canvas></div>
+<div id="alert_div_text"></div>
+
+<div id="alertaudio" class="audio_ctrlr_hidden"></div>
+
+</body>
+</html>

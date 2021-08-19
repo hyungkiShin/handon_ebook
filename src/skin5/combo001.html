@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - combo001</title>
+<link rel="stylesheet" type="text/css" href="../main.css">
+<style>
+	html{width:100%;height:100%;margin:0;overflow-x:hidden;overflow-y:auto}
+	body{width:100%;height:100%;margin:0;overflow-x:hidden;overflow-y:auto;}
+
+	body{background-color:#ededed;}
+	*{font-family:굴림,Arial,Tahoma;font-size:13px;color:#444444;}
+	a{text-decoration:none;color:#444444;}
+	#newin_frame{display:block;z-index:1;position:absolute;width:100%;}
+</style>
+<script src="explorer.js"></script>
+<script src="newin.js"></script>
+<script>
+// 모바일에서만 사용됨
+var selfName = "combo001.html", winCnt = "combo";
+var newin_titletext = "이 동";
+var svgObj = "combopopSvg";
+var plusID = "";
+var combokind, ckormed;
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "";
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	combokind = "001";
+	ckormed = ar[4];
+
+	if(eclang === "en") newin_titletext = "Move";
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.combopopSvg = this;
+	window.parent.objLoaded2('combo', this, false);
+	p.document.getElementById('newin_frame'+plusID).innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+
+	document.getElementById("newin_frame").style.height = svgHeight + "px";
+
+	expDiv = document.getElementById('sclass');
+	expDiv.className = "sclassE" + nwclass;
+
+	if(ckormed === "m"){
+		expData = p.MediaObj.arMediaFile;
+		expView = p.MediaObj.arMediaTitle;
+		explist_showOpening();
+	}
+	else{
+		if(combokind === "001"){
+			if(p.DataMan.cataboxData == 4){
+				p.ComboObj.set_comboData();
+				p.DataMan.cataboxData = 5;
+			}
+
+			expCurrCode = p.PageInfo.cataDir;
+			expData = p.cataBoxData.arCataDir;
+			expView = p.cataBoxData.arCataTitle;
+			explist_showOpening();
+		}
+		else{
+			exp_initVar(incview);
+
+			if(p.DataMan.cataboxData == 4){
+				p.ComboObj.set_expComboData();
+				p.DataMan.cataboxData = 5;
+			}
+
+			expSplit = 1;
+			expCurrCode = p.PageInfo.cateCode;
+			expChild = p.cataBoxData.linkCate;
+			expData = p.cataBoxData.expData;
+			expView = p.cataBoxData.expView;
+
+			exp_showOpening(true);
+		}
+	}
+}
+function exp_itemClick(fname, obj){			// media play
+	if(ckormed === "m"){
+		p.MediaObj.setSeqfromFile(fname);
+		p.MediaObj.playSound();
+	}
+	else{
+		if(combokind === "001"){
+			if(sdir == "" || sdir == p.PageInfo.cataDir) return;
+			// docu, sdir, cimage, start, cate, callmode, eclang
+			p.location = p.ServerInfo.get_cataDoculink("ecatalogm."+p.ServerInfo.progExt,sdir,"","","","","");
+		}
+		else{
+			var aaa = expData[pno].split("|");
+			var sdir = aaa[3];
+			if(sdir == "" || sdir == p.PageInfo.cataDir) return;
+
+			// docu, sdir, cimage, start, cate, callmode, eclang
+			//alert(p.ServerInfo.get_cataDoculink("ecatalogm."+p.ServerInfo.progExt,sdir,"","","","",""));
+			p.location = p.ServerInfo.get_cataDoculink("ecatalogm."+p.ServerInfo.progExt,sdir,"","","","","");
+		}
+	}
+}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.combopopSvg = undefined;
+	p.unload_newin('combo');
+}
+
+function newintitle_mousedown(e){
+	p.clickX = e.clientX;
+	p.clickY = e.clientY;
+	downKind = 1;
+}
+function refresh_size(ah){
+	expDiv.style.height = (ah - 30) + "px";
+}
+</script>
+</head>
+
+<body onload="onload_func();">
+
+<div id="sclass"></div>
+
+</body>
+</html>

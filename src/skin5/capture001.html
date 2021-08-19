@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - capture</title>
+<style>
+	body{margin:0;width:100%;}
+	div{display:block;position:absolute;}
+	img{display:block;border:0;}
+	#notice{z-index:2;display:block;position:absolute;width:100%;height:20px;
+		line-height:20px;background-color:#777777;color:#ffffff;font-size:12px;text-align:center;}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "capture001.html", winCnt = "capture";
+var newin_titletext = "이미지 캡쳐";
+var svgObj = "printpageSvg";
+var plusID = "";
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "";
+
+var downKind = 0;		// for touches.js
+var dragGap = 0;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	if(eclang === "en") newin_titletext = "Capture";
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.printpageSvg = this;
+	window.parent.objLoaded2('capture', this, false);
+	dragGap = p.WinInfo.get_dragGap(nw2class);
+
+	p.document.getElementById('newin_frame'+plusID).innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+	document.body.insertAdjacentHTML('afterend', getNewinButton(nw2class));
+
+	if(typeof p.document.getElementById('newin_titleclosebtn').parentNode.focus === "function"){
+		p.document.getElementById('newin_titleclosebtn').parentNode.focus();
+	}
+	else{
+		p.document.getElementById('newin_frame').focus();
+	}
+
+	partPrint();
+}
+function partPrint(){
+	var aaa = p.FileInfo.cimgFilePath(p.PrintInfo.frPageNo,"","","*");
+	var urlstr = aaa[0] + "?h=br";
+	if(p.CataInfo.cdmake === true) urlstr = "../" + urlstr;
+
+	if(p.ServerInfo.applyCipher === true){
+		p.load_cipherImage('cap', p.PrintInfo.frPageNo, urlstr, partPrint2);
+	}
+	else{
+		partPrint2('cap', p.PrintInfo.frPageNo, urlstr);
+	}
+}
+function partPrint2(skd, npage, urlsrc){
+	var image = new Image();
+	image.onload = function(){
+		var nw = p.PrintInfo.partWidth;
+		var nh = p.PrintInfo.partHeight;
+		var partWH = nw / nh;
+
+		var prnCanvas = document.createElement('canvas');
+		document.body.appendChild(prnCanvas);
+		var cntx = prnCanvas.getContext("2d");
+
+		prnCanvas.width = nw;
+		prnCanvas.height = nh;
+		cntx.drawImage(image, p.PrintInfo.partX, p.PrintInfo.partY, nw, nh, 0, 0, nw, nh);
+
+		var mimetype = (p.FileInfo.fileExt === "jpg") ? "image/jpeg" : "image/"+p.FileInfo.fileExt;
+		var dataurl = prnCanvas.toDataURL(mimetype, 0.8);
+
+		var fname = "capture." + p.FileInfo.fileExt;
+		if(eclang === "en"){
+			document.body.innerHTML = "<div id='notice'>If the download button is not displayed, store the image using the mouse right button.</div>"
+				+ "<div><a download='"+fname+"' id='imgdownclick'><img src='"+dataurl+"'></a></div>";
+		}
+		else{
+			document.body.innerHTML = "<div id='notice'>다운로드 버튼이 안보이면 마우스 오른쪽 버튼으로 이미지를 저장하세요.</div>"
+				+ "<div><a download='"+fname+"' id='imgdownclick'><img src='"+dataurl+"'></a></div>";
+		}
+
+		if(window.navigator.msSaveOrOpenBlob){
+			var binary = atob(dataurl.split(',')[1]);
+			var charCodeArr = new Array(binary.length);
+			for(var i = 0;i < binary.length;++i){
+				charCodeArr[i] = binary.charCodeAt(i);
+			}
+			var blob = new Blob([new Uint8Array(charCodeArr)], {type: mimetype});
+			window.navigator.msSaveOrOpenBlob(blob, fname);
+		}
+		else{
+			document.getElementById('imgdownclick').href = dataurl;
+			document.getElementById('imgdownclick').click();
+		}
+
+		window.setTimeout(function(){ document.getElementById('notice').style.display = "none"; }, 2000);
+	}
+	image.src = urlsrc;
+}
+function load_imageCipher2(urlsrc){
+	var image = new Image();
+	image.onload = function(){
+		sumstr += "<div><img src='"+urlsrc+"' width='"+shwidth+"' height='"+shheight+"'></div>\n";
+		loaded++;
+		if(loaded >= loadto){
+			document.body.innerHTML = sumstr;
+			focus();
+			window.print();
+		}
+	}
+	image.src = urlsrc;
+}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.MenuObj.swap_captureImg(false);
+	p.printpageSvg = undefined;
+	p.unload_newin(winCnt);
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.befX;
+	var posY = e.clientY - p.clickY + p.befY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.newinDiv.style.left = posX + "px";
+	p.newinDiv.style.top = posY + "px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.befX += e.clientX - p.clickX;
+	p.befY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func();">
+
+</body>
+</html>
+

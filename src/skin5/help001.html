@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>ecatalog - help001</title>
+<link rel="stylesheet" type="text/css" href="../main.css">
+<style>
+	html{margin:0;width:100%;height:100%;overflow:hidden;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}
+
+	.body5d{margin:0;width:100%;height:100%;overflow:hidden;background-color:#ffffff;}
+	.body5mD001{margin:0;width:100%;height:100%;overflow:hidden;background-color:#ffffff;}
+	.body5mD001n{margin:0;width:100%;height:100%;overflow:hidden;background-color:#000000;opacity:0.8;}
+
+	.newin_bodybtn5dP1D018{display:block;z-index:4;position:absolute;right:10px;top:376px;cursor:pointer;margin:0;}
+	.newin_bodybtn5dP1D018n{display:block;z-index:4;position:absolute;right:5px;top:376px;cursor:pointer;margin:0;}
+	.newin_bodybtn5dP2{display:block;z-index:4;position:absolute;right:53px;top:374px;cursor:pointer;}
+
+	.help_main5dP1D001, .help_main5dP1D012, .help_main5dP1D014, .help_main5dP1D041{z-index:2;display:block;position:absolute;
+		left:0px;top:16px;width:495px;height:430px;}
+	.help_main5dP1D016, .help_main5dP1D017, .help_main5dP1D021{z-index:2;display:block;position:absolute;
+		left:5px;top:16px;width:495px;height:430px;}
+	.help_main5dP1D018{z-index:2;display:block;position:absolute;left:7px;top:16px;width:495px;height:430px;}
+
+	.help_main5dP2D001, .help_main5dP2D012, .help_main5dP2D014, .help_main5dP2D041{z-index:2;display:block;position:absolute;
+		left:3px;top:16px;width:495px;height:430px;}
+	.help_main5dP2D016, .help_main5dP2D017, .help_main5dP2D021{z-index:2;display:block;position:absolute;
+		left:5px;top:16px;width:495px;height:430px;}
+	.help_main5dP2D018{z-index:2;display:block;position:absolute;left:7px;top:16px;width:495px;height:430px;}
+
+	.help_g_menu > rect{fill:#FFFFFF;stroke:#989898;stroke-opacity:1;shape-rendering:crispEdges;cursor:pointer;}
+	.help_g_menu:hover > rect{fill:#D7FDFF;stroke:#444444;stroke-opacity:1;shape-rendering:crispEdges;}
+	.help_rect{fill:#FFFFFF;stroke:#989898;stroke-opacity:1;shape-rendering:crispEdges;}
+	.mask1{fill:#FFFFFF;}
+
+	.help_div_main5mP1{display:block;position:absolute;left:0;top:16px;width:100%;height:289px;}
+	.help_div_main5mP1 > img{display:block;width:215px;height:289px;margin:0 auto;}
+
+	#help_paging{z-index:4;display:block;position:absolute;left:calc(50% - 20px);top:304px;width:40px;height:12px;height:12px;margin:0 auto;}
+	#help_paging img{display:block;float:left;width:8px;height:8px;margin:2px 0 0 5px;}
+
+	.help_div_main5mP2{display:block;position:relative;margin:0 auto;}
+</style>
+<script src="touches.js"></script>
+<script src="newin.js"></script>
+<script>
+var selfName = "help001.html", winCnt = "help";
+var newin_titletext = "도움말";
+var svgObj = "helpSvg";
+var plusID = "";
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "close";
+var helpmc;
+
+var downKind = 0;		// for touches.js
+var dragGap = 0;
+var helpImage = "";
+var sntc = ["페이지 이동","확대/축소","탐색/링크","인쇄/메일","이동"];
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	helpmc = ar[4];
+	if(eclang === "en"){
+		newin_titletext = "Help";
+		sntc = ["Page Movement","Enlarge/Downsize","Search/Link","Print/Email","Move"];
+	}
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.helpSvg = this;
+	window.parent.objLoaded2('help', this, false);
+	dragGap = p.WinInfo.get_dragGap(nw2class);
+
+	if(incview === "m") skind = "";
+
+	if(Display['help'] != ""){
+		var aaa = Display['help'].split(",");
+		helpImage = aaa[0];
+		if(aaa[3] == "false") skind = "";
+	}
+
+	p.document.getElementById('newin_frame'+plusID).innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+	document.body.insertAdjacentHTML('afterend', getNewinButton(nw2class));
+
+	if(incview === "d"){
+		document.body.className = "body5d";
+		if(helpmc === "001") document.getElementById('newin_bodybtn').className = (nw2class == "018" || nw2class == "014") ? "newin_bodybtn5dP1D018" : "newin_bodybtn5dP1D018n";
+		else document.getElementById('newin_bodybtn').className = "newin_bodybtn5dP2";
+	}
+	else{		// m
+		document.body.className = (helpmc === "001") ? "body5mD001" : "body5mD001n";
+	}
+
+	if(incview === "d"){
+		var s = "";
+		if(helpmc === "001"){
+			//<!-- help main svg -->
+			s = '<svg version="1.1" class="help_main5dP1D'+nw2class+'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+				+ '<g transform="translate(154.5,0.5)" class="help_g_menu" onclick="help_menuClick(\'move\')">'
+				+ '<title>'+sntc[0]+'</title>'
+				+ '<rect x="0" y="0" width="85" height="26" rx="2" />';
+
+			if(eclang === "en") s += '<image x="26" y="5" width="24" height="13" xlink:href="./help/menu1en.png" />';
+			else s += '<image x="12" y="5" width="52" height="13" xlink:href="./help/menu1.png" />';
+
+			s += '</g>'
+				+ '<g transform="translate(239.5,0.5)" class="help_g_menu" onclick="help_menuClick(\'enlarge\')">'
+				+ '<title>'+sntc[1]+'</title>'
+				+ '<rect x="0" y="0" width="85" height="25" rx="2" />';
+
+			if(eclang === "en") s += '<image x="23" y="5" width="30" height="13" xlink:href="./help/menu2en.png" />';
+			else s += '<image x="12" y="5" width="52" height="13" xlink:href="./help/menu2.png" />';
+
+			s += '</g>'
+				+ '<g transform="translate(324.5,0.5)" class="help_g_menu" onclick="help_menuClick(\'explorer\')">'
+				+ '<title>'+sntc[2]+'</title>'
+				+ '<rect x="0" y="0" width="85" height="25" rx="2" />';
+
+			if(eclang === "en") s += '<image x="4" y="5" width="68" height="13" xlink:href="./help/menu3en.png" />';
+			else s += '<image x="12" y="5" width="52" height="13" xlink:href="./help/menu3.png" />';
+
+			s += '</g>'
+				+ '<g transform="translate(409.5,0.5)" class="help_g_menu" onclick="help_menuClick(\'print\')">'
+				+ '<title>'+sntc[3]+'</title>'
+				+ '<rect x="0" y="0" width="85" height="25" rx="2" />';
+
+			if(eclang === "en") s += '<image x="8" y="5" width="59" height="13" xlink:href="./help/menu4en.png" />';
+			else s += '<image x="12" y="5" width="52" height="13" xlink:href="./help/menu4.png" />';
+
+			s += '</g>'
+				+ '<g transform="translate(5,24)">'
+				+ '<rect class="help_rect" x="0" y="0" width="490" height="327" />'
+				+ '<image id="help_image" x="1" y="1" width="486" height="322" xlink:href="./help/help001_move'+lolang+'.png" />'
+				+ '</g>'
+				+ '<rect id="help_line_mask" class="mask1" x="155" y="23" width="84" height="2" />'
+				+ '</svg>';
+		}
+		else{
+			if(helpImage != ""){
+				s = '<div class="help_main5dP2D'+nw2class+'"><img src="../'+helpImage+'" alt=""></div>';
+			}
+			else{
+				s = '<div class="help_main5dP2D'+nw2class+'"><img src="./help/help0025_content'+lolang+'.png" width="684" height="369" alt=""></div>';
+			}
+		}
+	}
+	else{ // "m"
+		if(helpmc === "001"){
+			s = '<div id="help_move" class="help_div_main5mP1" style="visibility:visible;">'
+				+ '<img src="./help/m_help001_move.png" alt="'+sntc[0]+'"></div>'
+				+ '<div id="help_enlarge" class="help_div_main5mP1" style="visibility:hidden;">'
+				+ '<img src="./help/m_help001_enlarge.png" alt="'+sntc[1]+'"></div>'
+				+ '<div id="help_print" class="help_div_main5mP1" style="visibility:hidden;">'
+				+ '<img src="./help/m_help001_print.png" alt="'+sntc[3]+'"></div>';
+
+			// <!-- sync circle -->
+			s += '<div id="help_paging">'
+				+ '<a href="javascript:paging_itemClick(0);"><img src="./mm001/m_syncircle.png" alt="'+sntc[4]+'"></a>'
+				+ '<a href="javascript:paging_itemClick(1);"><img src="./mm001/m_syncircle.png" alt="'+sntc[4]+'"></a>'
+				+ '<a href="javascript:paging_itemClick(2);"><img src="./mm001/m_syncircle.png" alt="'+sntc[4]+'"></a>'
+				+ '</div>';
+		}
+		else{
+			s = '<div id="help_div_main5mP2"></div>';
+		}
+	}
+
+	document.getElementById('documain').innerHTML = s;
+
+	if(incview === "m"){
+		if(helpmc == "001"){
+			touchMoveAry.push(document.getElementById("help_move"));
+			touchMoveAry.push(document.getElementById("help_enlarge"));
+			touchMoveAry.push(document.getElementById("help_print"));
+
+			touchPagingObj = document.getElementById('help_paging');
+			touchPagingPix = "./mm001/m_syncircle.png";
+			touchPagingCurPix = "./mm001/m_syncircle-s.png";
+
+			init_touchDrag(0, svgWidth, 0);			// startX, touchMoveWidth, touchidx
+
+		}
+		else{
+			var tw = 113;
+			var th = 141;
+			var s = "";
+			if(p.MoveInfo.spDrag === true){
+				s += "<img src='./help/m2_draglr.png' class='helpimg5mE002'>";
+				th += 141;
+			}
+			s += (p.MoveInfo.bigImageOnly === true) ? "<img src='./help/m2_pinchen.png' class='helpimg5mE002'>" 
+				: "<img src='./help/m2_clicken.png' class='helpimg5mE002'>";
+			document.getElementById('help_div_main').innerHTML = s;
+			document.getElementById('help_div_main').style.width = tw + "px";
+			document.getElementById('help_div_main').style.top = ((svgHeight-th)/2-10) + "px";
+		}
+	}
+}
+
+function help_menuClick(s){
+	if(s == "move") nx = 155;
+	else if(s == "enlarge") nx = 240;
+	else if(s == "explorer") nx = 325;
+	else if(s == "print") nx = 410;
+
+	document.getElementById('help_image').setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "./help/help001_"+s+lolang+".png");
+	document.getElementById('help_line_mask').setAttribute("x", nx);
+}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.helpSvg = undefined;
+	p.unload_newin(winCnt);
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.befX;
+	var posY = e.clientY - p.clickY + p.befY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.newinDiv.style.left = posX + "px";
+	p.newinDiv.style.top = posY + "px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.befX += e.clientX - p.clickX;
+	p.befY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<main id="documain"></main>
+
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, user-scalable=yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:title" content="한돈이 주는 가치">
+<meta property="og:description" content="">
+<meta property="og:url" content="./ecatalogm.html">
+<meta property="og:image" content="./catImage/31/s001.jpg">
+<title>한돈이 주는 가치 </title>
+<link rel="stylesheet" type="text/css" href="./main.css">
+<link rel="stylesheet" type="text/css" href="./skin5/mm041.css">
+<style>
+	html, body{width:100%;height:100%;margin:0;overflow-x:hidden;}
+	body{background-color:#404040;}
+</style>
+<script src="./common.js"></script>
+<script src="./util.js"></script>
+<script src="./action.js"></script>
+<script src="./info.js"></script>
+<script src="./ani.js"></script>
+<script src="./smc.js" async></script>
+<script src="./skin5/smc041.js" async></script>
+<script src="./link.js" async></script>
+<!--<script src="./link2.js" async></script>-->
+<script>
+function init_param(){
+set_catainfo('C','',true,'normal','utf-8','color','#404040','','m',true,'N','');
+set_action(false,false, false);
+set_serverinfo('.','html','','','',0,'N','/make/v992h');
+set_skininfo('041','041','000','000','005','041','001','041','041','001','001','loadeach','top',false,'001','000');
+set_screeninfo(594,840,1188,1680,0,false,'D',0,'#FFFFFF',0,'top','I',true,false,false);
+set_unifyinfo(false, false);
+set_pageinfo('0104000000','31',0,46,0,0,'number','20210810_텐씨씨','','31',false);
+set_guideinfo(80);
+set_menuinfo('','1','N',70,false,false,false,'N','Y','R',90,35,0,0,'','C');
+set_fileinfo(true,true,false,false,false,true,false,false,false,true,'','CD','N','J','.xml');
+set_moveinfo('F',false,true,false,true,false,800,1600,true,true,false);
+set_searchinfo('A','','',false,'#ff6600',0.5,false,false);
+set_soundinfo('N','','N',false,'[mp3]',true,true,true,false,false);
+set_linkinfo('','#FF0000',0.2,false,'','H',false,'한돈이 주는 가치','','','View Image','http://make.aiibook.net/make/v992h/catImage/31/s001.jpg',594,840);
+set_printinfo('fit');				// partPrintMode
+set_spacerinfo();
+set_wininfo();
+set_connman();
+set_perman();
+set_screenman();
+set_debugman();
+set_optioninfo('','','','');
+set_touchInfo();
+
+//if(navigator.userAgent.match(/(iPad|iPhone|iPod)/g)){
+//	window.onorientationchange = onresize_func;
+//	alert('change');
+//}
+//else{
+	window.onresize = onresize_func;
+//}
+
+document.addEventListener("touchstart", function(e){ Action.do_touchStart("root", e); }, false);
+//document.addEventListener("touchmove", function(e){}, false);
+document.addEventListener("touchend", function(e){ Action.do_touchEnd("root", e); }, false);
+}
+
+function objLoaded(s, obj){			// for opening object
+	loaded++;
+	if(loaded == loadto){
+		if(UnifyInfo.classUnify === true){
+			if(UnifyInfo.outpage === true) ConnectMan.load_unifyOutData();
+			else ConnectMan.load_unifyData();
+		}
+		else{
+			if(FileInfo.seqFile[PageInfo.cataDir] == "F") ConnectMan.load_fileseqData(PageInfo.cataDir);
+			else if(FileInfo.seqFile[PageInfo.cataDir] == "X") ConnectMan.load_bookxmlData(PageInfo.cataDir);
+			else onload_func2();
+		}
+	}
+}
+function objLoaded2(s, obj, bool){		// for new window object
+	//if(bool == true) obj.onload_func2();
+}
+function objLoaded3(s, obj){			// for link object
+	if(s == "linkimg") linkoutObj.push(obj);
+	obj.onload_func2();
+}
+
+function onload_func(){
+	console.log("root : loaded");
+
+	init_param();
+	linkoutObj = new Array();
+	stageWidth = document.documentElement.clientWidth;
+	stageHeight = document.documentElement.clientHeight;
+	ScreenInfo.innerOriWidth = window.innerWidth;
+	console.log("stage : " + stageWidth + " * " + stageHeight);
+
+	if(document.getElementById("mmsect")) menuSide = document.getElementById("mmsect");
+	if(document.getElementById("lowersect")) lowerSide = document.getElementById("lowersect");
+	smcntDiv = document.getElementById("smcntsect");
+	smcDiv = document.getElementById("smcsect1");
+	linkoutDiv = document.getElementById("linkoutsect");
+
+	set_cursorObj();
+	if(mediaPlayer) set_mediaObj();
+
+	encDiv = document.getElementById("encsect");
+	guideDiv = document.getElementById("guidesect");
+	newinDiv = document.getElementById("newinsect");
+	newin2Div = document.getElementById("newin2sect");
+	indexDiv = document.getElementById("indexsect");
+	glassesDiv = document.getElementById("glassessect");
+	soundDiv = document.getElementById("soundsect");
+	combopopDiv = document.getElementById("combopopsect");
+	descriptDiv = document.getElementById("descriptsect");
+	hideDiv = document.getElementById("hidesect");
+	bbwDiv = document.getElementById("bbwsect");
+	memoDiv = document.getElementById('memosect');
+	ushapeDiv = document.getElementById("usershape");
+	pageiconDiv = document.getElementById("pageiconsect");
+	alertDiv = document.getElementById("alertsect");
+	debugDiv = document.getElementById("debugsect");
+	expandDiv = document.getElementById("expandsect");
+
+	if(SkinInfo.smcenter === "000" || SkinInfo.onesmc == true) document.getElementById("smctrsect").style.display = "none";
+
+	set_cataRectm(0,40,0,0,0,0,0,0);			// x, y, right, bottom
+	load_license();
+}
+function after_loadLicense(){
+	if(licenseSvg.check_domain() == false) return;
+	if(PermitMan.get_openingPerm() === false) return;
+	console.log("License approved : " + CataInfo.useDomain);
+	objLoaded("root", this);
+}
+
+function onload_func2(){
+	maincnvDiv = document.getElementById("maincnvsect");
+	mainCnv = document.getElementById("maincnv");
+	if(ScreenInfo.smImageDiff === true) smcntDiv.style.overflow = "visible";
+
+	init_link('');
+	//init_link2();
+	init_smc();
+	init_smc2();
+	MenuObj.onload_func2();
+
+	SmcObj.onload_func2();
+
+
+	if(MoveInfo.pageIcon === true) CoverObj.show_pageIcon();
+	set_location();
+
+	debugDiv.style.visibility = "visible";
+	ConnectMan.load_cataboxData();
+}
+function after_openingData(){			// from ConnectMan.load_flashData()
+	Action.drawCondition = 0;
+	MenuObj.show_pageNumber();
+	SmcObj.do_afterMainFinish();
+
+	if(MenuInfo.indexType === "R" && MenuInfo.openingIndexView === true) indexbtnClick();
+	if(SkinInfo.helpmc === "002") CoverObj.show_helpMessage();
+	focus();
+
+	
+	var spno = "";
+		var params = document.defaultView.location.href;
+	if(params != undefined && params.indexOf("?") > 0){
+		var ar = params.split("?")[1].split("&");
+		for(var i = 0;i < ar.length;i++){
+			var t = ar[i].split("=");
+			if(t[0] == "start"){
+				spno = t[1];
+				break;
+			}
+		}
+	}
+	
+	if(spno !== ""){
+		if(spno.substr(0,1) === "a") MoveInfo.move_systemPage(parseInt(spno.substr(1)));
+		else MoveInfo.move_strPage(spno);
+	}
+}
+function set_location(){
+	menuSide.style.width = (winRect.width > stageWidth) ? winRect.width + "px" : "100%";
+	//lowerSide.style.top = cataRect.bottom + "px";
+
+	smcntDiv.style.width = winRect.width + "px";
+	smcntDiv.style.height = winRect.height + "px";
+
+	smcDiv.style.left = smRect.x + "px";
+	smcDiv.style.top = smRect.y + "px";
+	smcDiv.style.width = smRect.width + "px";
+	smcDiv.style.height = smRect.height + "px";
+
+	if(Action.drawCondition < 1){
+		linkoutDiv.style.left = smRect.x + "px";
+		linkoutDiv.style.top = smRect.y + "px";
+	}
+	else{
+		linkoutDiv.style.left = EncObj.encX + "px";
+		linkoutDiv.style.top = EncObj.encY + "px";
+	}
+
+	if(OnsmObj) OnsmObj.set_location();
+
+	if(MoveInfo.pageIcon === true){
+		pageiconDiv.style.top = (cataRect.bottom-40) + "px";
+		pageiconDiv.style.left = Math.floor(winRect.centerPt.x-CoverObj.piWidth/2) + "px";
+	}
+
+	if(LinkInfo.showDescript === true){
+		descriptDiv.style.left = (cataRect.centerPt.x - descriptDiv.clientWidth/2) + "px";
+		descriptDiv.style.top = (SkinInfo.smc === "008") ? (smRect.bottom+25) + "px" : (smRect.bottom+5) + "px";
+	}
+}
+function onresize_func(){
+	if(Action.resizeLocking === true){
+		Action.resizeLocking = false;
+		return;
+	}
+
+	stageWidth = document.documentElement.clientWidth;
+	stageHeight = document.documentElement.clientHeight;
+
+	ScreenInfo.befonesmc = ScreenInfo.onesmc;
+	ScreenInfo.orientation = window.orientation;
+	if(ScreenInfo.sporient === true){
+		//ScreenInfo.onesmc = (Math.abs(ScreenInfo.orientation) === 90) ? false : true;
+		ScreenInfo.onesmc = (stageWidth > stageHeight) ? false : true;
+	}
+
+	set_cataRectm(0,40,0,0,0,0,0,0);			// x, y, right, bottom
+
+	if(ScreenInfo.befonesmc !== ScreenInfo.onesmc){
+		if(ScreenInfo.befonesmc === true) SmcObj.stored2Page = PageInfo.currentPage;
+		PageInfo.set_firstLast();
+		SmcObj.refresh_onesmc();
+	}
+
+	MenuObj.onresize_func();
+	NewinObj.onresize_func();
+	ScreenMan.onresize_func();
+
+	if(soundctrlSvg) loc_soundcontrol();
+	if(EncObj){
+		encDiv.style.left = winRect.x+"px";
+		encDiv.style.top = winRect.y+"px";
+		encDiv.style.width = winRect.width+"px";
+		encDiv.style.height = winRect.height+"px";
+		EncObj.onresize_func();
+	}
+
+	SmcObj.onresize_func();
+	LinkObj.loc_linkData();
+	set_location();
+}
+function set_galleryProperty(w, h){
+	ScreenInfo.set_gallerySmProperty(w, h);
+	set_cataRectm(0,40,0,0,0,0,0,0);			// x, y, right, bottom
+	set_location();
+}
+</script>
+<noscript>
+<style>
+	body{margin:0;overflow:hidden;width:100%;height:100%;background-color:#777777;color:#FFFFFF;}
+</style>
+</noscript>
+</head>
+
+<body onload="onload_func();">
+<noscript>
+<p style="text-align:center;width:100%;">
+브라우저가 자바스크립트를 지원하지 않으면 현재 페이지를 보실 수 없습니다.</p>
+</noscript>
+
+
+<!-- logo -->
+
+<!-- main menu -->
+<!-- mm navigation -->
+<nav id="mmsect" class="mm5mD041">
+<div id="mmpopbtn" class="mmpopbtn5mD041"><a href="javascript:MenuObj.mmpopClick();" title="이동메뉴"><img 
+  src="./skin5/mm041/m_morebtn.png" class="mm_ul_imgE007" alt="이동메뉴"></a></div>
+<div id="mmturnbtn" class="mmturnbtn5mD041"><a href="javascript:MenuObj.mmturnClick();" title="펼쳐보기"><img 
+  src="./skin5/mm041/m_expandbtn.png" id="mmturnbtnpix" class="mm_ul_imgE006" alt="펼쳐보기"></a></div>
+</nav>
+
+
+<!-- mmpop menu -->
+<nav id="mmpopsect" class="mmpop5mD041" style="visibility:hidden;">
+<div id="mmpopclosebtn"><a href="javascript:MenuObj.mmpopClick();" title="닫기"><img 
+ src="./skin5/mm041/m_popclosebtn.png" width="24" height="24" alt="닫기"></a></div>
+<ul class="mmpop_ul5mD041">
+<li id="indexbtn"><a href="javascript:indexbtnClick();MenuObj.mmpopClick();" title="목차 보기"><img 
+  src="./skin5/mm041/m_indexbtn.png" width="24" height="24" alt="목차"><p>목차</p></a></li>
+<li id="expbtn"><a href="javascript:expbtnClick();MenuObj.mmpopClick();" title="탐색기 보기"><img 
+  src="./skin5/mm041/m_expbtn.png" width="24" height="24" alt="탐색기"><p>썸네일</p></a></li>
+<li id="spacerbtn"><a href="javascript:spacerbtnClick('left');MenuObj.mmpopClick();" title="책갈피에 추가"><img 
+  src="./skin5/mm041/m_spacerbtn.png" width="24" height="24" alt="책갈피"><p>책갈피</p></a></li>
+
+<!--div id="searchsect" class="search5mD041">
+<form name="searchform" method="get" action="#" onsubmit="return MenuObj.searchClick(document.searchform.qtxt.value)" title="페이지 내용 검색">
+<input type="search" class="searchtxt5mD041" name="qtxt" title="검색어 입력" onfocus="do_qtxtFocusIn(this)" onblur="do_qtxtFocusOut(this)">
+<input type="image" class="searchbtn5mD041" src="./skin5/mm041/m_searchbtn.png" alt="검색">
+</form>
+</div-->
+
+<!-- lower more sns group menu -->
+<div id="snssect" class="sns_nav5mD041">
+<ul class="sns_ul5mD041">
+<li id="facebookbtn" class="facebookbtn5mD041"><a href="javascript:facebookbtnClick();" title="페이스북 공유"><img 
+  src="./skin5/mm041/m_facebookbtn.png" width="10" height="20" alt="페이스북"></a></li>
+<li id="twitterbtn" class="twitterbtn5mD041"><a href="javascript:twitterbtnClick();" title="트위터 공유"><img 
+  src="./skin5/mm041/m_twitterbtn.png" width="28" height="20" alt="트위터"></a></li>
+<!--li id="kakaobtn" class="kakaobtn5mD041"><a href="javascript:kakaobtnClick();" title="카카오 공유"><img 
+  src="./skin5/mm041/m_kakaobtn.png" width="21" height="20" alt="카카오"></a></li-->
+</ul>
+</div>
+</nav>
+
+<!-- onsmimage -->
+<div id="onsmlsect" class="onsmlE041">
+<a href="javascript:leftOnsmClick();" title="이전 페이지로 이동"><img src="./skin5/onsm/onsmimageL041.png" 
+  width="33" height="49" alt="이전 페이지"></a>
+</div>
+<div id="onsmrsect" class="onsmlE041">
+<a href="javascript:rightOnsmClick();" title="다음 페이지로 이동"><img src="./skin5/onsm/onsmimageR041.png" 
+  width="33" height="49" alt="다음 페이지"></a>
+</div>
+
+<script>
+MenuObj = {storedStr:''};
+MenuObj.onload_func2 = function(){
+	if(LinkInfo.snstext === ""){
+		if(document.getElementById("facebookbtn")) document.getElementById("facebookbtn").style.opacity = "0.2";
+		if(document.getElementById("twitterbtn")) document.getElementById("twitterbtn").style.opacity = "0.2";
+		if(document.getElementById("kakaobtn")) document.getElementById("kakaobtn").style.opacity = "0.2";
+	}
+	if(logoDiv) logoDiv.style.left = Math.floor(stageWidth/2-logoDiv.clientWidth/2) + "px";
+	if(MenuInfo.idxmorebtn === false){
+		document.getElementById("horidx_div").style.width = "100%";
+		document.getElementById("idxmorebtn").style.display = "none";
+	}
+}
+MenuObj.show_pageNumber = function(){
+	show_currIndex();
+}
+MenuObj.mmpopClick = function(){
+	if(mmpopDiv.style.visibility == "hidden"){
+		mmpopDiv.style.visibility = "visible";
+	}
+	else{
+		mmpopDiv.style.visibility = "hidden";
+	}
+}
+MenuObj.horidxmoreClick = function(){
+	if(indexDiv.style.visibility == "visible"){
+		document.getElementById('idxmoreimg').src = "./skin5/mm041/m_horidxmore.png";
+		indexDiv.innerHTML = "";
+		indexDiv.style.visibility = "hidden";
+	}
+	else{
+		document.getElementById('idxmoreimg').src = "./skin5/mm041/m_horidxmore_over.png";
+		indexDiv.style.top = cataRect.y+"px";
+		indexDiv.innerHTML = document.getElementById("horidx_div").innerHTML;
+		indexDiv.style.visibility = "visible";
+	}
+}
+MenuObj.mmturnClick = function(){
+	if(Action.mainState === "expand"){
+		document.getElementById('mmturnbtnpix').src = "./skin5/mm041/m_expandbtn.png";
+		unload_expand();
+	}
+	else{
+		document.getElementById('mmturnbtnpix').src = "./skin5/mm041/m_turnbtn.png";
+		load_expand(true);
+	}
+}
+MenuObj.searchClick = function(s){
+	if(s === "") return false;
+	if(PermitMan.normalPerm(-1) === false) return false;
+	if(searchSvg) return false;
+
+	MenuObj.mmpopClick();
+	SearchInfo.set_qtxt(s);
+	load_search(0, 1);
+	return false;
+}
+MenuObj.onresize_func = function(){}
+MenuObj.finish_enlarge = function(){}
+MenuObj.prepare_downsize = function(){}
+
+mmpopDiv = document.getElementById('mmpopsect');
+snsDiv = document.getElementById("snssect");
+if(document.getElementById("searchsect")) searchDiv = document.getElementById("searchsect");
+
+onsmlDiv = document.getElementById("onsmlsect");
+onsmrDiv = document.getElementById("onsmrsect");
+OnsmObj = {};
+OnsmObj.set_location = function(){
+	onsmlDiv.style.left = winRect.x + "px";
+	onsmlDiv.style.top = (smRect.centerPt.y-25) + "px";
+	onsmrDiv.style.left = (winRect.right-33) + "px";
+	onsmrDiv.style.top = (smRect.centerPt.y-25) + "px";
+}
+OnsmObj.set_visible = function(b1, b2){
+	onsmlDiv.style.visibility = b1;
+	onsmrDiv.style.visibility = b2;
+}
+OnsmObj.prepare_enlarge = function(){}
+OnsmObj.finish_enlarge = function(){}
+OnsmObj.prepare_downsize = function(){}
+
+SpacerObj = {};
+SpacerObj.onload_func2 = function(){}
+SpacerObj.set_location = function(){}
+SpacerObj.finish_turnover = function(){}
+SpacerObj.finish_enlarge = function(){}
+SpacerObj.prepare_downsize = function(){}
+</script>
+
+<!-- smc -->
+<div id="smcntsect">
+<div id="smcsect0">
+<svg version="1.1" id="smcsvg0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="smcntg0">
+<g id="smcImgL0"></g>
+<g id="smcImgR0"></g>
+<g id="smcSearchL0"></g>
+<g id="smcSearchR0"></g>
+<g id="smcLinkL0"></g>
+<g id="smcLinkR0"></g>
+</g>
+</svg>
+</div>
+<div id="smcsect2">
+<svg version="1.1" id="smcsvg2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="smcntg2">
+<g id="smcImgL2"></g>
+<g id="smcImgR2"></g>
+<g id="smcSearchL2"></g>
+<g id="smcSearchR2"></g>
+<g id="smcLinkL2"></g>
+<g id="smcLinkR2"></g>
+</g>
+</svg>
+</div>
+<div id="smcsect1">
+<svg version="1.1" id="smcsvg1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<filter id="approveMatrix">
+<feColorMatrix in="SourceGraphic" type="matrix" values="0.1 0 0 0 0  0 0.1 0 0 0  0 0 0.1 0 0  0 0 0 1 0" />
+</filter>
+<g id="smcntg1">
+<g id="smcImgL1"></g>
+<g id="smcImgR1"></g>
+<g id="smcSearchL1"></g>
+<g id="smcSearchR1"></g>
+<g id="smcLinkL1"></g>
+<g id="smcLinkR1"></g>
+</g>
+</svg>
+<audio id="smcaudio" class="audio_ctrlr_hidden">브라우저가 audio를 지원하지 않습니다</audio>
+</div>
+</div>
+
+<!-- sync circle -->
+<div id="pageiconsect"></div>
+
+<!-- main canvas -->
+<div id="maincnvsect"><canvas id="maincnv"></canvas></div>
+
+<!-- smcenter -->
+<div id="smctrsect"></div>
+
+<!-- ani canvas -->
+
+<div id="linkoutsect"></div>
+<audio id="linkoutaudio" class="audio_ctrlr_hidden">브라우저가 audio를 지원하지 않습니다</audio>
+<div id="descriptsect"></div>
+<div id="soundsect"></div>
+<div id="combopopsect" class="combopop001"></div>
+<div id="glassessect"></div>
+<div id="encsect"></div>
+<div id="guidesect"></div>
+<div id="bbwsect"></div>
+<div id="memosect"></div>
+<div id="usershape"></div>
+<div id="expandsect"></div>
+
+<div id="hidesect"></div>
+<div id="licensesect"></div>
+<div id="fadesect"></div>
+
+<div id="newinsect" class="newinE041"></div>
+<div id="newin2sect"></div>
+<div id="indexsect" class="newinE041"></div>
+<div id="alertsect" class="newinE041"></div>
+<div id="debugsect"></div>
+<div id="tooltipsect"></div>
+<div id="cursorsect" class="cursor5d">
+<svg version="1.1" id="cursorsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<linearGradient id="cursor_backgrad">
+	<stop offset="0%" stop-color="#FFFFFF" />
+	<stop offset="100%" stop-color="#CCCCCC" />
+</linearGradient>
+</defs>
+<g>
+	<rect id="cursor_backrect" x="0.5" y="0.5" width="150" height="35" rx="4" fill="url(#cursor_backgrad)" stroke="#444444" stroke-width="1" />
+	<image xlink:href="./skin5/icon/altlink_back.png" x="3" y="3" width="30" height="30" />
+	<rect x="14" y="13" width="8" height="13" rx="4" stroke="#000000" stroke-width="2" fill="none" />
+	<line x1="18" y1="9" x2="18" y2="17" stroke="#000000" stroke-width="2" />
+	<line x1="14" y1="18" x2="22" y2="18" stroke="#000000" stroke-width="2" />
+	<circle id="cursor_leftcc" r="2" cx="16" cy="16" fill="#ff6600" visibility="hidden" />
+	<circle id="cursor_rightcc" r="2" cx="20" cy="16" fill="#00ff00" visibility="hidden" />
+</g>
+</svg>
+<div id="cursor_text"></div>
+</div>
+
+<!-- url copy -->
+<div class="url_copy"><input type="text" name="urlcopy" id="urlcopy" value=""></div>
+
+<script>
+	loadto = 2;
+	if(document.getElementById("logosect")) logoDiv = document.getElementById("logosect");
+	if(document.getElementById("anicnvsect")) anicnvDiv = document.getElementById("anicnvsect");
+</script>
+
+</body>
+</html>

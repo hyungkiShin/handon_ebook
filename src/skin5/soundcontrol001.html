@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - soundcontrol001</title>
+<style>
+	body{width:100%;margin:0;overflow:hidden;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}
+
+	/*#audiosect{z-index:1;display:block;position:absolute;left:0;top:0;width:0;height:0;} */
+	#mainsvg{z-index:2;display:block;position:absolute;left:0;top:0;width:250px;height:30px;}
+	#playbtn, #volbtn, #statebtn, #mutebtn{cursor:pointer;}
+	#playbtn:hover,#volbtn:hover,#statebtn:hover,#mutebtn:hover{opacity:0.8;}
+	#playbtn:active,#volbtn:active,#statebtn:active,#mutebtn:active{opacity:0.6;}
+</style>
+<script>
+var selfName = "soundcontrol001.html", winCnt = "soundcontrol";
+var svgWidth, svgHeight, p;
+
+var downObj, clickX, clickY;
+var paridx = -1, leftRight = true;			// paridx(parameter idx, uidx)
+var linkunit, audioPlayer;
+var sndState = "play";
+var stateObj = {startx:47, distance:75, radius:4};
+var volumeObj = {startx:167, distance:65, radius:4};
+var mouseDragged = false;
+var stateX, volumeX;
+var urlstr;
+var currAppKind;
+var currSound = 0;
+var moveTimer;
+
+// applyMph(whether [mph] link is applied or not), progress(whether linkunit.option1 is or not for highlighting)
+// curridx(option1's array index), ttaidx([mph]'s array index), time/rule(option1's parsing data)
+var mphObj = {applyMph:false, curridx:-1, ttaidx:0, time:[], rule:[], progress:false};
+
+function onload_func(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	var params = document.defaultView.location.href;
+	if(params != undefined && params.indexOf("?") > 0){
+		var ar = params.split("?")[1].split("&");
+		for(var i = 0;i < ar.length;i++){
+			var t = ar[i].split("=");
+			if(t[0] === "idx") paridx = parseInt(t[1]);
+			else if(t[0] === "lr") leftRight = eval(t[1]);
+		}
+	}
+
+	p.soundctrlSvg = this;
+	p.objLoaded2('soundcontrol', this, false);
+
+	if(p.CataInfo.cataLang === "en"){
+		//document.getElementById('audiosect').innerHTML = "<audio id='autoctrl'>This browser does not support the 'audio' tag.</audio>";
+		var atitle = document.createElementNS("http://www.w3.org/2000/svg","title");
+		atitle.textContent = "Play";
+		document.getElementById('sndStatePlay').appendChild(atitle);
+
+		atitle = document.createElementNS("http://www.w3.org/2000/svg","title");
+		atitle.textContent = "Mute";
+		document.getElementById('sndVolumeMute').appendChild(atitle);
+	}
+	else{
+		//document.getElementById('audiosect').innerHTML = "<audio id='autoctrl'>브라우저가 audio를 지원하지 않습니다.</audio>";
+		var atitle = document.createElementNS("http://www.w3.org/2000/svg","title");
+		atitle.textContent = "재생";
+		document.getElementById('sndStatePlay').appendChild(atitle);
+
+		atitle = document.createElementNS("http://www.w3.org/2000/svg","title");
+		atitle.textContent = "음소거";
+		document.getElementById('sndVolumeMute').appendChild(atitle);
+	}
+
+	if(p.CataInfo.incview === "d"){
+		document.getElementById('statebtn').addEventListener("mousedown", function(e){statebtnDown(e,true)}, false);
+		document.getElementById('volbtn').addEventListener("mousedown", function(e){volbtnDown(e,true)}, false);
+		document.addEventListener("mousemove", function(e){do_mousemove(e,true)}, false);
+		document.addEventListener("mouseup", function(e){do_mouseup(e,true)}, false);
+	}
+	else{
+		document.getElementById('statebtn').addEventListener("touchstart", function(e){statebtnDown(e,false)}, false);
+		document.getElementById('volbtn').addEventListener("touchstart", function(e){volbtnDown(e,false)}, false);
+		document.addEventListener("touchmove", function(e){do_mousemove(e,false)}, false);
+		document.addEventListener("touchend", function(e){do_mouseup(e,false)}, false);
+	}
+
+	//audioPlayer = document.getElementById('autoctrl');
+	audioPlayer = p.LinkObj.audioPlayer;
+	currAppKind = p.SoundInfo.soundAppKind;	
+
+	if(currAppKind === "Y"){		// when 'Page sound'
+		if(paridx === -1){
+			currSound = (p.SoundInfo.currState === 1 || p.SoundInfo.currState === 3) ? 1 : 2;			// 1: left
+		}
+		else{
+			currAppKind = "N";
+			linkunit = p.LinkObj.arLinkUnit[paridx];
+		}
+	}
+	else{
+		linkunit = p.LinkObj.arLinkUnit[paridx];
+	}
+
+	if(p.SoundInfo.sndplayAtPageOpen === false){
+		sndState = "play";
+		playbtnClick();
+	}
+	else{
+		audioPlayer.play();
+		audioPlayer.addEventListener('ended', audioEnded);
+		if(currAppKind === "P" && p.SoundInfo.markLinkArea === true) show_linkArea();
+		else if(linkunit){
+			if(linkunit.option1 === "[hlg]" || linkunit.option1 === "[hln]") show_linkArea();
+			else if(linkunit.head === "[mph]"){
+				mphObj.applyMph = true;
+				check_hightlight();
+			}
+		}
+	}
+
+	audioPlayer.addEventListener("timeupdate", timeupdateEvent, true);
+	// initialize the volume button
+	audioPlayer.volume = 1;
+	document.getElementById('volbtn').setAttribute("x", volumeObj.startx+volumeObj.distance);
+}
+function check_hightlight(){
+	mphObj.progress = false;
+	mphObj.time = [];
+	mphObj.rule = [];
+	if(linkunit.option1 !== "" && p.SoundInfo.markLinkArea === true){
+		var optstr = linkunit.option1.substr(1, linkunit.option1.length-2);
+		var linestr = optstr.split(",");
+		var pos, str;
+		for(var i = 0;i < linestr.length;i++){
+			str = linestr[i];
+			pos = str.indexOf(":");
+			mphObj.time[i] = parseInt(str.substr(0,pos));
+			mphObj.rule[i] = str.substr(pos+1);
+		}
+		mphObj.progress = true;
+	}
+}
+
+function timeupdateEvent(){
+	if(mphObj.progress === true) show_linkArea2();
+	var elapsedTime = Math.round(audioPlayer.currentTime);
+	var fWidth = (elapsedTime / audioPlayer.duration) * stateObj.distance;
+	if(fWidth > 0 && downObj != 1){
+		document.getElementById('statebtn').setAttribute("x", stateObj.startx+fWidth);
+	}
+}
+function audioEnded(){
+	var k;
+	audioPlayer.removeEventListener('ended', audioEnded);
+
+	if(mphObj.applyMph === true){
+		p.LinkObj.remove_highlight(true);
+
+		mphObj.curridx = -1;
+		mphObj.ttaidx++;
+		if(p.LinkObj.arTTaMP3.length > mphObj.ttaidx){
+			var uidx = p.LinkObj.arTTaMP3[mphObj.ttaidx];
+			linkunit = p.LinkObj.arLinkUnit[uidx];
+			urlstr = p.FileInfo.soundFilePath(linkunit.rule,"","*");
+
+			audioPlayer.setAttribute("src", urlstr);
+			audioPlayer.play();
+			audioPlayer.addEventListener('ended', audioEnded);
+			check_hightlight();
+		}
+		else{
+			mphObj.progress = false;
+			mphObj.applyMph = false;
+			if(p.SoundInfo.pageoverAtSndEnd === true) p.rightOnsmClick();
+			else stop_soundcontrol();
+		}
+		return;
+	}
+
+	// none, Y(page), P(link)
+	if(currAppKind === "N"){
+		if(p.SoundInfo.markLinkArea === true || linkunit.option1 === "[hlg]" || linkunit.option1 === "[hln]") p.LinkObj.remove_highlight(true);
+		stop_soundcontrol();
+	}
+	else if(currAppKind === "Y"){
+		if(p.SoundInfo.currState === 3 && currSound === 1){
+			currSound = 2;
+			urlstr = p.FileInfo.soundFilePath(p.SoundInfo.get_pageSoundFile(2),"","*");
+			audioPlayer.setAttribute("src", urlstr);
+			audioPlayer.play();
+			audioPlayer.addEventListener('ended', audioEnded);
+		}
+ 		else if(p.SoundInfo.pageoverAtSndEnd === true){
+			p.rightOnsmClick();
+		}
+		else{
+			stop_soundcontrol();
+		}
+	}
+	else if(currAppKind === "P"){
+		if(p.SoundInfo.markLinkArea === true || linkunit.option1 === "[hlg]" || linkunit.option1 === "[hln]"){
+			p.LinkObj.remove_highlight(true);
+		}
+
+		if(leftRight === true){
+			k = p.SoundInfo.arLeftMP3.indexOf(paridx);
+			if(k === -1){
+				console.log("audioEnded: arLeftMP3 array index error");
+				stop_soundcontrol();
+				return;
+			}
+			if(k === p.SoundInfo.arLeftMP3.length-1){		// the last
+				if(p.SoundInfo.arRightMP3.length === 0){
+					if(p.SoundInfo.pageoverAtSndEnd === true) p.rightOnsmClick();
+					else stop_soundcontrol();
+					return;
+				}
+				else{
+					if(p.SoundInfo.leftRightUnify == false){
+						stop_soundcontrol();
+						return;
+					}
+
+					paridx = p.SoundInfo.arRightMP3[0];
+					linkunit = p.LinkObj.arLinkUnit[paridx];
+					urlstr = p.FileInfo.soundFilePath(linkunit.rule,"","*");
+					leftRight = false;
+				}
+			}
+			else{
+				k++;
+				paridx = p.SoundInfo.arLeftMP3[k];
+				linkunit = p.LinkObj.arLinkUnit[paridx];
+				urlstr = p.FileInfo.soundFilePath(linkunit.rule,"","*");
+			}
+		}
+		else{
+			k = p.SoundInfo.arRightMP3.indexOf(paridx);
+			if(k === -1){
+				console.log("audioEnded: arRightMP3 array index error");
+				stop_soundcontrol();
+				return;
+			}
+
+			if(k === p.SoundInfo.arRightMP3.length-1){		// the last
+				if(p.SoundInfo.pageoverAtSndEnd == true) p.rightOnsmClick();
+				else stop_soundcontrol();
+				return;
+			}
+			else{
+				k++;
+				paridx = p.SoundInfo.arRightMP3[k];
+				linkunit = p.LinkObj.arLinkUnit[paridx];
+				urlstr = p.FileInfo.soundFilePath(linkunit.rule,"","*");
+			}
+		}
+
+		audioPlayer.setAttribute("src", urlstr);
+		audioPlayer.play();
+		audioPlayer.addEventListener('ended', audioEnded);
+		if(p.SoundInfo.markLinkArea === true || linkunit.option1 === "[hlg]" || linkunit.option1 === "[hln]"){
+			show_linkArea();		
+		}
+	}
+}
+function stop_soundcontrol(){
+	sndState = "end";
+	//if(p.SkinInfo.mainmenu === "658"){ }	
+}
+function play_interSound(n){
+	if(mphObj.applyMph === true) return;
+	paridx = n;
+	linkunit = p.LinkObj.arLinkUnit[paridx];
+	urlstr = p.FileInfo.soundFilePath(linkunit.rule,"","*");
+
+	audioPlayer.removeEventListener('ended', audioEnded);
+	if(p.SoundInfo.markLinkArea === true || linkunit.option1 === "[hlg]" || linkunit.option1 === "[hln]") p.LinkObj.remove_highlight(true);
+
+	// if clicked, unconditionally 'none'
+	if(currAppKind === "Y") currAppKind = "N";
+
+	currMode = "play";
+	audioPlayer.setAttribute("src", urlstr);
+	audioPlayer.load();
+	audioPlayer.play();
+	audioPlayer.addEventListener('ended', audioEnded);
+	if(p.SoundInfo.markLinkArea === true || linkunit.option1 === "[hlg]" || linkunit.option1 === "[hln]"){
+		show_linkArea();
+	}
+}
+function unload(){
+	audioPlayer.pause();
+	audioPlayer.removeEventListener('ended', audioEnded);
+	audioPlayer.removeEventListener("timeupdate", timeupdateEvent, true);
+	audioPlayer.src = "";
+}
+function show_linkArea(){
+	if(p.LinkInfo.markingVar === "R"){
+		p.LinkObj.show_markAreaRule(linkunit.rule);
+	}
+	else if(p.LinkInfo.markingVar === "P"){
+		p.LinkObj.show_markAreaPtr(linkunit.pointer);
+	}
+}
+function show_linkArea2(){
+	for(var i = 0;i < mphObj.time.length;i++){
+		if(audioPlayer.currentTime < mphObj.time[i]){
+			if(mphObj.curridx !== i){
+				p.LinkObj.remove_highlight(true);
+				p.LinkObj.show_markAreaRule(mphObj.rule[i]);
+				mphObj.curridx = i;
+			}
+			break;
+		}
+	}
+}
+
+/// ############################## mouse event ############################## ///
+function playbtnClick(){
+	if(sndState === "play"){
+		audioPlayer.pause();
+		document.getElementById('playbtn').setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "./sndctrl/play.png");
+		sndState = "pause";
+	}
+	else if(sndState === "end"){
+		if(currAppKind === "Y"){
+			if(paridx === -1){
+				currSound = (p.SoundInfo.currState === 1 || p.SoundInfo.currState === 3) ? 1 : 2;			// 1: left
+			}
+			else{
+				currAppKind = "N";
+				linkunit = p.LinkObj.arLinkUnit[paridx];
+			}
+		}
+		else{
+			linkunit = p.LinkObj.arLinkUnit[paridx];
+		}
+
+		audioPlayer.play();
+		audioPlayer.addEventListener('ended', audioEnded);
+		if(currAppKind === "P" && p.SoundInfo.markLinkArea === true) show_linkArea();
+		else if(linkunit){
+			if(linkunit.option1 === "[hlg]" || linkunit.option1 === "[hln]") show_linkArea();
+			else if(linkunit.head === "[mph]"){
+				mphObj.applyMph = true;
+				check_hightlight();
+			}
+		}
+
+		sndState = "play";
+	}
+	else{
+		audioPlayer.play();
+		document.getElementById('playbtn').setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "./sndctrl/pause.png");
+		sndState = "play";
+	}
+}
+function mutebtnClick(){
+	if(audioPlayer.muted == false){
+		audioPlayer.muted = true;
+		document.getElementById('mutebtn').setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "./sndctrl/volume_off.png");
+	}
+	else{
+		audioPlayer.muted = false;
+		document.getElementById('mutebtn').setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "./sndctrl/volume_on.png");
+	}
+}
+function statebtnDown(e, bool){
+	clickX = (bool === true) ? e.clientX : e.touches[0].clientX;
+	clickY = (bool === true) ? e.clientY : e.touches[0].clientY;
+	stateX = parseInt(document.getElementById('statebtn').getAttribute("x"));
+	downObj = 1;
+}
+function volbtnDown(e, bool){
+	clickX = (bool === true) ? e.clientX : e.touches[0].clientX;
+	clickY = (bool === true) ? e.clientY : e.touches[0].clientY;
+	volumeX = parseInt(document.getElementById('volbtn').getAttribute("x"));
+	downObj = 2;
+}
+
+function do_mousemove(e, bool){
+	if(downObj !== 0 && mouseDragged === false) mouseDragged = true;
+	if(mouseDragged === true){
+		var posX;
+		if(downObj === 1){
+			posX = (bool === true) ? e.clientX - clickX + stateX : e.touches[0].clientX - clickX + stateX;
+
+			if(posX < stateObj.startx-stateObj.radius) posX = stateObj.startx - stateObj.radius;
+			else if(posX > stateObj.startx+stateObj.distance-stateObj.radius) posX = stateObj.startx + stateObj.distance - stateObj.radius;
+
+			document.getElementById('statebtn').setAttribute("x", posX);
+		}
+		else if(downObj === 2){
+			posX = (bool === true) ? e.clientX - clickX + volumeX : e.touches[0].clientX - clickX + volumeX;
+
+			if(posX < volumeObj.startx-volumeObj.radius) posX = volumeObj.startx - volumeObj.radius;
+			else if(posX > volumeObj.startx+volumeObj.distance-volumeObj.radius) posX = volumeObj.startx + volumeObj.distance - volumeObj.radius;
+
+			document.getElementById('volbtn').setAttribute("x", posX);
+			audioPlayer.volume = (posX-volumeObj.startx) / volumeObj.distance;
+		}
+	}
+}
+function do_mouseup(e, bool){
+	var posX;
+	if(downObj === 1){
+		posX = parseInt(document.getElementById('statebtn').getAttribute("x")) - stateObj.startx;
+		audioPlayer.currentTime = (posX / stateObj.distance) * audioPlayer.duration;
+	}
+
+	downObj = 0
+	mouseDragged = false;
+}
+document.addEventListener("keydown", function(e){
+	if(e.keyCode !== 37 && e.keyCode !== 39) return;
+	if(moveTimer) return;
+	if(document.activeElement == document.getElementById('statebtn').parentNode){
+		stateX = parseInt(document.getElementById('statebtn').getAttribute("x"));
+		moveTimer = setInterval(function(){
+			if(e.keyCode === 37) stateX -= 2;
+			else stateX += 2;
+
+			var reached = false;
+			if(stateX < stateObj.startx){
+				stateX = stateObj.startx;
+				reached = true;
+			}
+			else if(stateX > stateObj.startx+stateObj.distance){
+				stateX = stateObj.startx + stateObj.distance;
+				reached = true;
+			}
+
+			document.getElementById('statebtn').setAttribute("x", stateX);
+			if(reached === true && moveTimer){
+				clearInterval(moveTimer);
+				moveTimer = undefined;
+			}
+		}, 50);
+	}
+	else if(document.activeElement == document.getElementById('volbtn').parentNode){
+		volumeX = parseInt(document.getElementById('volbtn').getAttribute("x"));
+		moveTimer = setInterval(function(){
+			if(e.keyCode === 37) volumeX -= 2;
+			else volumeX += 2;
+
+			var reached = false;
+			if(volumeX < volumeObj.startx){
+				volumeX = volumeObj.startx;
+				reached = true;
+			}
+			else if(volumeX > volumeObj.startx+volumeObj.distance){
+				volumeX = volumeObj.startx + volumeObj.distance;
+				reached = true;
+			}
+
+			document.getElementById('volbtn').setAttribute("x", volumeX);
+			if(reached === true && moveTimer){
+				clearInterval(moveTimer);
+				moveTimer = undefined;
+			}
+		}, 50);
+	}
+}, false);
+document.addEventListener("keyup", function(e){
+	if(e.keyCode !== 37 && e.keyCode !== 39) return;
+	if(moveTimer){
+		if(document.activeElement == document.getElementById('playbtn').parentNode){
+			var posX = parseInt(document.getElementById('statebtn').getAttribute("x")) - stateObj.startx;
+			audioPlayer.currentTime = (posX / stateObj.distance) * audioPlayer.duration;
+		}
+		else if(document.activeElement == document.getElementById('mutebtn').parentNode){
+			var posX = parseInt(document.getElementById('volbtn').getAttribute("x"));
+			audioPlayer.volume = (posX-volumeObj.startx) / volumeObj.distance;
+		}
+
+		clearInterval(moveTimer);
+		moveTimer = undefined;
+	}
+}, false);
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<!--<div id="audiosect"></div>-->
+
+<svg version="1.1" id="mainsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect id="ctrlbodyback" x="0.5" y="0.5" width="250" height="30" rx="15" fill="#c8e3ff" />
+<g id="sndStateGrp">
+	<a id="sndStatePlay" xlink:href="javascript:playbtnClick();">
+	<image id="playbtn" x="20" y="4" width="22" height="22" xlink:href="./sndctrl/pause.png" />
+	</a>
+	<line x1="50" y1="15" x2="125" y2="15" stroke="#000000" />
+	<line x1="50" y1="16" x2="125" y2="16" stroke="#b0b0b0" />
+	<image id="statebtn" x="47" y="11" width="9" height="9" xlink:href="./sndctrl/button.png" />
+</g>
+<g id="sndVolumeGrp">
+	<a id="sndVolumeMute" xlink:href="javascript:mutebtnClick();">
+	<image id="mutebtn" x="140" y="4" width="22" height="22" xlink:href="./sndctrl/volume_on.png" />		
+	</a>
+	<line x1="170" y1="15" x2="235" y2="15" stroke="#000000" />
+	<line x1="170" y1="16" x2="235" y2="16" stroke="#b0b0b0" />
+	<image id="volbtn" x="232" y="11" width="9" height="9" xlink:href="./sndctrl/button.png" />
+</g>
+</svg>
+
+</body>
+</html>

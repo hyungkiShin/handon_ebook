@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - print001</title>
+<style>
+	html, body{width:100%;height:100%;margin:0;overflow:hidden;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}
+	input{vertical-align:bottom;}
+	a{text-decoration:none;}
+
+	.body016{background-color:#ffffff;}
+	.body016n{background-color:#f7f7f7;}
+
+	#newin_bodybtn{z-index:4;display:block;position:absolute;cursor:pointer;}
+	.newin_bodybtn001{left:151px;top:246px;}
+	.newin_bodyclosebtn012{right:10px;top:239px;}
+	.newin_bodybtn016, .newin_bodybtn018, .newin_bodybtn014{left:152px;top:245px;}
+	.newin_bodybtn041, .newin_bodybtn014{left:150px;top:240px;}
+
+	.svgcnt{z-index:2;display:block;position:absolute;width:270px;height:207px;}
+	.svgcnt > svg{display:block;width:100%;height:100%;}
+	.prn_svgback_rect{fill:none;stroke:#666666;stroke-opacity:1;}
+
+	#prn_secprint{z-index:4;display:block;position:absolute;}
+	.prn_secprint001, .prn_secprint012, .prn_secprint014, .prn_secprint016{left:6px;top:6px;}
+	.prn_secprint018{left:10px;top:6px;}
+	#prn_secprint > h1{display:block;position:relative;margin:5px 0 0 10px;padding:0;font-weight:normal;}
+	#prn_secprint > p:nth-of-type(1){display:block;position:relative;margin:5px 0 0 50px;padding:0;}
+	#prn_secprint > p:nth-of-type(2){display:block;position:relative;margin:5px 0 0 70px;padding:0;}
+
+	#prn_partprint{z-index:4;display:block;position:absolute;left:6px;top:100px;}
+	#prn_partprint > h1{display:block;position:relative;margin:16px 0 0 10px;padding:0;font-weight:normal;}
+	#prn_partprint > p:nth-of-type(1){display:block;position:relative;margin:5px 0 0 30px;padding:0;}
+
+	#frpage{display:inline;border:1px solid #000000;width:32px;height:14px;}
+	#topage{display:inline;border:1px solid #000000;width:32px;height:14px;margin-left:10px;}
+
+	.prn_button{z-index:5;display:block;width:81px;height:21px;border:1px solid #666666;
+		text-align:center;cursor:pointer;background-color:#e5e5e5;color:#444444;}
+	.prn_button:hover{background-color:#FCFBBC;}
+	.prn_button_secprint{margin:10px 0 0 170px;}
+	.prn_button_secprint:active{margin:11px 0 0 171px;}
+	.prn_button_partprint{margin:4px 0 0 170px;}
+	.prn_button_partprint:active{margin:5px 0 0 171px;}
+
+	.prn_newincheck5m{z-index:5;display:block;position:absolute;left:6px;top:120px;width:268px;height:23px;margin:0;}
+	.prn_image5m{z-index:5;display:block;position:absolute;left:20px;top:36px;margin:0;width:26px;height:24px;}
+	.prn_anisvg5m{z-index:5;display:block;position:absolute;left:20px;top:40px;margin:0;width:30px;height:30px;visibility:hidden;}
+
+	.prn_newincheck5d{z-index:5;display:block;position:absolute;left:6px;top:220px;width:268px;height:23px;margin:0;}
+	.prn_image5d{z-index:5;display:block;position:absolute;left:20px;top:36px;margin:0;width:26px;height:24px;}
+	.prn_anisvg5d{z-index:5;display:block;position:absolute;left:20px;top:40px;margin:0;width:30px;height:30px;visibility:hidden;}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "print001.html", winCnt = "print";
+var newin_titletext = "인 쇄";
+var svgObj = "printSvg";
+var plusID = "";
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "close";
+var dragGap = 0;
+
+var prnaniObj = new Array();
+var prnaniTimer;
+var prnSeq = 0;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	if(eclang === "en") newin_titletext = "Print";
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.printSvg = this;
+	window.parent.objLoaded2('print', this, false);
+	dragGap = p.WinInfo.get_dragGap(nwclass);
+
+	document.body.className = (nwclass === "016") ? "body016" : "body016n";
+
+	if(incview === "m"){
+		document.getElementById('prn_partprint').style.display = "none";
+		document.getElementById('partprintback').style.visibility = "hidden";
+		skind = "";
+	}
+
+	p.document.getElementById('newin_frame'+plusID).innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+	document.body.insertAdjacentHTML('afterend', getNewinButton(nwclass));
+
+	if(nwclass === "016") document.getElementById('prn_svgback').style.margin = "2px 0 0 11px";
+	else document.getElementById('prn_svgback').style.margin = "6px";
+
+	document.getElementById('prn_secprint').className = "prn_secprint" + nwclass;
+	document.getElementById('newincheck').className = "prn_newincheck5" + incview;
+	document.getElementById('prnimage').className = "prn_image5" + incview;
+	document.getElementById('prn_anisvg').className = "prn_anisvg5" + incview;
+
+	if(eclang === "en"){
+		document.getElementById('titlemask1_poly').setAttribute("points","0,0 7,0 7,15 103,15 103,0 268,0 268,91 0,91, 0,0");
+		document.getElementById('titlemask2_poly').setAttribute("points","0,0 7,0 7,15 83,15 83,0 268,0 268,91 0,91, 0,0");
+		document.getElementById('prn_secprint').innerHTML = '<h1>Section Printing</h1>\n'
+			+ '<p>Enter the pages to print</p>\n'
+			+ '<p>From <input type="text" id="frpage" name="frpage"> ~ To <input type="text" id="topage" name="topage"></p>\n'
+			+ '<input type="submit" class="prn_button prn_button_secprint" value="Print">';
+		document.getElementById('prn_partprint').innerHTML = '<h1>Part Printing</h1>\n'
+			+ '<p>Select the area to print by dragging after clicking Select button below. Press the ESC key to cancel.</p>\n'
+			+ '<input type="button" class="prn_button prn_button_partprint" value="Select" onclick="partPrint();">';
+		document.getElementById('newincheck').innerHTML = '<label><input type="checkbox" name="newin" value="1" onclick="change_newinOption();">'
+			+ 'Open in new window(Preview to confirm)</label>';
+	}
+	else{
+		document.getElementById('prn_secprint').innerHTML = '<h1>구간인쇄</h1>\n'
+			+ '<p>인쇄하실 페이지를 입력해주세요.</p>\n'
+			+ '<p><input type="text" id="frpage" name="frpage"> 부터 ~ <input type="text" id="topage" name="topage"> 까지</p>\n'
+			+ '<input type="submit" class="prn_button prn_button_secprint" value="인  쇄">';
+		document.getElementById('prn_partprint').innerHTML = '<h1>부분인쇄</h1>\n'
+			+ '<p>인쇄하실 영역을 아래 버튼을 클릭하신 후<br>마우스 드래그하여 선택해주십시오.<br>취소는 ESC 키를 눌러 주십시오.</p>\n'
+			+ '<input type="button" class="prn_button prn_button_partprint" value="선  택" onclick="partPrint();">';
+		document.getElementById('newincheck').innerHTML = '<label><input type="checkbox" name="newin" value="1" onclick="change_newinOption();">'
+			+ '새창에서 열기 (미리보기로 확인 가능)</label>';
+	}
+
+	if(p.PrintInfo.newinPage === true) document.printform.newin.checked = true;
+	if(p.SkinInfo.printkind === "999") encPrint();
+
+	prnaniObj[0] = document.getElementById("prnanicc1");
+	prnaniObj[1] = document.getElementById("prnanicc2");
+	prnaniObj[2] = document.getElementById("prnanicc3");
+	prnaniObj[3] = document.getElementById("prnanicc4");
+	prnaniObj[4] = document.getElementById("prnanicc5");
+	prnaniObj[5] = document.getElementById("prnanicc6");
+	prnaniObj[6] = document.getElementById("prnanicc7");
+	prnaniObj[7] = document.getElementById("prnanicc8");
+}
+
+function sectionPrint(){
+	if(document.printform.frpage.value == ""){
+		if(eclang === "en") alert('Please enter the start page to print.');
+		else alert('인쇄하실 시작 페이지를 입력하여 주십시오.');
+		document.printform.frpage.focus();
+		return false;
+	}
+	if(document.printform.topage.value == ""){
+		if(eclang === "en") alert('Please enter the end page to print.');
+		else alert('인쇄하실 페이지를 입력하여 주십시오.');
+		document.printform.topage.focus();
+		return false;
+	}
+
+	var fr_page = p.PageInfo.get_realFromShowPage(parseInt(document.printform.frpage.value));
+	var to_page = p.PageInfo.get_realFromShowPage(parseInt(document.printform.topage.value));
+	if(fr_page > to_page){
+		if(eclang === "en") alert('Please enter the start page and the end page precisely.');
+		else alert('인쇄구간의 시작과 끝을 정확하게 입력해주십시오.');
+		return false;
+	}
+
+	p.PrintInfo.frPageNo = fr_page;
+	p.PrintInfo.toPageNo = to_page;
+	p.PrintInfo.partPrint = false;
+
+	if(!prnaniTimer) start_ani();
+	p.load_printpage();
+	return false;
+}
+function encPrint(){
+	if(p.Action.mainState === "alert") return;
+	if(p.Action.drawCondition <= 0){
+		if(eclang === "en") alert('Printing is available in the enlarged condition.');
+		else alert('확대상태에서 인쇄하실 수 있습니다.');
+		return;
+	}
+
+	var fr_page, to_page;
+	if(p.Action.togetherEnlarge === true){
+		fr_page = p.PageInfo.currentPage
+		to_page = p.PageInfo.currentPage + 1;
+	}
+	else if(p.Action.drawCondition === 10){
+		fr_page = p.PageInfo.currentPage;
+		to_page = p.PageInfo.currentPage
+	}
+	else if(p.Action.drawCondition === 11){
+		fr_page = p.PageInfo.currentPage + 1;
+		to_page = p.PageInfo.currentPage + 1;
+	}
+
+	p.PrintInfo.frPageNo = fr_page;
+	p.PrintInfo.toPageNo = to_page;
+	p.PrintInfo.partPrint = false;
+
+	if(!prnaniTimer) start_ani();
+	p.load_printpage();
+}
+function partPrint(){
+	p.PrintInfo.partPrint = true;
+	p.load_partprint();
+}
+function change_newinOption(){
+	p.PrintInfo.newinPage = document.printform.newin.checked ? true : false;	
+}
+
+function start_ani(){				// from [ecatalog5.ext]-onload_func2()
+	document.getElementById('prn_anisvg').style.visibility = "visible";
+	prnaniTimer = setInterval(spool_animate, 120);
+}
+
+function spool_animate(){
+	var n = prnSeq % 8;
+	for(var i = 0;i < 8;i++){
+		if(i == n) prnaniObj[i].setAttribute("fill","#aaaaaa");
+		else if(i == n-1) prnaniObj[i].setAttribute("fill","#bbbbbb");
+		else if(i == n-2) prnaniObj[i].setAttribute("fill","#cccccc");
+		else prnaniObj[i].setAttribute("fill","#dddddd");
+	}
+	prnSeq++;
+}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.unload_printpage();
+	p.printSvg = undefined;
+	p.unload_newin(winCnt);
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.befX;
+	var posY = e.clientY - p.clickY + p.befY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.newinDiv.style.left = posX + "px";
+	p.newinDiv.style.top = posY + "px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.befX += e.clientX - p.clickX;
+	p.befY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<!-- section print background -->
+<div class="svgcnt">
+<svg version="1.1" id="prn_svgback" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g transform="translate(0,10)">
+<clipPath id="titlemask1">
+	<polygon id="titlemask1_poly" points="0,0 7,0 7,15 63,15 63,0 268,0 268,91 0,91, 0,0" />
+</clipPath>
+<rect class="prn_svgback_rect" x="0.5" y="0.5" width="267" height="90" rx="5" clip-path="url(#titlemask1)" />
+</g>
+
+<!-- part print background -->
+<g id="partprintback" transform="translate(0,115)">
+<clipPath id="titlemask2">
+	<polygon id="titlemask2_poly" points="0,0 7,0 7,15 63,15 63,0 268,0 268,91 0,91, 0,0" />
+</clipPath>
+<rect class="prn_svgback_rect" x="0.5" y="0.5" width="267" height="90" rx="5" clip-path="url(#titlemask2)" />
+</g>
+</svg></div>
+
+<div id="prnimage"><img src="./etc/printico.png" width="26" height="24" alt="printer"></div>
+
+<!-- animation -->
+<div id="prn_anisvg">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g transform="translate(0,29)">
+	<circle id="prnanicc1" cx="15" cy="3" r="3" fill="#dddddd" />
+	<circle id="prnanicc2" cx="23" cy="6" r="3" fill="#dddddd" />
+	<circle id="prnanicc3" cx="26" cy="14" r="3" fill="#dddddd" />
+	<circle id="prnanicc4" cx="23" cy="22" r="3" fill="#dddddd" />
+	<circle id="prnanicc5" cx="15" cy="26" r="3" fill="#dddddd" />
+	<circle id="prnanicc6" cx="6" cy="23" r="3" fill="#dddddd" />
+	<circle id="prnanicc7" cx="3" cy="15" r="3" fill="#dddddd" />
+	<circle id="prnanicc8" cx="6" cy="6" r="3" fill="#dddddd" />
+</g>
+</svg>
+</div>
+
+<!-- section print input form -->
+<form name="printform" method="get" action="javascript:void(0);" onsubmit="return sectionPrint();">
+<section id="prn_secprint"></section>
+<section id="prn_partprint"></section><!-- part print button -->
+<div id="newincheck"></div>
+</form>
+
+</body>
+</html>
+

@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - spacer001</title>
+<link rel="stylesheet" type="text/css" href="../main.css">
+<style id="thstyle">
+	html, body{width:100%;height:100%;margin:0;overflow:hidden;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;color:#444444;}
+
+	a{text-decoration:none;color:#444444;}
+	.body016{background-color:#ffffff;}
+	.body016n{background-color:#f7f7f7;}
+
+	.mainsvg5m{display:block;z-index:2;position:absolute;width:100%;top:30px;}
+	.mainsvg5d{display:block;z-index:2;position:absolute;width:100%;height:100%;}
+	.mainsvg5m > svg, .mainsvg5d > svg{display:block;width:100%;height:100%;margin:0;}
+
+	.addbtn{display:block;z-index:3;position:absolute;left:10px;top:5px;height:20px;}
+	.addbtn img{display:block;float:left;width:15px;height:18px;}
+	.addbtn span{display:block;float:left;width:auto;height:15px;margin:4px 0 0 3px;}
+
+	.thumb_g{cursor:pointer;}
+	.thumb_g:hover rect:first-child{fill:#777777;}
+
+	.btntext{font-family:Tahoma;font-size:8pt;fill:#666666;fill-opacity:1;text-anchor:middle;text-rendering:optimizeLegibility;}
+	.ntctext{font-family:돋움;font-size:11px;fill:#999999;text-anchor:middle;}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "spacer001.html", winCnt = "spacer";
+var newin_titletext = "책갈피";
+var svgObj = "spacerSvg";
+var plusID = "";
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "";
+
+var thumbGrpObj;
+var thumbWidth, thumbHeight;
+var dragGap = 0;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	if(eclang === "en") newin_titletext = "Bookmarks";
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.spacerSvg = this;
+	window.parent.objLoaded2('spacer', this, false);
+	dragGap = p.WinInfo.get_dragGap(nw2class);
+
+	document.body.className = (nw2class === "016") ? "body016" : "body016n";
+	document.getElementById('mainsvg').className = (incview === "m") ? "mainsvg5m" : "mainsvg5d";
+
+	p.document.getElementById('newin_frame'+plusID).innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+	document.body.insertAdjacentHTML('afterend', getNewinButton(nw2class));
+
+	thumbGrpObj = document.getElementById('thumbGrp');
+	if(incview === "m"){
+		thumbGrpObj.setAttribute("transform",'translate('+p.newinTmp.winpadL+','+p.newinTmp.winpadT+')');
+		document.getElementById('mainsvg').style.height = (svgHeight - p.NewinObj.titleHeight - 30) + "px";
+	}
+
+	if(incview === "m"){
+		var s = "<a href=\"javascript:emptybtnClick();\"><img src='./mm001/m_delfav.png' width='15' height='18'>";
+		if(eclang == "en") s += "<span>Delete all Bookmarks</span>";
+		else s += "<span>책갈피 비우기</span>";
+		s += "</a></div>";
+		document.getElementById('addbtn').innerHTML = s;
+	}
+
+	thumbWidth = p.newinTmp.thumbWidth;
+	thumbHeight = p.newinTmp.thumbHeight;
+
+	if(p.SpacerInfo.retrieved === false){
+		p.SpacerInfo.retrieve_item();
+		p.SpacerInfo.retrieved = true;
+	}
+
+	//p.localStorage.clear();
+	//alert(localStorage.getItem("bmrk"+p.SpacerInfo.cKey));
+	//if(callkd !== "view"){
+	//	p.SpacerInfo.add_item(callkd);
+	//}
+
+	if(p.SpacerInfo.arItem.length === 0) make_notice();
+	else{
+		if(incview === "m") make_thumbs5m();
+		else make_thumbs5d();
+	}
+}
+function refresh_size(aw, ah){			// only mobile by orientation change
+	svgWidth = aw;
+	svgHeight = ah;
+	newin_size();
+
+	var nodes = thumbGrpObj.childNodes;
+	for(var i = 0;i < nodes.length;i++){
+		thumbGrpObj.removeChild(nodes[i]);
+	}
+
+	thumbGrpObj.setAttribute("transform",'translate('+p.newinTmp.winpadL+','+p.newinTmp.winpadT+')');
+	document.getElementById('mainsvg').style.height = (svgHeight - p.NewinObj.titleHeight - 30) + "px";
+	make_thumbs5m();
+}
+function make_thumbs5d(){
+	var tx, page;
+	for(var i = 0;i < p.SpacerInfo.arItem.length;i++){
+		page = parseInt(p.SpacerInfo.arItem[i]);
+		tx = (thumbWidth+p.newinTmp.spacingII)*i;
+		make_thumbItem(page, tx, 0);
+	}
+}
+function make_thumbs5m(){
+	var tx, ty, page;
+	var k = 0;
+	for(var i = 0;i < p.SpacerInfo.arItem.length;i++){
+		tx = (thumbWidth+p.newinTmp.spacingII)*(k%p.newinTmp.colQty);
+		ty = (thumbHeight+p.newinTmp.spacingII)*Math.floor(k/p.newinTmp.colQty);
+
+		page = parseInt(p.SpacerInfo.arItem[i]);
+		make_thumbItem(page, tx, ty);
+		k++;
+	}
+}
+function make_thumbItem(pno, tx, ty){
+	var gObj = document.createElementNS("http://www.w3.org/2000/svg","g");
+	gObj.setAttribute("class", "thumb_g");
+	gObj.setAttribute('transform','translate('+(tx-1)+','+(ty-1)+')');
+	gObj.setAttribute('onclick',"do_itemClick(evt,"+pno+")");
+
+	// a rectangle for shadow effect
+	var rectObj = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	rectObj.setAttribute("fill", "#BBBBBB");
+	rectObj.setAttribute("x", 2);
+	rectObj.setAttribute("y", 2);
+	rectObj.setAttribute("width", thumbWidth+2);
+	rectObj.setAttribute("height", thumbHeight+2);
+	gObj.appendChild(rectObj);
+
+	// a rectangle for black outline
+	rectObj = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	rectObj.setAttribute("fill", "#000000");
+	rectObj.setAttribute("x", 0);
+	rectObj.setAttribute("y", 0);
+	rectObj.setAttribute("width", thumbWidth+2);
+	rectObj.setAttribute("height", thumbHeight+2);
+	gObj.appendChild(rectObj);
+
+	var aaa = p.FileInfo.thumbFilePath(pno,"s","","*");
+	if(p.CataInfo.cdmake === true) aaa[0] = "."+aaa[0];
+
+	var imageObj = document.createElementNS("http://www.w3.org/2000/svg","image");
+	if(p.ServerInfo.applyCipher === true) p.load_cipherImage('spacer', pno, aaa[0], after_cipherLoaded);
+	else imageObj.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", aaa[0]);
+	imageObj.setAttribute("id", "anime1_"+pno);
+	imageObj.setAttribute("x", 1);
+	imageObj.setAttribute("y", 1);
+	imageObj.setAttribute("width", thumbWidth);
+	imageObj.setAttribute("height", thumbHeight);
+	gObj.appendChild(imageObj);
+
+	// 모바일에서는 너무 작아서 전체 비우기로 대체함.
+	if(incview !== "m"){
+		// close button image
+		var closeObj = document.createElementNS("http://www.w3.org/2000/svg","image");
+		closeObj.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "./etc/close_9b.png");
+		closeObj.setAttribute("opacity", "0.4");
+		closeObj.setAttribute("x", thumbWidth-7);
+		closeObj.setAttribute("y", 0);
+		closeObj.setAttribute("width", 9);
+		closeObj.setAttribute("height", 9);
+		closeObj.setAttribute('onclick',"delbtnClick(evt,'"+pno+"')");
+		gObj.appendChild(closeObj);
+	}
+
+	// circle for page number
+	var circleObj = document.createElementNS("http://www.w3.org/2000/svg","circle");
+	circleObj.setAttribute("fill", "#FFFFFF");
+	circleObj.setAttribute("fill-opacity", "0.6");
+	circleObj.setAttribute("cx", 10);
+	circleObj.setAttribute("cy", thumbHeight-10);
+	circleObj.setAttribute("r", 9);
+	gObj.appendChild(circleObj);
+
+	var textObj = document.createElementNS("http://www.w3.org/2000/svg","text");
+	textObj.setAttribute("class", "btntext");
+	textObj.setAttribute("x", 10);
+	textObj.setAttribute("y", thumbHeight-5);
+	var textNode = document.createTextNode(p.PageInfo.get_showPage(pno));
+	textObj.appendChild(textNode);
+	gObj.appendChild(textObj);
+
+	thumbGrpObj.appendChild(gObj);
+}
+function after_cipherLoaded(skd, npage, urlsrc){
+	document.getElementById("anime1_"+npage).setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", urlsrc);
+}
+function make_notice(){
+	var textObj = document.createElementNS("http://www.w3.org/2000/svg","text");
+	textObj.setAttribute("class", "ntctext");
+	textObj.setAttribute("x", svgWidth/2);
+	textObj.setAttribute("y", 35);
+	var textNode = document.createTextNode("목록이 없습니다.");
+	textObj.appendChild(textNode);
+	thumbGrpObj.appendChild(textObj);
+}
+
+function emptybtnClick(){			// only in mobile
+	p.SpacerInfo.empty_items();
+
+	var nodes = thumbGrpObj.childNodes;
+	for(var i = nodes.length-1;i >= 0;i--){
+		thumbGrpObj.removeChild(nodes[i]);
+	}
+
+	make_notice();
+}
+function delbtnClick(e,s){
+	e.stopPropagation();
+
+	p.SpacerInfo.remove_itemValue(s);
+	var nodes = thumbGrpObj.childNodes;
+	for(var i = nodes.length-1;i >= 0;i--){
+		thumbGrpObj.removeChild(nodes[i]);
+	}
+
+	if(p.SpacerInfo.arItem.length === 0){
+		make_notice();
+	}
+	else{
+		if(incview === "m") make_thumbs5m();
+		else make_thumbs5d();
+	}
+}
+
+function do_itemClick(e,pno){
+	if(p.PermitMan.get_directGoPermNumber("spacer", pno, "system") === false) return;			// device, spage, pageshow
+	p.go_general(pno, "system");
+	if(incview === "m") newin_close();
+}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.spacerSvg = undefined;
+	p.unload_newin(winCnt);
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.befX;
+	var posY = e.clientY - p.clickY + p.befY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.newinDiv.style.left = posX+"px";
+	p.newinDiv.style.top = posY+"px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.befX += e.clientX - p.clickX;
+	p.befY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<div id="mainsvg">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="thumbGrp" transform="translate(8,8)"></g>
+</svg>
+</div>
+
+<div id="addbtn" class="addbtn"></div>
+
+</body>
+</html>

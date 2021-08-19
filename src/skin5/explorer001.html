@@ -1,0 +1,475 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - explorer001</title>
+<link rel="stylesheet" type="text/css" href="../main.css">
+<style>
+	html{width:100%;height:100%;margin:0;}
+	body{width:100%;height:100%;margin:0;background-color:#f7f7f7;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}
+
+	.maincnt5m{display:block;position:absolute;width:100%;height:100%;overflow-y:auto;}
+	.maincnt5d{display:block;position:absolute;width:100%;height:100%;overflow-x:hidden;overflow-y:auto;}
+
+	#mainsvg{display:block;position:absolute;width:100%;height:100%;}
+
+	.thumb_g{cursor:pointer;}
+	.thumb_g:hover > rect:first-child{fill:#777777;}
+	.thumb_g > text{font-family:Tahoma;font-size:8pt;fill:#666666;fill-opacity:1;text-anchor:middle;text-rendering:optimizeLegibility;}
+
+	.thumb_back{fill:#000000;}
+	.thumb_back-curr{fill:#ff6600;}
+
+	.pg_g{cursor:pointer;}
+	.pg_g > rect{fill:#F5F5F5;stroke:#333333;}
+	.pg_g:hover > rect{fill:#FFFFD9;stroke:#aaaaaa;}
+	.pg_g:active > rect{fill:#CCCCCC;stroke:#999999;}
+	.pg_g > text{font-family:Tahoma;font-size:8pt;fill:#666666;fill-opacity:1;text-anchor:middle;text-rendering:optimizeLegibility;}
+
+	.pg_g-curr > rect{fill:#777777;stroke:#555555;}
+	.pg_g-curr > text{font-family:Tahoma;font-size:8pt;fill:#ffffff;fill-opacity:1;text-anchor:middle;text-rendering:optimizeLegibility;}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "explorer001.html", winCnt = "explorer";
+var newin_titletext = "탐 색";
+var svgObj = "expSvg";
+var plusID = "";
+var applyMax = "Y";
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "";
+
+var dragGap = 0;
+var pc, thumbWidth, thumbHeight;
+var thumbGrpObj, pagingGrpObj;
+var arPagingObj = new Array();
+
+var firstLastBtn = true;
+var spacingPP = 5;				// between paging and paging
+var spacingPS = 5;				// between prev/first button and paging
+var pgitemWidth = 19, pgitemHeight = 14;			// paging item
+var bef_articlesOnPage = 0;
+var bef_currPage = 1;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	applyMax = ar[4];
+
+	if(eclang === "en") newin_titletext = "Thumbnails";
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.expSvg = this;
+	window.parent.objLoaded2('explorer', this, false);
+	dragGap = p.WinInfo.get_dragGap(nw2class);
+
+	if(applyMax === "b") fullscrbtn = 1;
+
+	p.document.getElementById('newin_frame').innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+	document.body.insertAdjacentHTML('afterend', getNewinButton(nw2class));
+
+	document.getElementById('maincnt').className = (incview === "m") ? "maincnt5m" : "maincnt5d";
+
+	thumbGrpObj = document.getElementById('thumbGrp');
+	pagingGrpObj = document.getElementById('pagingGrp');
+
+	thumbWidth = p.newinTmp.thumbWidth;
+	thumbHeight = p.newinTmp.thumbHeight
+
+	pc = new p.PagingCont();
+	onload_func2();
+}
+
+function refresh_size(aw, ah){			// only mobile by orientation change
+	svgWidth = aw;
+	svgHeight = ah;
+	newin_size();
+
+	pc.set_articlesOnPage(p.newinTmp.colQty*p.newinTmp.rowQty);
+	pc.set_pagesOnSheet(10);
+	
+	if(bef_currPage > pc.totalPages) bef_currPage = pc.totalPages;
+	pc.set_currentPage(bef_currPage);
+
+	if(pc.articlesOnPage >= pc.totalArticles) p.MenuInfo.applyMax = "N";
+
+	var nodes = thumbGrpObj.childNodes;
+	for(var i = 0;i < nodes.length;i++){
+		thumbGrpObj.removeChild(nodes[i]);
+	}
+
+	thumbGrpObj.setAttribute("transform",'translate('+p.newinTmp.winpadL+','+p.newinTmp.winpadT+')');
+	var tx, ty, pno, k = 0;
+	for(var i = pc.startArticle;i <= pc.finalArticle;i++){
+		pno = i + 1;
+		tx = (thumbWidth+p.newinTmp.spacingII)*(k%p.newinTmp.colQty);
+		ty = (thumbHeight+p.newinTmp.spacingII)*Math.floor(k/p.newinTmp.colQty);
+		if(document.getElementById("thumb_g"+pno)){
+			document.getElementById("thumb_g"+pno).setAttribute('transform','translate('+(tx-1)+','+(ty-1)+')');
+		}
+		else{
+			make_thumbItem(pno, tx, ty);
+		}
+		k++;
+	}
+
+	if(pc.articlesOnPage < pc.totalArticles) refresh_paging(true);
+	else refresh_paging(false);
+}
+
+function onload_func2(){
+	pc.totalArticles = p.PageInfo.cataPages;
+	pc.set_articlesOnPage(p.newinTmp.colQty*p.newinTmp.rowQty);
+	pc.set_pagesOnSheet(10);
+
+	var carti = (p.PageInfo.currentPage === 0) ? 1 : p.PageInfo.currentPage;
+	var cpage = pc.get_pageFromArticle(carti);
+	pc.set_currentPage(cpage);
+	bef_currPage = cpage;
+
+	if(pc.articlesOnPage >= pc.totalArticles){
+		if(p.MenuInfo.currShowMenu !== "total" && p.document.getElementById('newin_titlefullscrbtn')){
+			p.document.getElementById('newin_titlefullscrbtn').setAttribute("visibility", "hidden");
+		}
+	}
+	else{
+		if(p.document.getElementById('newin_titlefullscrbtn')){
+			p.document.getElementById('newin_titlefullscrbtn').setAttribute("visibility","visible");
+		}		
+	}
+
+	// The maincnt's scroll is used in mobile's total. If body is used, the title area would be move simultaneously.
+	if(p.NewinObj.openAni !== 0){
+		make_thumbs5dline();
+	}
+	else if(incview === "m"){
+		document.getElementById('mainsvg').style.height = (svgHeight - p.NewinObj.titleHeight) + "px";
+		thumbGrpObj.setAttribute("transform",'translate('+p.newinTmp.winpadL+','+p.newinTmp.winpadT+')');
+
+		make_thumbs5m();
+		if(pc.articlesOnPage < pc.totalArticles) make_paging();			// calculate the height
+	}
+	else if(p.MenuInfo.currShowMenu === "explorer"){
+		make_thumbs5dexp();
+		if(pc.articlesOnPage < pc.totalArticles) make_paging();			// calculate the height
+	}
+	else{
+		make_thumbs5dtot();
+	}
+}
+function make_thumbs5dexp(){				// explorer
+	var tx, k = 0;
+	for(var i = pc.startArticle;i <= pc.finalArticle;i++){
+		tx = (thumbWidth+p.newinTmp.spacingII)*k;
+		make_thumbItem(i+1, tx, 0);
+		k++;
+	}
+}
+function make_thumbs5dtot(){				// total
+	var tx, ty;
+	for(var i = 0;i < pc.totalArticles;i++){
+		tx = (thumbWidth+p.newinTmp.spacingII)*(i%p.newinTmp.colQty);
+		ty = (thumbHeight+p.newinTmp.spacingII)*Math.floor(i/p.newinTmp.colQty);
+		make_thumbItem(i+1, tx, ty);
+	}
+}
+function make_thumbs5dline(){				// total in a line
+	var tx, ty;
+	for(var i = 0;i < pc.totalArticles;i++){
+		tx = (thumbWidth+p.newinTmp.spacingII)*i;
+		ty = 0;
+		make_thumbItem(i+1, tx, ty);
+	}
+	document.getElementById('mainsvg').style.width = (tx+thumbWidth+p.newinTmp.spacingII*2) + "px";
+}
+function make_thumbs5m(){					// explorer(mobile)
+	var tx, ty, k = 0;
+	for(var i = pc.startArticle;i <= pc.finalArticle;i++){
+		tx = (thumbWidth+p.newinTmp.spacingII)*(k%p.newinTmp.colQty);
+		ty = (thumbHeight+p.newinTmp.spacingII)*Math.floor(k/p.newinTmp.colQty);
+		make_thumbItem(i+1, tx, ty);
+		k++;
+	}
+}
+function make_thumbItem(pno, tx, ty){
+	var gObj = document.createElementNS("http://www.w3.org/2000/svg","g");
+	gObj.setAttribute("id", "thumb_g"+pno);
+	gObj.setAttribute("class", "thumb_g");
+	gObj.setAttribute('transform','translate('+(tx-1)+','+(ty-1)+')');
+	gObj.setAttribute('onclick',"do_itemClick("+pno+")");
+
+	// a rectangle for shadow effect
+	var rectObj = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	rectObj.setAttribute("fill", "#BBBBBB");
+	rectObj.setAttribute("x", 2);
+	rectObj.setAttribute("y", 2);
+	rectObj.setAttribute("width", thumbWidth+2);
+	rectObj.setAttribute("height", thumbHeight+2);
+	gObj.appendChild(rectObj);
+
+	// a rectangle for black outline
+	rectObj = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	if(p.ScreenInfo.onesmc === true){
+		if(p.PageInfo.currentPage === pno) rectObj.setAttribute("class", "thumb_back-curr");
+		else rectObj.setAttribute("class", "thumb_back");
+	}
+	else{
+		if(p.PageInfo.currentPage === pno) rectObj.setAttribute("class", "thumb_back-curr");
+		else if(p.PageInfo.currentPage+1 === pno) rectObj.setAttribute("class", "thumb_back-curr");
+		else rectObj.setAttribute("class", "thumb_back");
+	}
+	rectObj.setAttribute("x", 0);
+	rectObj.setAttribute("y", 0);
+	rectObj.setAttribute("width", thumbWidth+2);
+	rectObj.setAttribute("height", thumbHeight+2);
+	gObj.appendChild(rectObj);
+
+	var aaa = p.FileInfo.thumbFilePath(pno,"s","","*");
+	if(p.CataInfo.cdmake === true) aaa[0] = "."+aaa[0];
+
+	var imageObj = document.createElementNS("http://www.w3.org/2000/svg","image");
+	if(p.ServerInfo.applyCipher === true) p.load_cipherImage('exp', pno, aaa[0], after_cipherLoaded);
+	else imageObj.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", aaa[0]);
+	imageObj.setAttribute("id", "anime1_"+pno);
+	imageObj.setAttribute("x", 1);
+	imageObj.setAttribute("y", 1);
+	imageObj.setAttribute("width", thumbWidth);
+	imageObj.setAttribute("height", thumbHeight);
+	gObj.appendChild(imageObj);
+
+	// circle for page number
+	var circleObj = document.createElementNS("http://www.w3.org/2000/svg","circle");
+	circleObj.setAttribute("fill", "#FFFFFF");
+	circleObj.setAttribute("fill-opacity", "0.6");
+	circleObj.setAttribute("cx", 10);
+	circleObj.setAttribute("cy", thumbHeight-10);
+	circleObj.setAttribute("r", 9);
+	gObj.appendChild(circleObj);
+
+	var textObj = document.createElementNS("http://www.w3.org/2000/svg","text");
+	textObj.setAttribute("class", "btntext");
+	textObj.setAttribute("x", 10);
+	textObj.setAttribute("y", thumbHeight-5);
+	var textNode = document.createTextNode(p.PageInfo.get_showPage(pno));
+	textObj.appendChild(textNode);
+	gObj.appendChild(textObj);
+	if(p.PermitMan.check_memberZone("exp") === true && p.PageInfo.is_previewPage(pno) === false) gObj.setAttribute("filter","url(#approveMatrix)");
+
+	thumbGrpObj.appendChild(gObj);
+}
+function after_cipherLoaded(skd, npage, urlsrc){
+	document.getElementById("anime1_"+npage).setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", urlsrc);
+}
+function refresh_thumbs(n){
+	if(n == pc.currentPage) return;
+
+	var nodes = thumbGrpObj.childNodes;
+	for(var i = nodes.length-1;i > 0;i--){
+		thumbGrpObj.removeChild(nodes[i]);
+	}
+
+	if(n === 0) return;
+
+	pc.set_currentPage(n);
+	bef_currPage = n;
+
+	if(incview === "m"){
+		make_thumbs5m();
+	}
+	else if(p.MenuInfo.currShowMenu === "explorer"){
+		make_thumbs5dexp();
+	}
+	else{
+		make_thumbs5dtot();
+	}
+}
+function do_itemClick(pno){
+	if(p.PermitMan.get_directGoPermNumber("explorer", pno, "system") === false) return;			// device, spage, pageshow
+	p.go_general(pno, "system");
+	if(incview === "m") newin_close();
+}
+
+/// ############################## paging ############################## ///
+function make_paging(){
+	var accum = 0;
+	if(pc.prevSheet !== -1){
+		if(firstLastBtn === true){
+			make_pagingitem(accum, "<<", "pg_g","javascript:do_firstSheetClick()");
+			accum += pgitemWidth + spacingPS;
+		}
+
+		make_pagingitem(accum, "<", "pg_g","javascript:do_prevSheetClick()");
+		accum += pgitemWidth + spacingPS;
+	}
+
+	var gObj;
+	for(var i = pc.startPage;i <= pc.finalPage;i++){
+		gObj = (i === pc.currentPage) ? make_pagingitem(accum, i, "pg_g-curr", "javascript:do_pageNoClick("+i+")")
+			: make_pagingitem(accum, i, "pg_g", "javascript:do_pageNoClick("+i+")");
+		arPagingObj.push(gObj);
+		accum += pgitemWidth + spacingPP;
+	}
+
+	accum += (spacingPS - spacingPP);
+
+	if(pc.nextSheet !== -1){
+		make_pagingitem(accum, ">", "pg_g", "javascript:do_nextSheetClick()");
+		accum += pgitemWidth + spacingPP;
+
+		if(firstLastBtn === true){
+			make_pagingitem(accum, ">>", "pg_g", "javascript:do_nextSheetClick()");
+			accum += pgitemWidth + spacingPP;
+		}
+	}
+	//alert(svgHeight+":"+p.newinTmp.pgY);
+	pagingGrpObj.setAttribute('transform','translate('+(svgWidth-accum)/2+','+p.newinTmp.pgY+')');
+}
+function make_pagingitem(tx, stitle, clname, shref){
+	var alink = document.createElementNS("http://www.w3.org/2000/svg","a");
+	alink.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",shref);
+	pagingGrpObj.appendChild(alink);
+
+	var gObj = document.createElementNS("http://www.w3.org/2000/svg","g");
+	gObj.setAttribute("class", clname);
+	gObj.setAttribute('transform','translate('+tx+','+0+')');
+
+	var rectObj = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	rectObj.setAttribute("x", 0.5);
+	rectObj.setAttribute("y", 0.5);
+	rectObj.setAttribute("width", pgitemWidth);
+	rectObj.setAttribute("height", pgitemHeight);
+	gObj.appendChild(rectObj);
+
+	var textObj = document.createElementNS("http://www.w3.org/2000/svg","text");
+	textObj.setAttribute("x", 10);
+	textObj.setAttribute("y", 11);
+	var textNode = document.createTextNode(stitle);
+	textObj.appendChild(textNode);
+	gObj.appendChild(textObj);
+
+	if(stitle == ">" || stitle == "<"){
+		textObj.setAttribute("textLength", 5);
+		textObj.setAttribute("lengthAdjust", "spacingAndGlyphs");
+	}
+	else if(stitle == ">>" || stitle == "<<"){
+		textObj.setAttribute("textLength", 10);
+		textObj.setAttribute("lengthAdjust", "spacingAndGlyphs");
+	}
+	alink.appendChild(gObj);
+	return gObj;
+}
+function set_currPaging(){
+	var k = 0;
+	for(var i = pc.startPage;i <= pc.finalPage;i++){
+		if(i === pc.currentPage) arPagingObj[k].setAttribute("class", "pg_g-curr");
+		else arPagingObj[k].setAttribute("class", "pg_g");
+		k++;
+	}
+}
+function refresh_paging(bool){
+	var nodes = pagingGrpObj.childNodes;
+	for(var i = nodes.length-1;i >= 0;i--){
+		pagingGrpObj.removeChild(nodes[i]);
+	}
+	if(bool === true) make_paging();
+}
+
+/// ############################## paging event ############################## ///
+function do_pageNoClick(n){
+	if(get_perm() === false) return;
+	refresh_thumbs(n);
+	set_currPaging();
+}
+function do_firstSheetClick(){
+	if(get_perm() === false) return;
+	refresh_thumbs(1);
+	refresh_paging(true);
+}
+function do_prevSheetClick(){
+	if(get_perm() === false) return;
+	refresh_thumbs(pc.prevSheet);
+	refresh_paging(true);
+}
+function do_nextSheetClick(){
+	if(get_perm() === false) return;
+	refresh_thumbs(pc.nextSheet);
+	refresh_paging(true);
+}
+function do_lastSheetClick(){
+	if(get_perm() === false) return;
+	refresh_thumbs(pc.totalPages);
+	refresh_paging(true);
+}
+function get_perm(){
+	if(p.Action.aniLocking === true || p.Action.drawCondition < -1) return false;
+	return true;
+}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.expSvg = undefined;
+	p.unload_newin(winCnt);
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.befX;
+	var posY = e.clientY - p.clickY + p.befY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.newinDiv.style.left = posX+"px";
+	p.newinDiv.style.top = posY+"px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.befX += e.clientX - p.clickX;
+	p.befY += e.clientY - p.clickY;
+}
+function newin_fullscr(){
+	if(p.MenuInfo.currShowMenu === "explorer"){
+		swap_fullscrimage("restore");
+		p.MenuInfo.currShowMenu = "total";
+		p.calc_totalwindow();
+
+		refresh_thumbs(0);
+		onload_func2();
+		refresh_paging(false);
+	}
+	else{
+		swap_fullscrimage("fullscr");
+		p.MenuInfo.currShowMenu = "explorer";
+		p.calc_expwindow();
+
+		refresh_thumbs(0);
+		onload_func2();
+		refresh_paging(true);
+	}
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<div id="maincnt">
+<svg version="1.1" id="mainsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<filter id="approveMatrix">
+<feColorMatrix in="SourceGraphic" type="matrix" values="0.1 0 0 0 0  0 0.1 0 0 0  0 0 0.1 0 0  0 0 0 1 0" />
+</filter>
+<g id="thumbGrp" transform="translate(8,8)"></g>
+<g id="pagingGrp" transform="translate(8,8)"></g>
+</svg>
+</div>
+
+</body>
+</html>

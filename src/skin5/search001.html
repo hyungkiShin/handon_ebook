@@ -1,0 +1,716 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - search001</title>
+<link rel="stylesheet" type="text/css" href="../main.css">
+<style id="thstyle">
+	html, body{width:100%;height:100%;margin:0;overflow:hidden;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}	
+
+	.bodyP1{background-color:#f7f7f7;}
+
+	.resultxt5m{z-index:2;display:block;position:absolute;left:10px;top:40px;width:auto;height:17px;color:#777777;}
+	.maincnt5m{display:block;z-index:4;position:absolute;left:5px;top:55px;width:100%;height:auto;}
+	.maincnt5m > p{display:block;width:93%;height:33px;margin:2px 3px;border:1px solid #dddddd;background-color:#ffffff;padding:1px 2px;overflow:hidden;line-height:17px;cursor:pointer;}
+
+	.resultxt5d016{z-index:2;display:block;position:absolute;left:10px;top:40px;width:auto;height:17px;color:#777777;}
+	.maincnt5d016{display:block;z-index:4;position:absolute;left:5px;top:55px;width:495px;height:416px;}
+	.maincnt5d016 > p{display:block;width:487px;height:33px;margin:2px 3px;border:1px solid #dddddd;background-color:#ffffff;padding:1px 2px;overflow:hidden;line-height:17px;cursor:pointer;}
+
+	.resultxt5d018{z-index:2;display:block;position:absolute;left:5px;top:40px;width:auto;height:17px;color:#777777;}
+	.maincnt5d018{display:block;z-index:4;position:absolute;left:8px;top:54px;width:495px;height:416px;}
+	.maincnt5d018 > p{display:block;width:487px;height:33px;margin:2px 3px;border:1px solid #dddddd;background-color:#ffffff;padding:1px 2px;overflow:hidden;line-height:17px;cursor:pointer;}
+
+	.resultxt5d001{z-index:2;display:block;position:absolute;left:5px;top:40px;width:auto;height:17px;color:#777777;}
+	.maincnt5d001{display:block;z-index:4;position:absolute;left:0px;top:54px;width:495px;height:416px;}
+	.maincnt5d001 > p{display:block;width:487px;height:33px;margin:2px 3px;border:1px solid #dddddd;background-color:#ffffff;padding:1px 2px;overflow:hidden;line-height:17px;cursor:pointer;}
+
+	/* searchmenu searchtxt */
+	.searchmenu016{display:block;width:155px;height:21px;margin:10px auto 0 auto;}
+	.searchtxt016{display:block;float:left;width:120px;height:19px;margin:0;padding:0;border:1px solid #000000;background-color:#F7F7F7;}
+	.searchbtn016{display:block;float:left;width:31px;height:21px;margin:0 0 0 1px;padding:0;vertical-align:middle;}
+
+	.searchmenu016n{display:block;width:164px;height:17px;margin:14px auto 0 auto;}
+	.searchtxt016n{display:block;float:left;width:120px;height:16px;margin:0;padding:0;border:1px solid #000000;background-color:#F7F7F7;}
+	.searchbtn016n{display:block;float:left;width:30px;height:18px;margin-left:1px;padding:0;vertical-align:middle;}
+	.searchbtnen016n{display:block;float:left;width:41px;height:18px;margin-left:1px;padding:0;vertical-align:middle;}
+
+	#maincnt > p:hover{background-color:#E2F3FE;}
+	.nolist{color:#cccccc;text-align:center;}
+
+	.searchbtn:hover{opacity:0.8;}
+	.searchbtn:active{opacity:1.0;}
+
+	.qfound{color:#ff0000;font-weight:bold;}
+	.qpage{font-weight:bold;}
+
+	#newin_bodybtn{display:block;z-index:6;position:absolute;cursor:pointer;}
+	.newin_bodybtn001, .newin_bodybtn016, .newin_bodybtn018{right:2px;top:476px;}
+	.newin_bodyclosebtn012{right:2px;top:476px;}
+	.newin_bodysendbtn012{right:2px;top:476px;}
+	.newin_bodybtn014, .newin_bodybtn041{right:9px;top:476px;}
+
+	#pagingsvg{display:block;z-index:5;position:absolute;top:453px;height:15px;}
+	.pg_g{cursor:pointer;}
+	.pg_g rect{fill:#F5F5F5;stroke:#333333;}
+	.pg_g:hover > rect{fill:#FFFFD9;stroke:#aaaaaa;}
+	.pg_g:active > rect{fill:#cccccc;stroke:#999999;}
+	.pg_g > text{font-family:Tahoma;font-size:9px;fill:#666666;fill-opacity:1;text-anchor:middle;text-rendering:optimizeLegibility;}
+
+	.pg_g-curr > rect{fill:#777777;stroke:#555555;}
+	.pg_g-curr > text{font-family:Tahoma;font-size:9px;fill:#ffffff;fill-opacity:1;text-anchor:middle;text-rendering:optimizeLegibility;}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "search001.html", winCnt = "search";
+var newin_titletext = "검색결과";
+var svgObj = "searchSvg";
+var plusID = "";
+
+var custom, osearch = "1";
+var sntc = ["검색어 입력","검색 시작"];
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "close";
+var dragGap = 0;
+
+var unifyLoad = false;
+var loadSeq = 0;
+
+var mainDiv, pagingGrpObj;
+var arSearchText, arSearchValu, arSearchIdx;
+var qtxt;
+var pc, colQty = 10;
+var firstLastBtn = true;
+var ispacing = 10;				// thumb bet. page
+var spacingPP = 3;				// page bet. page
+var spacingPS = 5;				// first bet. page
+var pgitemWidth = 19, pgitemHeight = 14;			// paging item
+var arPagingObj = new Array();
+var cutLength = 100;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	custom = ar[4];
+	if(ar.length > 5) osearch = ar[5];
+	if(eclang === "en"){
+		newin_titletext = "Search Result";
+		sntc = ["enter search words","Start search"];
+	}
+
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.searchSvg = this;
+	window.parent.objLoaded2('search', this, false);
+	dragGap = p.WinInfo.get_dragGap(nw2class);
+
+	p.document.getElementById('newin_frame'+plusID).innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+	document.body.insertAdjacentHTML('afterend', getNewinButton(nw2class));
+
+	var s = '<input type="text" id="searchtxt" name="qtxt" title="'+sntc[0]+'">';
+	if(nw2class === "016") s += '<input type="image" id="searchbtn" src="./mm016/search_btn2.png" alt="'+sntc[1]+'">';
+	else s += '<input type="image" id="searchbtn" src="./mm020/search_btn'+lolang+'.png" alt="'+sntc[1]+'">';
+
+	document.getElementById("searchmenu").innerHTML = s;
+
+	mainDiv = document.getElementById("maincnt");
+	pagingGrpObj = document.getElementById('pagingGrp');
+
+	if(incview === "m" || (incview !== "m" && nw2class !== "016")) document.body.className = "bodyP1";
+	if(incview === "m"){
+		document.getElementById("resultxt").className = "resultxt5m";
+		mainDiv.className = "maincnt5m";
+	}
+	else{
+		if(nw2class === "016"){
+			document.getElementById("resultxt").className = "resultxt5d016";
+			mainDiv.className = "maincnt5d016";
+		}
+		else if(nw2class === "018"){
+			document.getElementById("resultxt").className = "resultxt5d018";
+			mainDiv.className = "maincnt5d018";
+		}
+		else{
+			document.getElementById("resultxt").className = "resultxt5d001";
+			mainDiv.className = "maincnt5d001";
+		}
+	}
+
+	if(nw2class === "016"){
+		document.getElementById("searchmenu").className = "searchmenu016";
+		document.getElementById("searchtxt").className = "searchtxt016";
+		document.getElementById("searchbtn").className = "searchbtn016";
+	}
+	else{
+		document.getElementById("searchmenu").className = "searchmenu016n";
+		document.getElementById("searchtxt").className = "searchtxt016n";
+		document.getElementById("searchbtn").className = "searchbtn"+lolang+"016n";
+	}
+
+	qtxt = p.SearchInfo.qtxt;
+	document.searchform.qtxt.value = qtxt;
+
+	if(incview === "d" && p.SearchInfo.showThumb === true){
+		mainDiv.style.height = "400px";
+		document.getElementById("pagingsvg").style.top = "460px";
+	}
+	else if(incview === "m"){
+		mainDiv.style.height = (svgHeight-140)+"px";
+		document.getElementById("pagingsvg").style.top = (svgHeight-80)+"px";
+		document.getElementById("newin_bodybtn").style.top = (svgHeight-60)+"px";
+	}
+	if(osearch == "1") load_search();
+}
+function do_searchSubmit(s){		// from this.searchform
+	if(s == "") return false;
+	if(p.SearchInfo.get_qtxtPatternPerm(s) === false){
+		if(eclang === "en") alert("The search words have characters not allowed");
+		else alert("검색에 허용되지 않는 문자가 있습니다!");
+		return false;
+	}
+
+	qtxt = s;
+	p.SearchInfo.set_qtxt(s);
+
+	var nodes = mainDiv.childNodes;
+	for(var i = nodes.length-1;i >= 0;i--){
+		mainDiv.removeChild(nodes[i]);
+	}
+
+	if(p.SearchInfo.searchMark === true){
+		p.SearchInfo.searchMark = false;
+		p.LinkObj.remove_searchData();
+	}
+
+	refresh_list(0);
+	refresh_paging(false);
+
+	load_search();
+	return false;
+}
+function load_search(){
+	arSearchText = new Array();
+	arSearchValu = new Array();
+	arSearchIdx = new Array();
+
+	if(p.UnifyInfo.classUnify === true){
+		if(p.SearchInfo.oneResultWhenUnify === true){
+			unifyLoad = true;
+			loadSeq = 0;
+			load_unifyData();
+		}
+		else{
+			loadSeq = p.UnifyInfo.get_diridxFromPage(p.PageInfo.currentPage);
+			load_unifyData();
+		}
+	}
+	else{
+		load_currData(p.PageInfo.cataDir);
+	}
+}
+function load_currData(currDir){
+	if(p.SearchInfo.searchMethod === "F"){
+		if(p.FileInfo.existSearchFile === false) after_loadSearchData();
+		else search_txtData(currDir);
+	}
+	else if(p.SearchInfo.searchMethod === "A"){
+		if(p.FileInfo.existSearchFile === false) after_loadSearchData();
+		else search_xmlData(currDir);
+	}
+	else if(p.SearchInfo.searchMethod === "U") search_urlData(currDir);
+	else if(p.SearchInfo.searchMethod === "C") load_bookData(currDir)
+}
+
+// 폴더통합시
+function load_unifyData(){
+	var currDir = p.UnifyInfo.arDir[loadSeq];
+	var md = p.UnifyInfo.arSearchMethod[currDir];
+
+	// 파일 유무는 미리 검사하기 때문에 여기서는 필요없음.
+	if(md === "F") search_txtData(currDir);
+	else if(md === "A") search_xmlData(currDir);
+	else if(md === "U") search_urlData(currDir);
+	else if(md === "C") search_bookData(currDir);
+	else do_afterSearchDataLoaded();
+}
+
+function search_txtData(sdir){
+	var urlstr = p.FileInfo.dirFilePath("search.txt",sdir,"*");
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("GET", urlstr);
+	if(xmlHttp.overrideMimeType) xmlHttp.overrideMimeType("text/plain; charset=utf-8");
+	xmlHttp.onreadystatechange = function(){
+		if(xmlHttp.readyState != 4) return;			// 0:unset, 1:opened, 2:headers_received, 3:loading, 4:done
+		if(xmlHttp.status == 200){
+			var restr = xmlHttp.responseText.replace(/^\s*|\s*$/g, '');				// front and rear's white space
+			var lines = restr.split("\n");
+			var alen = lines.length;
+
+			var tstr, pos, spage, stext;
+			var k = 0;
+			for(var i = 0;i < alen;i++){
+				tstr = lines[i].trim();
+				if(tstr === "") continue;
+
+				pos = tstr.indexOf(":");
+				if(pos === -1) continue;
+
+				spage = tstr.substr(0, pos);
+				if(spage === "") continue;
+
+				stext = tstr.substr(pos+1);
+				if(has_searchTxt(stext) === false) continue;
+
+				arSearchText[k] = stext;
+				arSearchValu[k] = spage;
+				arSearchIdx[k] = 0;		// Dir's index when Unify
+				k++;
+			}
+			after_loadSearchData();
+			console.log("search001.html : "+urlstr+" : "+xmlHttp.readyState);
+		}
+		else{
+			console.log("[Error] search001.html : "+urlstr+" : "+xmlHttp.status);
+		}
+	}
+	xmlHttp.send();
+}
+function search_xmlData(sdir){
+	var urlstr = p.FileInfo.dirFilePath("search"+p.FileInfo.xmlExt,sdir,"*");
+	if(p.CataInfo.cdmake === true) urlstr = "."+urlstr;
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("GET", urlstr);
+	if(xmlHttp.overrideMimeType) xmlHttp.overrideMimeType("text/plain; charset=utf-8");
+	xmlHttp.onreadystatechange = function(){
+		if(xmlHttp.readyState != 4) return;			// 0:unset, 1:opened, 2:headers_received, 3:loading, 4:done
+		if(xmlHttp.status == 200){
+			var restr = xmlHttp.responseText.replace(/^\s*|\s*$/g, '');				// front and rear's white space
+			restr = restr.replace(/>\s*/g, '>');				// front and rear's white space of >
+			restr = restr.replace(/\s*</g, '<');				// front and rear's white space of <
+
+			var strRegex = new RegExp("<page>([\\s\\S]*?)<\\/page>","gi");
+			var noRegex = new RegExp("<no>(.*?)<\\/no>","m");
+			var shRegex = new RegExp("<search>(.*?)<\\/search>","m");
+			var cdRegex = /<!\[CDATA\[(.*?)]]>/;
+
+			var match, matchstr, noMatch, shMatch, cdMatch;
+			var spage, stext, k = 0;
+			while((match = strRegex.exec(restr)) != null){
+				matchstr = match[1];
+
+				noMatch = noRegex.exec(matchstr);
+				if(noMatch == null) continue;
+				spage = noMatch[1];
+
+				shMatch = shRegex.exec(matchstr);
+				if(shMatch == null) continue;
+				stext = shMatch[1];
+
+				cdMatch = cdRegex.exec(stext);
+				if(cdMatch != null) stext = cdMatch[1];
+
+				if(spage == "" || stext == "") continue;
+				if(has_searchTxt(stext) === false) continue;
+
+				arSearchText[k] = stext;
+				arSearchValu[k] = spage;
+				arSearchIdx[k] = 0;		// Dir's index when Unify
+				k++;			
+			}
+			after_loadSearchData();
+			console.log("search001.html : "+urlstr+" : "+xmlHttp.readyState);
+		}
+		else{
+			console.log("[Error] search001.html : "+urlstr+" : "+xmlHttp.status);
+		}
+	}
+	xmlHttp.send();
+}
+
+function search_urlData(){
+	var urlstr = p.SearchInfo.searchUrl+"?catimage="+p.CataInfo.catimage+"&sdir="+p.PageInfo.cataDir+"&qstr="+qtxt;
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("GET", urlstr);
+	if(xmlHttp.overrideMimeType) xmlHttp.overrideMimeType("text/plain; charset=utf-8");
+	xmlHttp.onreadystatechange = function(){
+		if(xmlHttp.readyState != 4) return;			// 0:unset, 1:opened, 2:headers_received, 3:loading, 4:done
+		if(xmlHttp.status == 200){
+			var restr = xmlHttp.responseText.replace(/^\s*|\s*$/g, '');				// front and rear's white space
+			var lines = restr.split("\n");
+			var alen = lines.length;
+
+			var tstr, pos, spage;
+			var k = 0;
+			for(var i = 0;i < alen;i++){
+				tstr = lines[i].trim();
+				if(tstr === "") continue;
+
+				pos = tstr.indexOf(":");
+				if(pos === -1) continue;
+
+				spage = tstr.substr(0, pos);
+				if(spage === "") continue;
+
+				arSearchText[k] = tstr.substr(pos+1);
+				arSearchValu[k] = spage;
+				arSearchIdx[k] = 0;		// Dir's index when Unify
+				k++;
+			}
+			after_loadSearchData();
+			console.log("search001.html : "+urlstr+" : "+xmlHttp.readyState);
+		}
+		else{
+			console.log("[Error] search001.html : "+urlstr+" : "+xmlHttp.status);
+		}
+	}
+	xmlHttp.send();
+}
+function load_bookData(sdir){
+	arSearchText = new Array();
+	arSearchValu = new Array();
+	arSearchIdx = new Array();
+
+	var lines = p.BookInfo.arSearch[sdir];
+	var alen = lines.length;
+
+	var tstr, pos;
+	var k = 0;
+	for(var i = 0;i < alen;i++){
+		if(!lines[i]) continue;
+
+		tstr = lines[i];
+		if(tstr == "") continue;
+
+		pos = tstr.indexOf(qtxt);
+		if(pos === -1) continue;
+
+		arSearchText[k] = tstr;
+		arSearchValu[k] = i + 1;
+		arSearchIdx[k] = 0;		// Dir's index when Unify
+		k++;
+	}
+	after_loadSearchData();
+}
+
+function has_searchTxt(s){
+	for(var i = 0;i < p.SearchInfo.arqtxt.length;i++){
+		if(p.SearchInfo.distinctCase === true){
+			if(s.indexOf(p.SearchInfo.arqtxt[i]) === -1) return false;
+		}
+		else{
+			if(s.toLowerCase().indexOf(p.SearchInfo.arqtxt[i].toLowerCase()) === -1) return false;
+		}
+	}
+	return true;
+}
+function after_loadSearchData(){
+	if(unifyLoad === true){
+		loadSeq++;
+		if(loadSeq < p.UnifyInfo.dirLen){
+			load_unifyData();
+			return;
+		}
+		else{
+			unifyLoad = false;
+		}
+	}
+
+	var alen = arSearchText.length;
+	document.getElementById('resultxt').innerHTML = "<span class='qfound'>'"+qtxt+"'</span>에 대한 검색결과 "+alen+"개";
+
+	if(alen === 0){
+		make_noList();
+	}
+	else{	
+		pc = new p.PagingCont();
+		pc.totalArticles = alen;
+		pc.set_articlesOnPage(colQty);
+		pc.set_pagesOnSheet(10);
+		pc.set_currentPage(1);
+
+		make_textList();
+		make_paging();
+	}
+}
+
+/// ############################## list ############################## ///
+function make_textList(){
+	var alen = p.SearchInfo.arqtxt.length;
+	var spage, rpage, npage, tstr, pos, obj, res;
+	var j, k, clen, qlen, restr;
+	for(var i = pc.startArticle;i <= pc.finalArticle;i++){
+		spage = arSearchValu[i];
+		res = arSearchText[i];
+		if(res == "") continue;
+
+		restr = "";
+		if(p.SearchInfo.distinctCase === true){
+			tstr = p.SearchInfo.arqtxt[0];
+			pos = res.indexOf(tstr);
+			if(pos >= 0) res = get_showText(res, pos);
+
+			for(j = 0;j < alen;j++){
+				tstr = p.SearchInfo.arqtxt[j];
+				res = res.replace(tstr, "<span class='qfound'>"+tstr+"</span>");
+			}
+			restr = res;
+		}
+		else{
+			tstr = p.SearchInfo.arqtxt[0].toLowerCase();
+			pos = res.toLowerCase().indexOf(tstr);
+			if(pos >= 0) res = get_showText(res, pos);
+
+			clen = res.length;
+			for(k = 0;k < clen;k++){
+				bool = false;
+				for(j = 0;j < alen;j++){
+					tstr = p.SearchInfo.arqtxt[j];
+					qlen = tstr.length;
+					if(res.substr(k,qlen).toLowerCase() === tstr.toLowerCase()){
+						restr += "<span class='qfound'>"+res.substr(k,qlen)+"</span>";
+						k += qlen;
+						bool = true;
+						break;
+					}
+				}
+				if(bool === false) restr += res.substr(k,1);
+			}
+		}
+
+		rpage = spage;
+		if(p.PageInfo.pageshowKind !== "filename"){
+			npage = parseInt(spage);
+			if(p.UnifyInfo.classUnify === true) npage = p.UnifyInfo.get_virtualNumber(npage, -1);
+			rpage = p.PageInfo.get_showPage(npage);
+		}
+
+		obj = document.createElement("p");
+		obj.setAttribute("onclick", "do_itemClick('"+spage+"')");
+		if(spage === "") obj.innerHTML = restr;
+		else obj.innerHTML = "<span class='qpage'>["+rpage+"페이지]</span> "+ restr;
+		mainDiv.appendChild(obj);
+	}
+}
+function make_noList(){
+	document.getElementById('resultxt').innerHTML = "<span class='qfound'>'"+qtxt+"'</span>에 대한 검색결과 0개";
+	var obj = document.createElement("p");
+	obj.className = "nolist";
+	obj.innerHTML = "'"+qtxt+"'에 대한 검색결과가 없습니다.";
+	mainDiv.appendChild(obj);
+}
+function refresh_list(n){
+	if(pc && n == pc.currentPage) return;
+
+	var nodes = mainDiv.childNodes;
+	for(var i = nodes.length-1;i >= 0;i--){
+		mainDiv.removeChild(nodes[i]);
+	}
+
+	if(n == 0) return;
+
+	pc.set_currentPage(n);
+	make_textList();
+}
+function get_showText(str, pos){		// 현재 검색된 검색어를 중심으로 앞뒤로 50씩 100문자만 보여주기
+	var res = str;
+	var clen = str.length;
+	if(clen <= cutLength) return res;
+
+	var starti = pos - cutLength/2;
+	if(starti < 0) starti = 0;
+
+	var endi = starti + cutLength;
+	if(endi > clen) endi = clen;
+
+	if(starti === 0) res = str.substr(0, endi);
+	else res = "..." + str.substring(starti, endi);
+
+	if(endi !== clen) res += "...";
+
+	return res;
+}
+
+/// ############################## paging ############################## ///
+function make_paging(){
+	var gObj;
+	var accum = 0;
+	if(pc.prevSheet !== -1){
+		if(firstLastBtn === true){
+			gObj = make_pagingitem(accum, "<<", "pg_g");
+			gObj.setAttribute("onclick", "do_firstSheetClick()");
+			accum += 19 + spacingPS;
+		}
+
+		gObj = make_pagingitem(accum, "<", "pg_g");
+		gObj.setAttribute("onclick", "do_prevSheetClick()");
+		accum += 19 + spacingPS;
+	}
+
+	for(var i = pc.startPage;i <= pc.finalPage;i++){
+		gObj = (i === pc.currentPage) ? make_pagingitem(accum, i, "pg_g-curr") : make_pagingitem(accum, i, "pg_g");
+		gObj.setAttribute("onclick", "do_pageNoClick("+i+")");
+		arPagingObj.push(gObj);
+		accum += 19 + spacingPP;
+	}
+
+	accum += (spacingPS - spacingPP);
+
+	if(pc.nextSheet !== -1){
+		gObj = make_pagingitem(accum, ">", "pg_g");
+		gObj.setAttribute("onclick", "do_nextSheetClick()");
+		accum += 19 + spacingPP;
+
+		if(firstLastBtn === true){
+			gObj = make_pagingitem(accum, ">>", "pg_g");
+			gObj.setAttribute("onclick", "do_nextSheetClick()");
+			accum += 19 + spacingPP;
+		}
+	}
+
+	document.getElementById("pagingsvg").style.left = (svgWidth-accum)/2 + "px";
+	//set_currPaging();
+}
+function make_pagingitem(tx, stitle, clname){
+	var gObj = document.createElementNS("http://www.w3.org/2000/svg","g");
+	gObj.setAttribute("class", clname);
+	gObj.setAttribute('transform','translate('+tx+','+0+')');
+
+	var rectObj = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	rectObj.setAttribute("x", 0.5);
+	rectObj.setAttribute("y", 0.5);
+	rectObj.setAttribute("width", 19);
+	rectObj.setAttribute("height", 14);
+	gObj.appendChild(rectObj);
+
+	var textObj = document.createElementNS("http://www.w3.org/2000/svg","text");
+	textObj.setAttribute("x", 10);
+	textObj.setAttribute("y", 11);
+	var textNode = document.createTextNode(stitle);
+	textObj.appendChild(textNode);
+	gObj.appendChild(textObj);
+
+	if(stitle === ">" || stitle === "<"){
+		textObj.setAttribute("textLength", 5);
+		textObj.setAttribute("lengthAdjust", "spacingAndGlyphs");
+	}
+	else if(stitle === ">>" || stitle === "<<"){
+		textObj.setAttribute("textLength", 10);
+		textObj.setAttribute("lengthAdjust", "spacingAndGlyphs");
+	}
+
+	pagingGrpObj.appendChild(gObj);
+	return gObj;
+}
+function set_currPaging(){
+	var k = 0;
+	for(var i = pc.startPage;i <= pc.finalPage;i++){
+		if(i === pc.currentPage) arPagingObj[k].setAttribute("class", "pg_g-curr");
+		else arPagingObj[k].setAttribute("class", "pg_g");
+		k++;
+	}
+}
+function refresh_paging(bool){
+	var nodes = pagingGrpObj.childNodes;
+	for(var i = nodes.length-1;i >= 0;i--){
+		pagingGrpObj.removeChild(nodes[i]);
+	}
+	if(bool === true) make_paging();
+}
+
+/// ############################## mouse event ############################## ///
+function do_itemClick(spno){
+	p.SearchInfo.searchMark = true;
+	var n = p.PermitMan.get_directGoPerm("search", spno, "", "search");			// device, spage, pageshow, state
+	if(n === -2){				// current page
+		p.show_searchResult();
+	}
+	else if(n < 0){
+		console.log("[Error] search001.html : page conversion(string to int) is failed");
+		return;
+	}
+	else{
+		p.go_general(n, "system");
+	}
+	if(incview === "m") newin_close();
+}
+function do_pageNoClick(n){
+	if(get_perm() === false) return;
+	refresh_list(n);
+	set_currPaging();
+}
+function do_firstSheetClick(){
+	if(get_perm() === false) return;
+	refresh_list(1);
+	refresh_paging(true);
+}
+function do_prevSheetClick(){
+	if(get_perm() === false) return;
+	refresh_list(pc.prevSheet);
+	refresh_paging(true);
+}
+function do_nextSheetClick(){
+	if(get_perm() === false) return;
+	refresh_list(pc.nextSheet);
+	refresh_paging(true);
+}
+function do_lastSheetClick(){
+	if(get_perm() === false) return;
+	refresh_list(pc.totalPages);
+	refresh_paging(true);
+}
+function get_perm(){
+	if(p.Action.aniLocking === true || p.Action.drawCondition < -1) return false;
+	return true;
+}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.searchSvg = undefined;
+	p.unload_newin(winCnt);
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.befX;
+	var posY = e.clientY - p.clickY + p.befY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.newinDiv.style.left = posX+"px";
+	p.newinDiv.style.top = posY+"px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.befX += e.clientX - p.clickX;
+	p.befY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<div id="resultxt"></div>
+
+<!-- search menu -->
+<form name="searchform" method="get" action="#" onsubmit="return do_searchSubmit(document.searchform.qtxt.value)">
+<div id="searchmenu"></div>
+</form>
+
+<div id="maincnt"></div>
+
+<svg version="1.1" id="pagingsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="pagingGrp"></g>
+</svg>
+
+</body>
+</html>

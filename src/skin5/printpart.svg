@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onload="onload_func()">
+<script type="application/ecmascript"><![CDATA[
+var selfName = "printpart.svg";
+var p;
+var selcRect;
+var downKind = 0;
+var tempX, tempY, tempW, tempH;
+var encX, encY;
+var snapping = 10;		// snapping points within the margin
+
+function onload_func(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+	p.partprintSvg = this;
+	window.parent.objLoaded2('partprint', this, false);
+
+	selcRect = document.getElementById("selcrect");
+}
+
+document.addEventListener("mousedown", function(e){
+	set_similarPoint(e.clientX, e.clientY);
+
+	downKind = 1;
+
+	selcRect.setAttribute("x", tempX-2.5);
+	selcRect.setAttribute("y", tempY-2.5);
+}, false);
+document.addEventListener("mousemove", function(e){
+	e.preventDefault();
+	if(downKind != 1) return;
+
+	tempW = e.clientX - tempX;
+	tempH = e.clientY - tempY;
+	selcRect.setAttribute("width", tempW);
+	selcRect.setAttribute("height", tempH);
+}, false);
+document.addEventListener("mouseup", function(e){
+	e.preventDefault();
+	var endX = tempX + tempW;
+	var endY = tempY + tempH;
+
+	if(tempX === endX || tempY === endY) return;
+
+	// coordinate through left and right image
+	if(p.Action.drawCondition === 0){
+		if(p.ScreenInfo.onesmc === false && tempX < p.smRect.centerPt.x && endX > p.smRect.centerPt.x){
+			if(p.CataInfo.cataLang == "en") alert('The point should not lie across the left and right pages.');
+			else alert('좌/우 페이지에 걸쳐서 설정하실 수 없습니다.');
+			return;
+		}
+	}
+	else if(p.Action.togetherEnlarge === true){
+		encX = p.ScreenInfo.bigImageRect.x;
+		if(tempX < (encX+p.ScreenInfo.bigImageWidth) && endX > (encX+p.ScreenInfo.bigImageWidth)){
+			if(p.CataInfo.cataLang == "en") alert('The point should not lie across the left and right pages.');
+			else alert('좌/우 페이지에 걸쳐서 설정하실 수 없습니다.');
+			return;
+		}
+	}
+
+	var confstr = (p.CataInfo.cataLang == "en") ? "The Area is selected. Would you like to continue?" : "영역을 선택하셨습니다. 계속하시겠습니까?";
+	if(!confirm(confstr)){
+		if(p.Action.mainState === "capture") p.MenuObj.swap_captureImg(false);
+		p.PrintInfo.partPrint = false;
+		p.unload_partprint(false);
+		return;
+	}
+
+	var pno = 0;
+	if(p.Action.drawCondition == 0){
+		pno = (tempX < p.smRect.centerPt.x) ? p.PageInfo.currentPage : p.PageInfo.currentPage+1;
+	}
+	else{
+		if(p.Action.togetherEnlarge == true){
+			pno = (tempX < (encX+p.ScreenInfo.bigImageWidth)) ? p.PageInfo.currentPage : p.PageInfo.currentPage+1;
+		}
+		else if(p.Action.drawCondition == 10){
+			pno = p.PageInfo.currentPage;
+		}
+		else if(p.Action.drawCondition == 11){
+			pno = p.PageInfo.currentPage+1;
+		}
+	}
+
+	var ax, ay, w, h, ratio;
+	if(p.Action.drawCondition === 0){
+		ratio = p.ScreenInfo.bigImageOriWidth / p.ScreenInfo.smImageWidth;
+		ax = (tempX < p.smRect.centerPt.x) ? Math.floor((tempX-p.smRect.x)*ratio) : Math.floor((tempX-p.smRect.centerPt.x)*ratio);
+		ay = Math.floor((tempY - p.smRect.y)*ratio);
+	}
+	else{
+		ratio = p.ScreenInfo.bigImageOriWidth / p.ScreenInfo.bigImageWidth;
+		if(p.Action.togetherEnlarge == true){
+			ax = (tempX < (encX+p.ScreenInfo.bigImageWidth)) ? Math.floor((tempX-encX)*ratio) : Math.floor((tempX-encX-p.ScreenInfo.bigImageWidth)*ratio);
+		}
+		else{
+			ax = Math.floor((tempX - encX) * ratio);
+		}
+
+		encY = p.ScreenInfo.bigImageRect.y;
+		ay = Math.floor((tempY - encY) * ratio);
+	}
+
+	w = Math.floor((endX-tempX) * ratio);
+	h = Math.floor((endY-tempY) * ratio);
+
+	p.PrintInfo.partX = ax;
+	p.PrintInfo.partY = ay;
+	p.PrintInfo.partWidth = w;
+	p.PrintInfo.partHeight = h;
+
+	p.PrintInfo.frPageNo = pno;
+	p.PrintInfo.toPageNo = 0;
+	p.PrintInfo.partPrint = true;
+
+	p.unload_partprint(true);
+	downKind = 0;
+}, false);
+
+function set_similarPoint(ax, ay){
+	if(p.Action.drawCondition === 0){
+		if(ax <= p.smRect.x+snapping){
+			tempX = p.smRect.x;
+		}
+		else if(ax <= p.smRect.centerPt.x+snapping && ax >= p.smRect.centerPt.x-snapping){
+			tempX = p.smRect.centerPt.x;
+		}
+		else if(ax >= p.smRect.right-snapping){
+			tempX = p.smRect.right;
+		}
+		else{
+			tempX = ax;
+		}
+
+		if(ay <= p.smRect.y+snapping){
+			tempY = p.smRect.y;
+		}
+		else if(ay >= p.smRect.bottom-snapping){
+			tempY = p.smRect.bottom;
+		}
+		else{
+			tempY = ay;
+		}
+	}
+	else{
+		if(ax < encX) tempX = encX;
+		else if(ax > (encX+p.ScreenInfo.bigImageRect.width)) tempX = encX + p.ScreenInfo.bigImageRect.width;
+		else tempX = ax;
+
+		if(ay < encY) tempY = encY;
+		else if(ay > (encY+p.ScreenInfo.bigImageRect.height)) tempY = encY + p.ScreenInfo.bigImageRect.height;
+		else tempY = ay;
+	}
+}
+]]></script>
+
+<rect id="selcrect" x="0" y="0" width="1" height="1" fill="#FFFFFF" fill-opacity="0.4" stroke="#000000" stroke-width="0.5" />
+
+</svg>

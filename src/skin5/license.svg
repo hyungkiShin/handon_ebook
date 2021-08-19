@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onload="onload_func()">
+<script type="application/ecmascript"><![CDATA[
+var selfName = "lisense.svg", winCnt = "license";
+var svgWidth, svgHeight;
+var p;
+
+var licenseVersion = 8;
+var cataSerial = "FI000014120005";
+var arLicense = ["MTAyIDExNCAxMDEgMTAx",
+"NDkgNTAgNTUgNDYgNDggNDYgNDggNDYgNDk=",		// 127.0.0.1
+"NDkgNTcgNTAgNDYgNDkgNTQgNTYgNDYgNDggNDYgNDkgNTEgNTY=",			// 192.168.0.138
+"NDkgNTcgNTAgNDYgNDkgNTQgNTYgNDYgNDggNDYgNDkgNDkgNDg=",			// 192.168.0.110
+"NDkgNTAgNDkgNDYgNDkgNTIgNTEgNDYgNTYgNTYgNDYgNTMgNTU=",			// 121.143.88.57
+"MTA4IDExMSA5OSA5NyAxMDggMTA0IDExMSAxMTUgMTE2"];				// localhost
+
+function onload_func(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+	p.licenseSvg = this;
+	window.parent.objLoaded('license', this);
+
+	arLicense.push("MTA0IDEwNSA0NSAxMTkgMTA1IDEwMiAxMDUgNDYgMTA3IDExNA==");
+
+	p.after_loadLicense();
+}
+
+function check_domain(){
+	p.CataInfo.cataSerial = cataSerial;
+	p.CataInfo.checkDomain = true;
+	p.CataInfo.useProtocol = document.location.protocol;
+
+	var s = document.location.href;
+	var idx = s.indexOf(":");
+	var protocol = s.substr(0, idx);
+	if(protocol === "file") return true;
+
+	idx = s.indexOf("/");
+	var dmain = s.substring(idx+2, s.indexOf("/",idx+3));
+
+	idx = dmain.indexOf(":");						// port
+	if(idx > 0){
+		dmain = dmain.substring(0,idx);
+		p.CataInfo.usePort = dmain.substr(idx+1);
+	}
+	p.CataInfo.useDomain = dmain;
+
+	var i, k = 0;
+	var alen = arLicense.length;
+	for(i = 0;i < alen;i++){
+		p.CataInfo.licenseDomain[k++] = p.license_decode(arLicense[i]);
+	}
+
+	if(p.CataInfo.licenseDomain[0] === "free") return true;
+
+	var strlen = dmain.length;
+	var str;
+	for(i = 0;i < alen;i++){
+		str = p.CataInfo.licenseDomain[i];
+		if(dmain.substring(strlen-str.length, strlen) === str) return true;
+	}
+
+	alert(p.CataInfo.useDomain + " is not a license domain!");
+	return false;
+	//return true;
+}
+function check_version(){
+	var majorVer = parseInt(p.CataInfo.cataVersion.substr(0,1));
+	if(licenseVersion < majorVer){
+		alert(p.CataInfo.cataVersion + " is not a license version(" + licenseVersion + "!");
+		return false;
+	}
+	return true;
+}
+]]></script>
+
+</svg>

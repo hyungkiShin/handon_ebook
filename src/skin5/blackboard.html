@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - blackboard</title>
+<style id='thstyle'>
+	html, body{width:100%;height:100%;margin:0;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}
+	#thcanvas{display:block;position:absolute;z-index:1;}
+	#nwsvg{display:block;position:absolute;z-index:2;width:0px;height:0px;}
+</style>
+<script>
+var selfName = "blackboard.html", winCnt = "blackboard";
+var p;		// = {BBwObj:{currMenu:'pen', defColor:'#000000', penThick:5}};
+var bbCnv, cntx, nwSvg, plineObj;
+var seq = 0;
+
+var currX, currY;
+var stageWidth, stageHeight;
+var downKind = 0;
+var tempPt = [];
+var ardrawObj = [], arundoObj = [];
+
+function drawObj(n6, n1, a2, n3, s4, n5){
+	this.npage = n6;
+	this.nkd = n1;						// 1: free pen, 2: line, 3: rectangle, 4: circle, 5: erase, 6: free highlighter
+	this.points = a2;
+	this.thick = n3;
+	this.pencol = s4;
+	this.cwidth = n5;
+}
+drawObj.prototype.toString = function(){
+	var s = this.npage + "\t" + this.nkd + "\t" + this.points.join(",") + "\t" + this.thick + "\t" + this.pencol + "\t" + this.cwidth;
+	return s;
+}
+
+function onload_func(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+	p.bboardSvg = this;
+	window.parent.objLoaded2('blackboard', this, false);
+
+	stageWidth = window.innerWidth;
+	stageHeight = window.innerHeight;
+
+	nwSvg = document.getElementById('nwsvg');
+	bbCnv = document.getElementById('thcanvas');
+	bbCnv.width = stageWidth;
+	bbCnv.height = stageHeight;
+	cntx = bbCnv.getContext("2d");
+
+	if(p.CataInfo.incview === "m"){
+		document.addEventListener("touchstart", do_touchstart, false);
+		document.addEventListener("touchmove", do_touchmove, false);
+		document.addEventListener("touchend", do_mouseup, false);
+	}
+	else{
+		document.addEventListener("mousedown", do_mousedown, false);
+		document.addEventListener("mousemove", do_mousemove, false);
+		document.addEventListener("mouseup", do_mouseup, false);
+	}
+
+	if(p.BBwObj.bbwsData !== "") show_boardData();
+	p.bbwDiv.style.visibility = "visible";		// because of blinking moved from load_blackboard()
+}
+function prepare_turnover(){
+	store_boardData();
+	ardrawObj.length = 0;
+	arundoObj.length = 0;
+}
+function set_location(aw, ah){
+	stageWidth = aw;
+	stageHeight = ah;
+	bbCnv.width = stageWidth;
+	bbCnv.height = stageHeight;
+	draw_boardData();
+}
+
+/// ############################## bbws ############################## ///
+function show_boardData(){
+	var obj, tstr, pos, arstr, nkd, tar, npage;
+	var bbws = p.BBwObj.bbwsData[0] + p.BBwObj.bbwsData[1];
+	var lines = bbws.split("\n");
+	var alen = lines.length - 1;
+	for(var i = 0;i < alen;i++){
+		tstr = lines[i];
+		if(tstr === "") continue;
+
+		pos = tstr.indexOf("\t");
+		if(pos === -1) continue;
+
+		arstr = tstr.split("\t");
+		tar = arstr[2].split(",");
+
+		obj = new drawObj(parseInt(arstr[0]), parseInt(arstr[1]), tar.map(parseInt10), parseInt(arstr[3]), arstr[4], parseInt(arstr[5]));
+		ardrawObj.push(obj);
+	}
+	draw_boardData();
+}
+function draw_boardData(){
+	cntx.clearRect(0, 0, stageWidth, stageHeight);
+
+	var j, obj, r, t1, t2, addx;
+	for(var i = 0;i < ardrawObj.length;i++){
+		obj = ardrawObj[i];
+		cntx.globalAlpha = (obj.nkd === 6) ? p.BBwObj.hlgAlpha : 1;
+		r = (p.BBwInfo.loc === "win") ? stageWidth / obj.cwidth : p.ScreenInfo.smImageWidth / obj.cwidth;
+		addx = (p.BBwInfo.loc === "smcsync" && p.ScreenInfo.onesmc === false && obj.npage === p.BBwObj.currPage+1) ? p.ScreenInfo.smImageWidth : 0;
+
+		if(obj.nkd === 1 || obj.nkd === 6){
+			cntx.beginPath();
+			cntx.globalCompositeOperation = "source-over";
+			cntx.strokeStyle = obj.pencol;
+			cntx.lineWidth = obj.thick;
+			cntx.lineJoin = "round";
+			cntx.moveTo(Math.floor(addx+obj.points[0]*r), Math.floor(obj.points[1]*r));
+			for(j = 2;j < obj.points.length;j+=2){
+				cntx.lineTo(Math.floor(addx+obj.points[j]*r), Math.floor(obj.points[j+1]*r));
+			}
+			cntx.stroke();
+		}
+		else if(obj.nkd === 2){
+			cntx.beginPath();
+			cntx.globalCompositeOperation = "source-over";
+			cntx.strokeStyle = obj.pencol;
+			cntx.lineWidth = obj.thick;
+			cntx.lineJoin = "round";
+			cntx.moveTo(Math.floor(addx+obj.points[0]*r), Math.floor(obj.points[1]*r));
+			cntx.lineTo(Math.floor(addx+obj.points[2]*r), Math.floor(obj.points[3]*r));
+			cntx.stroke();
+		}
+		else if(obj.nkd === 3){
+			cntx.beginPath();
+			cntx.globalCompositeOperation = "source-over";
+			cntx.strokeStyle = obj.pencol;
+			cntx.lineWidth = obj.thick;
+			cntx.lineJoin = "round";
+			t1 = Math.floor(addx+obj.points[0]*r);
+			t2 = Math.floor(obj.points[1]*r);
+			cntx.rect(t1, t2, Math.floor(addx+obj.points[2]*r)-t1, Math.floor(obj.points[3]*r)-t2);
+			cntx.stroke();
+		}
+		else if(obj.nkd === 4){
+			t1 = obj.points[2] - obj.points[0];
+			t2 = obj.points[3] - obj.points[1];
+			var cr = Math.floor(Math.sqrt(t1*t1+t2*t2)*r/2);
+			var cx = Math.floor(addx+(obj.points[0]+obj.points[2])*r/2);
+			var cy = Math.floor((obj.points[1]+obj.points[3])*r/2);
+
+			cntx.beginPath();
+			cntx.globalCompositeOperation = "source-over";
+			cntx.strokeStyle = obj.pencol;
+			cntx.lineWidth = obj.thick;
+			cntx.lineJoin = "round";
+			cntx.arc(cx, cy, cr, 0, 2*Math.PI);
+			cntx.stroke();
+		}
+		else if(obj.nkd === 5){
+			cntx.beginPath();
+			cntx.globalCompositeOperation = "destination-out";
+			cntx.strokeStyle = "rgba(0,0,0,1.0)";
+			cntx.lineWidth = obj.thick;
+			cntx.lineJoin = "round";
+			cntx.moveTo(Math.floor(addx+obj.points[0]*r), Math.floor(obj.points[1]*r));
+			for(j = 2;j < obj.points.length;j+=2){
+				cntx.lineTo(Math.floor(addx+obj.points[j]*r), Math.floor(obj.points[j+1]*r));
+			}
+			cntx.stroke();
+		}
+	}
+}
+function store_boardData(){
+	var obj, s = "", s2 = "";
+	if(p.BBwInfo.loc === "win"){
+		for(var i = 0;i < ardrawObj.length;i++){
+			s += ardrawObj[i].toString() + "\n";
+		}
+	}
+	else{
+		for(var i = 0;i < ardrawObj.length;i++){
+			if(p.ScreenInfo.onesmc === false && ardrawObj[i].npage === p.BBwObj.currPage+1) s2 += ardrawObj[i].toString() + "\n";
+			else s += ardrawObj[i].toString() + "\n";
+		}
+	}
+
+	if(s === ""){
+		if(p.BBwObj.bbwsData[0] !== "") p.BBwObj.remove_data("bbws", p.BBwObj.currPage, undefined);
+	}
+	else{
+		if(s !== p.BBwObj.bbwsData[0]) p.BBwObj.save_data("bbws", p.BBwObj.currPage, s, undefined);
+	}
+
+	if(p.BBwInfo.loc === "smcsync" && p.ScreenInfo.onesmc === false){
+		if(s2 === ""){
+			if(p.BBwObj.bbwsData[1] !== "") p.BBwObj.remove_data("bbws", p.BBwObj.currPage+1, undefined);
+		}
+		else{
+			if(s2 !== p.BBwObj.bbwsData[1]) p.BBwObj.save_data("memo", p.BBwObj.currPage+1, s2, undefined);
+		}
+	}
+}
+
+/// ############################## command ############################## ///
+function erase_all(){
+	ardrawObj.length = 0;
+	arundoObj.length = 0;
+
+	p.BBwObj.remove_data("bbws", p.BBwObj.currPage, undefined);
+	if(p.ScreenInfo.onesmc === false) p.BBwObj.remove_data("bbws", p.BBwObj.currPage+1, undefined);
+
+	cntx.clearRect(0, 0, stageWidth, stageHeight);
+}
+function undo_command(){
+	if(ardrawObj.length === 0) return;
+	var popped = ardrawObj.pop();
+	arundoObj.push(popped);
+	store_boardData();
+	draw_boardData();
+}
+function redo_command(){
+	if(arundoObj.length === 0) return;
+	var popped = arundoObj.pop();
+	ardrawObj.push(popped);
+	store_boardData();
+	draw_boardData();
+}
+function parseInt10(s){
+	return parseInt(s, 10);
+}
+function minus_smWidth(ar){
+	for(var i = 0;i < ar.length;i+=2){
+		ar[i] -= p.ScreenInfo.smImageWidth;
+	}
+}
+
+/// ############################## mouse event ############################## ///
+function do_mousedown(e){
+	do_mousedown2(e.clientX, e.clientY);
+}
+function do_touchstart(e){
+	do_mousedown2(e.touches[0].clientX, e.touches[0].clientY);
+}
+function do_mousedown2(tx, ty){
+	if(p.BBwObj.currMenu === "bbwpen" || p.BBwObj.currMenu === "bbwhlg"){
+		tempPt.push(tx, ty);
+		downKind = (p.BBwObj.currMenu === "bbwpen") ? 1 : 6;
+
+		nwSvg.style.width = stageWidth + "px";
+		nwSvg.style.height = stageHeight + "px";
+
+		plineObj = document.createElementNS("http://www.w3.org/2000/svg","polyline");
+		plineObj.setAttribute("fill", "none");
+		plineObj.setAttribute("stroke-width", p.BBwObj.penThick);
+		if(downKind === 6){
+			plineObj.setAttribute("stroke-width", p.BBwObj.hlgThick);
+			plineObj.setAttribute("stroke", p.BBwObj.hlgColor);
+			plineObj.setAttribute("stroke-opacity", p.BBwObj.hlgAlpha);
+		}
+		else{
+			plineObj.setAttribute("stroke", p.BBwObj.penColor);
+			plineObj.setAttribute("stroke-width", p.BBwObj.penThick);
+		}
+		plineObj.setAttribute("points", tx+","+ty);
+		nwSvg.appendChild(plineObj);
+	}
+	else if(p.BBwObj.currMenu === "bbwline"){
+		tempPt.push(tx, ty, 0, 0);
+		downKind = 2;
+	}
+	else if(p.BBwObj.currMenu === "bbwrect"){
+		tempPt.push(tx, ty, 0, 0);
+		downKind = 3;
+	}
+	else if(p.BBwObj.currMenu === "bbwcc"){
+		tempPt.push(tx, ty, 0, 0);
+		downKind = 4;
+	}
+	else if(p.BBwObj.currMenu === "bbwera"){
+		if(ardrawObj.length === 0){
+			downKind = 0;
+			return;
+		}
+		tempPt.push(tx, ty);
+		downKind = 5;
+	}
+}
+function do_mousemove(e){
+	currX = e.clientX;
+	currY = e.clientY;
+	do_mousemove2();
+}
+function do_touchmove(e){
+	currX = e.touches[0].clientX;
+	currY = e.touches[0].clientY;
+	e.preventDefault();
+	do_mousemove2();
+}
+function do_mousemove2(){
+	if(downKind === 0) return;
+
+	draw_boardData();
+
+	cntx.globalAlpha = (downKind === 6) ? p.BBwObj.hlgAlpha : 1;
+	if(downKind === 1 || downKind === 6){
+		tempPt.push(currX, currY);
+		var s = tempPt[0]+","+tempPt[1];
+		for(var j = 2;j < tempPt.length;j+=2){
+			s += " "+tempPt[j]+","+tempPt[j+1];
+		}
+		plineObj.setAttribute("points", s);
+	}
+	else if(downKind === 2){
+		tempPt[2] = currX, tempPt[3] = currY;
+
+		cntx.beginPath();
+		cntx.globalCompositeOperation = "source-over";
+		cntx.strokeStyle = p.BBwObj.penColor;
+		cntx.lineWidth = p.BBwObj.penThick;
+		cntx.lineJoin = "round";
+		cntx.moveTo(tempPt[0], tempPt[1]);
+		cntx.lineTo(tempPt[2], tempPt[3]);
+		cntx.stroke();
+	}
+	else if(downKind === 3){
+		tempPt[2] = currX, tempPt[3] = currY;
+
+		cntx.beginPath();
+		cntx.globalCompositeOperation = "source-over";
+		cntx.strokeStyle = p.BBwObj.penColor;
+		cntx.lineWidth = p.BBwObj.penThick;
+		cntx.lineJoin = "round";
+		cntx.rect(tempPt[0], tempPt[1], tempPt[2]-tempPt[0], tempPt[3]-tempPt[1]);
+		cntx.stroke();
+	}
+	else if(downKind === 4){
+		tempPt[2] = currX, tempPt[3] = currY;
+
+		var r = Math.floor(Math.sqrt((currX-tempPt[0])*(currX-tempPt[0]) + (currY-tempPt[1])*(currY-tempPt[1]))/2);
+		var cx = Math.floor((tempPt[0]+currX)/2);
+		var cy = Math.floor((tempPt[1]+currY)/2);
+
+		cntx.beginPath();
+		cntx.globalCompositeOperation = "source-over";
+		cntx.strokeStyle = p.BBwObj.penColor;
+		cntx.lineWidth = p.BBwObj.penThick;
+		cntx.lineJoin = "round";
+		cntx.arc(cx, cy, r, 0, 2*Math.PI);
+		cntx.stroke();
+	}
+	else if(downKind === 5){
+		tempPt.push(currX, currY);
+		cntx.beginPath();
+		cntx.globalCompositeOperation = "destination-out";
+		cntx.strokeStyle = "rgba(0,0,0,1.0)";
+		cntx.lineWidth = p.BBwObj.penThick;
+		cntx.lineJoin = "round";
+		cntx.moveTo(tempPt[0], tempPt[1]);
+		for(var j = 2;j < tempPt.length;j+=2){
+			cntx.lineTo(tempPt[j], tempPt[j+1]);
+		}
+		cntx.stroke();
+	}
+}
+function do_mouseup(e){
+	if(downKind === 0) return;
+	e.preventDefault();
+
+	if(downKind === 1 || downKind === 6){
+		nwSvg.style.width = "0px";
+		nwSvg.style.height = "0px";
+		nwSvg.removeChild(plineObj);
+		plineObj = undefined;
+	}
+
+	var dowell = true;
+	if((downKind === 1 || downKind === 5 || downKind === 6) && tempPt.length < 3) dowell = false;
+	else if(downKind === 2 && tempPt[0] === tempPt[2] && tempPt[1] === tempPt[3]) dowell = false;
+	else if(downKind === 3 && (tempPt[2] === 0 || tempPt[3] === 0)) dowell = false;
+	else if(downKind === 4 && tempPt[2] === 0) dowell = false;
+
+	var leftRight = (tempPt[0] < p.ScreenInfo.smImageWidth) ? true : false;
+	if(p.BBwInfo.loc === "smcsync" && p.ScreenInfo.onesmc === false && dowell === true){
+		var lr;
+		for(var i = 0;i < tempPt.length;i+=2){
+			lr = (tempPt[i] < p.ScreenInfo.smImageWidth) ? true : false;
+			if(lr !== leftRight){
+				dowell = false;
+				alert('좌/우 페이지에 걸쳐서 설정할 수 없습니다.');
+				break;
+			}
+		}
+	}
+
+	if(dowell === true){
+		var cpage = p.BBwObj.currPage;
+		if(p.BBwInfo.loc === "smcsync" && p.ScreenInfo.onesmc === false && leftRight === false){
+			cpage = p.BBwObj.currPage + 1;
+			minus_smWidth(tempPt);
+		}
+
+		var cwidth = (p.BBwInfo.loc === "win") ? stageWidth : p.ScreenInfo.smImageWidth;
+		var dobj;
+		if(downKind === 6){
+			dobj = new drawObj(cpage, downKind, tempPt, p.BBwObj.hlgThick, p.BBwObj.hlgColor, cwidth);
+		}
+		else{
+			dobj = new drawObj(cpage, downKind, tempPt, p.BBwObj.penThick, p.BBwObj.penColor, cwidth);
+		}
+		ardrawObj.push(dobj);
+		store_boardData();
+		if(downKind === 1 || downKind === 6) draw_boardData();
+	}
+
+	//p.BBwObj.currMenu = (p.BBwObj.currMenu === "pen") ? "era" : "pen";
+	tempPt = [];
+	downKind = 0;
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+<canvas id="thcanvas"></canvas>
+<svg version="1.1" id="nwsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
+</body>
+</html>

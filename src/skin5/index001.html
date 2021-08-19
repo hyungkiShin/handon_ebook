@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - index001</title>
+<link rel="stylesheet" type="text/css" href="../main.css">
+<style id="thstyle">
+	html, body{width:100%;height:100%;margin:0;overflow:hidden;}
+	.sclass014{z-index:2;display:block;position:absolute;left:8px;width:calc(100% - 16px);height:100%;overflow:auto;}
+	.sclass014n{z-index:2;display:block;position:absolute;width:100%;height:100%;overflow:auto;}
+</style>
+<script src="explorer.js"></script>
+<script src="newin.js"></script>
+<script>
+var selfName = "index001.html", winCnt = "index";
+var newin_titletext = "목 차";
+var svgObj = "indexSvg";
+var plusID = "Index";
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "";
+var dragGap = 0;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	if(eclang === "en") newin_titletext = "Contents";
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.indexSvg = this;
+	window.parent.objLoaded2('index', this, false);
+	dragGap = p.WinInfo.get_dragGap(nw2class);
+
+	document.getElementById('sclass').className = (nwclass === "014") ? "sclass014" : "sclass014n";
+	p.document.getElementById('newin_frame'+plusID).innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+
+	var stylesheet = document.getElementById('thstyle').sheet;
+	if(incview === "d"){
+		stylesheet.insertRule("body{background-color:#ffffff;}", 0);
+		stylesheet.insertRule("*{font-family:굴림,Arial,Tahoma;font-size:12px;}", 0);
+	}
+	else{
+		if(mainmenu === "050") stylesheet.insertRule("body{background-color:#ffffff;}", 0);
+		else stylesheet.insertRule("body{background-color:#ededed;}", 0);
+		stylesheet.insertRule("*{font-size:13px;color:#444444;}", 0);
+		stylesheet.insertRule("a{text-decoration:none;color:#444444;}", 0);
+	}
+
+	expDiv = document.getElementById('sclass');
+	exp_initVar(incview);
+	load_mokchaData();
+}
+function load_mokchaData(){
+	var urlstr = "."+p.FileInfo.dirFilePath("mokcha.txt","","*");
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("GET", urlstr);
+	if(xmlHttp.overrideMimeType) xmlHttp.overrideMimeType("text/plain; charset=utf-8");
+	xmlHttp.onreadystatechange = function(){
+		if(xmlHttp.readyState != 4) return;			// 0:unset, 1:opened, 2:headers_received, 3:loading, 4:done
+		if(xmlHttp.status == 200){
+			var restr = xmlHttp.responseText.replace(/^\s*|\s*$/g, '');				// front and rear's white space
+			if(restr.length < 5 || (restr.length > 5 && restr.substring(0,5) == "Error")){
+				alert(restr);
+				return;
+			}
+
+			var lines = restr.split("\n");
+			var alen = lines.length;
+			var idxs, tstr, t2code, t3code;
+			var k = 0;
+			for(var i = 0;i < alen;i++){
+				tstr = lines[i];
+				if(tstr == "" || tstr == "nextline") continue;
+
+				idxs = "" + k;
+				if(tstr.substr(0,2) == "--"){		// third category
+					//3차 아래는 없으므로
+					if(expChild[t3code] == undefined) expChild[t3code] = new Array();
+					expChild[t3code].push(idxs);
+					expData[idxs] = tstr.substr(2);
+				}
+				else if(tstr.substr(0,1) == "-"){		// second category
+					if(expChild[t2code] == undefined) expChild[t2code] = new Array();
+					expChild[t2code].push(idxs);
+					expData[idxs] = tstr.substr(1);
+					t3code = idxs;
+				}
+				else{
+					if(expChild[exp_rootidx] == undefined) expChild[exp_rootidx] = new Array();
+					expChild[exp_rootidx].push(idxs);
+					expView[idxs] = false;		// First, it's subcategory is not visible
+					expData[idxs] = tstr;
+					t2code = idxs;
+				}
+				k++;
+			}
+			exp_showOpening('none');
+			//if(p.Action.drawCondition >= 0 && incview === "d") document.getElementsByTagName('a')[0].focus();
+			console.log(selfName+" : "+urlstr+" : "+xmlHttp.readyState);
+		}
+		else{
+			console.log("[Error] "+selfName+" : "+urlstr+" : "+xmlHttp.status);
+		}
+	}
+	xmlHttp.send();
+}
+function exp_itemClick(spno, obj){
+	// device, spage, pageshow, state
+	var n = (incview === "m") ? p.PermitMan.get_directGoPerm("index",spno,"","index") : p.PermitMan.get_directGoPerm("index",spno,"","");
+	if(n < 0) return;
+	p.go_general(n, "user");
+	if(incview === "m") newin_close();
+}
+function height_changed(){}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.unload_index();
+}
+function refresh_size(aw, ah){			// mobile only
+	svgWidth = aw;
+	svgHeight = ah;
+	newin_size();
+	//expDiv.style.height = (ah - 30) + "px";
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.NewinObj.indexX;
+	var posY = e.clientY - p.clickY + p.NewinObj.indexY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.indexDiv.style.left = posX + "px";
+	p.indexDiv.style.top = posY + "px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.NewinObj.indexX += e.clientX - p.clickX;
+	p.NewinObj.indexY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func();">
+
+<div id="sclass"></div>
+
+</body>
+</html>

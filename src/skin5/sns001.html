@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - sns001</title>
+<link rel="stylesheet" type="text/css" href="../main.css">
+<style>
+	html{width:100%;height:100%;margin:0;}
+	.body016{width:100%;height:100%;margin:0;background-color:none;}
+	.body016n{width:100%;height:100%;margin:0;background-color:#f7f7f7;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}
+
+	.sns_div{display:block;z-index:2;width:100%;height:75px;margin:0;padding:0;text-align:center;}
+	.sns_div > p{display:inline-block;cursor:pointer;padding:18px 0;}
+	.sns_div > p:nth-of-type(1){margin:0;}
+	.sns_div > p:not(:first-child){margin:0 0 0 30px;}
+
+	.urldiv{display:block;width:calc(100% - 30px);height:34px;margin:10px 15px;}
+	#url_div{display:block;float:left;width:calc(100% - 60px);height:34px;color:#4A5459;white-space:pre;
+		font-family:Tahoma,Arial;font-size:11px;line-height:31px;overflow:hidden;
+		border-top:1px solid #d8d8d8;border-left:1px solid #d8d8d8;border-bottom:1px solid #d8d8d8;text-indent:3px;}
+	.url_btn{display:block;float:right;width:56px;height:34px;line-height:31px;text-align:center;
+		border-left:1px solid #d8d8d8;border-top:1px solid #4A5459;border-left:1px solid #4A5459;border-bottom:1px solid #4A5459;
+		background-color:#4A5459;color:#ffffff;cursor:pointer;}
+
+	/* url copy form */
+	.url_copy{position:absolute;left:0;top:-50px;font-size:1px;line-height:0;overflow:hidden;}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "sns001.html", winCnt = "sns";
+var newin_titletext = "공 유";
+var svgObj = "snsSvg";
+var plusID = "";
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "";
+
+var downKind = 0;
+var dragGap = 0;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	if(eclang === "en") newin_titletext = "SNS";
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.snsSvg = this;
+	window.parent.objLoaded2('sns', this, false);
+	dragGap = p.WinInfo.get_dragGap(nw2class);
+
+	p.document.getElementById('newin_frame').innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+	document.body.insertAdjacentHTML('afterend', getNewinButton(nw2class));
+
+	document.body.className = (nw2class === "016") ? "body016" : "body016n";
+
+	var s = "";
+	if(eclang === "en"){
+		s = '<p><a href="javascript:p.facebookbtnClick();" title="Share through Facebook"><img '
+			+ '  src="/develop_five/skin5/mm014/facebookbtn.png" alt="Facebook"></a></p>'
+			+ '<p><a href="javascript:p.twitterbtnClick();" title="Share through Twitter"><img '
+			+ '  src="/develop_five/skin5/mm014/twitterbtn.png" alt="Twitter"></a></p>';
+	}
+	else{
+		s = '<p><a href="javascript:p.facebookbtnClick();" title="페이스북 공유"><img '
+			+ '  src="/develop_five/skin5/mm014/facebookbtn.png" alt="페이스북"></a></p>'
+			+ '<p><a href="javascript:p.twitterbtnClick();" title="트위터 공유"><img '
+			+ '  src="/develop_five/skin5/mm014/twitterbtn.png" alt="트위터"></a></p>'
+			+ '<p><a href="javascript:p.kakaobtnClick();" title="카카오톡 공유"><img '
+			+ '  src="/develop_five/skin5/mm014/kakaotalkbtn.png" alt="카카오톡"></a></p>';
+	}
+	document.getElementById('listdiv').innerHTML = s;
+
+	if(eclang === "en"){
+		s = '<div id="url_div"></div>'
+			+ '<div class="url_btn" onclick="p.urlcopybtnClick(event)">Copy</div>';
+	}
+	else{
+		s += '<div id="url_div"></div>'
+			+ '<div class="url_btn" onclick="p.urlcopybtnClick(event)">복사</div>';
+	}
+	document.getElementById('copydiv').innerHTML = s;
+
+	if(p.NewinObj.openAni !== 0){
+		document.getElementById('sns_li').style.width = "500px";
+	}
+
+	document.getElementById('url_div').innerHTML = p.ServerInfo.selfUrl;
+}
+function refresh_size(aw, ah){			// only mobile by orientation change
+	svgWidth = aw;
+	svgHeight = ah;
+	newin_size();
+}
+function pinterestbtnClick(){
+	window.open("http://www.pinterest.com/");
+}
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.snsSvg = undefined;
+	p.unload_newin(winCnt);
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.befX;
+	var posY = e.clientY - p.clickY + p.befY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.newinDiv.style.left = posX+"px";
+	p.newinDiv.style.top = posY+"px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.befX += e.clientX - p.clickX;
+	p.befY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<div id="listdiv" class="sns_div"></div>
+<br clear="all">
+
+<div id="copydiv" class="urldiv"></div>
+
+</body>
+</html>

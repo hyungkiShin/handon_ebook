@@ -1,0 +1,417 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - combopop001</title>
+<style id="thstyle">
+	html{width:100%;height:100%;margin:0;}
+	body{width:100%;height:100%;margin:0;overflow-x:hidden;overflow-y:auto;}
+	#mainsvg{display:block;z-index:2;position:absolute;width:100%;height:100%;}
+
+	.bodyE001{background-color:#D4EBC3;}
+	.gitemE001 > rect{fill:#D4EBC3;stroke:none;}
+	.gitem_hoverE001 > rect{fill:#41830F;}
+	.gitemE001 > text{fill:#000000;}
+	.gitem_hoverE001 > text{fill:#ffffff;}
+
+	.bodyE002{background-color:#e8f4f8;}
+	.gitemE002 > rect{fill:#e8f4f8;stroke:none;}
+	.gitem_hoverE002 > rect{fill:#2492C6;}
+	.gitemE002 > text{fill:#000000;}
+	.gitem_hoverE002 > text{fill:#ffffff;}
+
+	.bodyE003{background-color:#ededed;}
+	.gitemE003 > rect{fill:#ededed;stroke:none;}
+	.gitem_hoverE003 > rect{fill:#404040;}
+	.gitemE003 > text{fill:#000000;}
+	.gitem_hoverE003 > text{fill:#ffffff;}
+
+	.bodyE016{background-color:transparent;}
+	.gitemE016 > rect{fill:#152e0a;cursor:pointer;opacity:1;}
+	.gitem_hoverE016 > rect{fill:#3A750A;opacity:1;}
+	.gitemE016 > text{fill:#ffffff;cursor:pointer;}
+	.gitem_hoverE016 > text{fill:#eeeeee;}
+	.rectbackE016{fill:#152e0a;stroke:#a4c37b;stroke-width:1;}
+	.arrowpolyE016{fill:#152e0a;stroke:none;}
+	.arrowlineE016{fill:none;stroke:#a4c37b;stroke-width:1;}
+
+	.bodyE017{background-color:transparent;}
+	.gitemE017 > rect{fill:#393939;cursor:pointer;opacity:1;}
+	.gitem_hoverE017 > rect{fill:#3A750A;opacity:1;}
+	.gitemE017 > text{fill:#ffffff;cursor:pointer;}
+	.gitem_hoverE017 > text{fill:#eeeeee;}
+	.rectbackE017{fill:#393939;stroke:#cccccc;stroke-width:1;}
+	.arrowpolyE017{fill:#393939;stroke:none;}
+	.arrowlineE017{fill:none;stroke:#cccccc;stroke-width:1;}
+
+	.bodyE018{background-color:transparent;}
+	.gitemE018 > rect{fill:#393939;cursor:pointer;opacity:1;}
+	.gitem_hoverE018 > rect{fill:#2875A8;opacity:1;}
+	.gitemE018 > text{fill:#ffffff;cursor:pointer;}
+	.gitem_hoverE018 > text{fill:#eeeeee;}
+	.rectbackE018{fill:#393939;stroke:#cccccc;stroke-width:1;}
+	.arrowpolyE018{fill:#393939;stroke:none;}
+	.arrowlineE018{fill:none;stroke:#cccccc;stroke-width:1;}
+
+	.bodyE021{background-color:transparent;}
+	.gitemE021 > rect{fill:none;cursor:pointer;opacity:1;}
+	.gitem_hoverE021 > rect{fill:#444444;opacity:1;}
+	.gitemE021 > text{fill:#ffffff;cursor:pointer;}
+	.gitem_hoverE021 > text{fill:#eeeeee;}
+	.rectbackE021{fill:url(#mainGradient);stroke:#9C9C9C;stroke-width:1;}
+	.arrowpolyE021{fill:#000000;stroke:none;}
+	.arrowlineE021{fill:none;stroke:#9C9C9C;stroke-width:1;}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "combopop001.html", winCnt = "cbpop";
+var cbpopskin, custom;
+
+var gra1Color = "#265a00";
+var gra2Color = "#acc852";
+var textColor = "#ffffff";
+var textColorOver = "#eeeeee"
+var rectColor = "#555555";
+var tnClass = "";
+
+var realHeight;
+var uheight = 15, uwidth = 0;
+var mainGrpObj;
+var maxWidth = 0;
+var cbkd;
+
+var startY = 0;
+var focusSeq = -1, maxSeq = 0, storedSeq = 0;
+var actFinish = false;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	cbpopskin = ar[4];
+	custom = ar[5];
+
+	if(cbpopskin === "001"){
+		if(mainmenu === "011") tnClass = "E001";
+		else if(mainmenu === "030") tnClass = "E002";
+		else tnClass = "E003";
+	}
+	else if(cbpopskin === "012"){
+		tnClass = "E012";
+		if(Display['user'] != "" && Display['cpcolor_d'] != ""){
+			aaa = Display['cpcolor_d'].split(",");
+			gra1Color = aaa[0];
+			gra2Color = aaa[1];
+			textColor = aaa[2];
+			textColorOver = aaa[3];
+			rectColor = aaa[4];
+		}
+	}
+	else if(cbpopskin === "016"){
+		if(mainmenu === "021") tnClass = "E021";
+		else if(mainmenu === "017") tnClass = "E017";
+		else if(mainmenu === "018") tnClass = "E018";
+		else tnClass = "E016";
+	}
+
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.combopopSvg = this;
+	p.objLoaded2('cbpop', this, false);
+
+	var stylesheet = document.getElementById('thstyle').sheet;
+	if(cbpopskin === "012") stylesheet.insertRule("*{font-family:굴림,Arial,Tahoma;font-size:11px;}", 0);
+	else stylesheet.insertRule("*{font-family:굴림,Arial,Tahoma;font-size:12px;}", 0);
+
+	if(cbpopskin === "012"){
+		stylesheet.insertRule(".bodyE012{background-color:"+textColor+";}",0);
+		stylesheet.insertRule(".gitemE012 > text{fill:"+textColor+";cursor:pointer;}",0);
+		stylesheet.insertRule(".gitem_hoverE012 > text{fill:"+textColorOver+";}",0);
+		stylesheet.insertRule(".gitemE012 > rect{fill:"+rectColor+";cursor:pointer;opacity:0;}",0);
+		stylesheet.insertRule(".gitem_hoverE012 > rect{fill:"+rectColor+";opacity:1;}",0);
+	}
+
+	var s =  "";
+	if(cbpopskin === "001"){
+		s = '<svg version="1.1" id="mainsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+			+ '<g id="mainGrp"></g>'
+			+ '</svg>';
+	}
+	else if(cbpopskin === "012"){
+		s = '<svg version="1.1" id="mainsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+			+ '<defs>'
+			+ '<linearGradient id="mainGradient" x1="0%" y1="0%" x2="0%" y2="100%">'
+			+ '	<stop offset="0%" stop-color="'+gra1Color+'" />'
+			+ '	<stop offset="100%" stop-color="'+gra2Color+'" />'
+			+ '</linearGradient>'
+			+ '</defs>'
+			+ '<rect id="rectback" x="0" y="0" width="100%" height="200" fill="url(#mainGradient)" />'
+			+ '<g id="mainGrp" transform="translate(2,2)"></g>'
+			+ '</svg>';
+	}
+	else if(cbpopskin === "016"){
+		s = '<svg version="1.1" id="mainsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+			+ '<defs>'
+			+ '<filter id="blurMe">'
+			+ '<feGaussianBlur in="SourceAlpha" stdDeviation="2" />'
+			+ '</filter>'
+			+ '</defs>';
+		//<!-- shadow & background rectangle & arrow -->
+		s += '<rect id="rectshadow" x="0.5" y="0.5" rx="7" width="100%" height="250" fill="#222222" filter="url(#blurMe)" />'
+			+ '<rect id="rectback" class="rectback'+tnClass+'" x="0.5" y="0.5" rx="7" width="100%" height="250" />'
+			+ '<g id="arrowGrp">'
+			+ '<polygon class="arrowpoly'+tnClass+'" points="0,0 6,6 12,0" />'
+			+ '<line class="arrowline'+tnClass+'" id="arrowLine1" x1="0" y1="0" x2="6" y2="6" />'
+			+ '<line class="arrowline'+tnClass+'" id="arrowLine2" x1="6" y1="6" x2="12" y2="0" />'
+			+ '</g>'
+			+ '</svg>'
+			+ '<div id="contdiv">'
+			+ '<svg version="1.1" id="contsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+			+ '<g id="mainGrp"></g>'
+			+ '</svg>'
+			+ '</div>';
+	}
+	document.getElementById('documain').innerHTML = s;
+
+	cbkd = p.ComboObj.skd;
+	mainGrpObj = document.getElementById('mainGrp');
+	document.body.className = "body" + tnClass;
+
+	if(cbpopskin === "001") uwidth = svgWidth;
+	else if(cbpopskin === "012") uwidth = svgWidth - 4;		// shadow
+	else if(cbpopskin === "016") uwidth = svgWidth - 8;		// bezel
+
+	if(cbkd == "catakind") init_combopop_catakind();
+	else if(cbkd == "media") init_combopop_media();
+}
+
+function init_combopop_catakind(){
+	//for testing
+	//var arCataTitle = ["새카탈로그","새갤러리","새글책","새카탈로그","새갤러리새갤러리새갤러리새갤러리","새글책","새카탈로그","새갤러리","새글책","새카탈로그","새갤러리","새글책"]
+	//var alen = arCataTitle.length;
+	var alen = p.cataBoxData.arCataTitle.length;
+
+	var ty;
+	var arRectObj = new Array();
+	for(var i = 0;i < alen;i++){
+		ty = uheight*i + startY;
+
+		var gObj = document.createElementNS("http://www.w3.org/2000/svg","g");
+		gObj.setAttribute("class", "gitem"+tnClass);
+		gObj.setAttribute("id","gitem"+i);
+		gObj.setAttribute("onmouseover", "do_mouseOverRect("+i+")");
+		gObj.setAttribute("onmouseout", "do_mouseOutRect("+i+")");
+		gObj.setAttribute("onmousedown", "do_mousedownCatakind("+i+")");
+
+		var rectObj = document.createElementNS("http://www.w3.org/2000/svg","rect");		// background
+		rectObj.setAttribute("x", 0);
+		rectObj.setAttribute("y", ty);
+		rectObj.setAttribute("width", uwidth);
+		rectObj.setAttribute("height", uheight);
+		gObj.appendChild(rectObj);
+		arRectObj.push(rectObj);
+
+		var textObj = document.createElementNS("http://www.w3.org/2000/svg","text");		// text
+		textObj.setAttribute("x", 1);
+		textObj.setAttribute("y", ty+12);
+		textNode = document.createTextNode(p.cataBoxData.arCataTitle[i]);
+		//textNode = document.createTextNode(arCataTitle[i]);
+		textObj.appendChild(textNode);
+		gObj.appendChild(textObj);
+
+		mainGrpObj.appendChild(gObj);
+
+		var bbox = textObj.getBBox();
+		if(bbox.width > maxWidth) maxWidth = bbox.width;
+	}
+
+	maxSeq = alen - 1;
+	var comboWidth = p.ComboObj.callobj.getAttribute("data-width");
+	if(comboWidth === "content" && maxWidth > svgWidth){
+		p.combopopObj.width = maxWidth;
+		for(i = 0;i < alen;i++){
+			arRectObj[i].setAttribute("width", maxWidth);
+		}
+	}
+	else maxWidth = svgWidth;
+
+	do_afterInit(alen, maxWidth);
+}
+
+function init_combopop_media(){
+	var alen = p.MediaObj.arMediaTitle.length;
+	var ty;
+	var arRectObj = [];
+	for(var i = 0;i < alen;i++){
+		ty = uheight*i + startY;
+
+		var gObj = document.createElementNS("http://www.w3.org/2000/svg","g");
+		gObj.setAttribute("class", "gitem"+tnClass);
+		gObj.setAttribute("id","gitem"+i);
+		gObj.setAttribute("onmouseover", "do_mouseOverRect("+i+")");
+		gObj.setAttribute("onmouseout", "do_mouseOutRect("+i+")");
+		gObj.setAttribute("onmousedown", "do_mousedownMedia("+i+")");
+
+		var rectObj = document.createElementNS("http://www.w3.org/2000/svg","rect");
+		rectObj.setAttribute("x", 0);
+		rectObj.setAttribute("y", ty);
+		rectObj.setAttribute("width", uwidth);
+		rectObj.setAttribute("height", uheight);
+		gObj.appendChild(rectObj);
+		arRectObj.push(rectObj);
+
+		var textObj = document.createElementNS("http://www.w3.org/2000/svg","text");
+		textObj.setAttribute("x", 1);
+		textObj.setAttribute("y", ty+12);
+		textNode = document.createTextNode(p.MediaObj.arMediaTitle[i]);
+		textObj.appendChild(textNode);
+		gObj.appendChild(textObj);
+
+		mainGrpObj.appendChild(gObj);
+
+		var bbox = textObj.getBBox();
+		if(bbox.width > maxWidth) maxWidth = bbox.width;
+	}
+
+	maxSeq = alen - 1;
+	var comboWidth = p.ComboObj.callobj.getAttribute("data-width");
+	if(comboWidth == "content" && maxWidth > svgWidth){
+		p.combopopObj.width = maxWidth;
+		for(i = 0;i < alen;i++){
+			arRectObj[i].setAttribute("width", maxWidth);
+		}
+	}
+	else maxWidth = svgWidth;
+
+	do_afterInit(alen, maxWidth);
+}
+
+function do_afterInit(alen, awidth){
+	if(cbpopskin === "001") do_afterInit001(alen, awidth);
+	else if(cbpopskin === "012") do_afterInit012(alen, awidth);
+	else if(cbpopskin === "016") do_afterInit016(alen, awidth);
+}
+function do_afterInit001(alen, awidth){
+	realHeight = uheight*alen;
+	p.combopopObj.height = realHeight;
+
+	if(realHeight < svgHeight) p.ComboObj.after_combopopLoad(cbkd, awidth, realHeight);
+	else p.ComboObj.after_combopopLoad(cbkd, awidth, svgHeight+2);
+}
+function do_afterInit012(alen, awidth){
+	realHeight = uheight*alen;
+	p.combopopObj.height = realHeight+4;
+	document.getElementById('rectback').setAttribute("height", realHeight+4);
+
+	if(realHeight < svgHeight) p.ComboObj.after_combopopLoad(cbkd, awidth, realHeight+4);
+	else p.ComboObj.after_combopopLoad(cbkd, awidth, svgHeight+6);
+}
+function do_afterInit016(alen, awidth){
+	document.body.style.overflowY = "hidden";
+	realHeight = uheight*alen;
+	if(realHeight < svgHeight){
+		document.getElementById('mainsvg').style.height = (realHeight+15) + "px";
+		p.combopopObj.height = realHeight+15;
+
+		document.getElementById('rectshadow').setAttribute("width", awidth-1);
+		document.getElementById('rectshadow').setAttribute("height", realHeight+8);
+		document.getElementById('rectback').setAttribute("width", awidth-1);
+		document.getElementById('rectback').setAttribute("height", realHeight+8);
+		if(p.ComboObj.direction === "top"){
+			document.getElementById('arrowGrp').setAttribute('transform','translate('+(awidth/2-6)+','+(realHeight+8)+')');
+		}
+		else if(p.ComboObj.direction === "bottom"){
+			document.getElementById('rectshadow').setAttribute("y", 5.5);
+			document.getElementById('rectback').setAttribute("y", 5.5);
+			document.getElementById('arrowGrp').setAttribute('transform','translate('+(awidth/2-6)+',0)');
+			document.getElementById('arrowGon').setAttribute('points','0,6 6,0 12,6');
+			document.getElementById('arrowLine1').setAttribute('x1','0');
+			document.getElementById('arrowLine1').setAttribute('y1','6');
+			document.getElementById('arrowLine1').setAttribute('x2','6');
+			document.getElementById('arrowLine1').setAttribute('y2','0');
+			document.getElementById('arrowLine2').setAttribute('x1','6');
+			document.getElementById('arrowLine2').setAttribute('y1','0');
+			document.getElementById('arrowLine2').setAttribute('x2','12');
+			document.getElementById('arrowLine2').setAttribute('y2','6');
+			document.getElementById('contdiv').style.top = "10px";
+		}
+
+		document.getElementById('contdiv').style.overflowY = "hidden";
+		p.ComboObj.after_combopopLoad(cbkd, awidth+4, realHeight+15);
+	}
+	else{
+		document.getElementById('mainsvg').style.height = (svgHeight+9) + "px";
+		document.getElementById('contsvg').style.height = realHeight + "px";
+		document.getElementById('contdiv').style.overflowY = "auto";
+		p.combopopObj.height = svgHeight+9;
+
+		document.getElementById('rectshadow').setAttribute("width", awidth-1);
+		document.getElementById('rectshadow').setAttribute("height", svgHeight+8);
+		document.getElementById('rectback').setAttribute("width", awidth-1);
+		document.getElementById('rectback').setAttribute("height", svgHeight+8);
+		document.getElementById('arrowGrp').setAttribute('transform','translate('+(awidth/2-6)+','+(svgHeight+8)+')');
+
+		p.ComboObj.after_combopopLoad(cbkd, awidth+4, svgHeight+17);
+	}
+}
+function do_mousedownCatakind(n){
+	storedSeq = n;
+	var sdir = p.cataBoxData.arCataDir[n];
+	if(sdir === p.PageInfo.cataDir) return;
+	actFinish = true;
+	p.unload_combopop();
+}
+function do_mousedownMedia(n){
+	storedSeq = n;
+	actFinish = true;
+	p.unload_combopop();
+}
+function finish_mousedown(){
+	if(actFinish === false) return;
+	if(cbkd === "catakind"){
+		var sdir = p.cataBoxData.arCataDir[storedSeq];
+		if(storedSeq === 0) p.location = "ecatalog5.html";
+		else p.location = "ecatalog5_" + sdir + ".html";
+		//p.location = p.ServerInfo.get_cataDoculink("ecatalog5."+p.ServerInfo.progExt,sdir,undefined,"");
+	}
+	else if(cbkd == "media"){
+		p.MediaObj.playFromList(storedSeq);
+	}
+}
+function do_mouseOverRect(n){
+	if(focusSeq >= 0) document.getElementById("gitem"+focusSeq).setAttribute("class","gitem"+tnClass);
+	focusSeq = n;
+	document.getElementById("gitem"+n).setAttribute("class","gitem_hover"+tnClass);
+}
+function do_mouseOutRect(n){
+	focusSeq = -1;
+	document.getElementById("gitem"+n).setAttribute("class","gitem"+tnClass);
+}
+function let_keydown(n){
+	if(n === 13){
+		if(cbkd === "catakind") do_mousedownCatakind(focusSeq);
+		else if(cbkd === "media") do_mousedownMedia(focusSeq);
+		return;
+	}
+
+	if(focusSeq >= 0) document.getElementById("gitem"+focusSeq).setAttribute("class","gitem"+tnClass);
+
+	if(n === 38) focusSeq--;
+	else if(n === 40) focusSeq++;
+
+	if(focusSeq < 0) focusSeq = maxSeq;
+	else if(focusSeq > maxSeq) focusSeq = 0;
+
+	document.getElementById("gitem"+focusSeq).setAttribute("class","gitem_hover"+tnClass);
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<main id="documain"></main>
+
+</body>
+</html>

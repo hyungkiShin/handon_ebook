@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - linkctrwin001</title>
+<style>
+	html, body{width:100%;height:100%;margin:0;overflow:hidden;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}
+
+	#maindiv{display:block;z-index:2;position:absolute;width:100%;height:100%;}
+	#maindiv > object{display:block;width:100%;height:100%;}
+	#maindiv > video{display:block;width:100%;height:100%;}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "linkctrwin001.html", winCnt = "linkctrwin";
+var newin_titletext = "";
+var svgObj = "ctrwinSvg";
+var plusID = "";
+var idx;
+
+var fullscrbtn = 1, closebtn = 1;
+var skind = "";
+
+var downObj, downX, downY;
+var linkunit;
+var movieObj, newinObj;
+var currState = "normal";			// normal, full
+var oriwidth, oriheight;
+
+var dragGap = 0;
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	if(eclang === "en") newin_titletext = "Print";
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log("ctrwin001 loaded");
+
+	p.ctrwinSvg = this;
+	window.parent.objLoaded2('newin', this);
+
+	p.document.getElementById('newin_frame'+plusID).innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+	document.body.insertAdjacentHTML('afterend', getNewinButton(nw2class));
+
+	linkunit = p.LinkObj.arLinkUnit[idx];
+	var n = linkunit.pointer;
+	var stitle = p.LinkInfo.arLinkExpl[n];
+	p.document.getElementById("newin_titletext").textContent = stitle;
+}
+
+/// ############################## window and events ############################## ///
+function newin_close(){
+	p.ctrwinSvg = undefined;
+	p.unload_newin(winCnt);
+}
+function newin_fullscr(){
+	if(currState === "normal"){
+		currState = "full";
+		swap_fullscrimage("restore");
+		p.LinkObj.go_winToFullscr();
+		newin_fullscr2();
+	}
+	else{
+		currState = "normal";
+		swap_fullscrimage("fullscr");
+		p.LinkObj.go_winToNormalscr();
+		newin_restore();
+	}
+}
+function do_mouseDrag(e){
+	if(currState === "full") return;
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.befX;
+	var posY = e.clientY - p.clickY + p.befY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.newinDiv.style.left = posX + "px";
+	p.newinDiv.style.top = posY + "px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.befX += e.clientX - p.clickX;
+	p.befY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<div id="maindiv"></div>
+</body>
+</html>

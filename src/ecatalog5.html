@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:title" content="한돈이 주는 가치">
+<meta property="og:description" content="">
+<meta property="og:image" content="./catImage/31/s001.jpg">
+<title>한돈이 주는 가치 </title>
+<link rel="stylesheet" type="text/css" href="./main.css">
+<link rel="stylesheet" type="text/css" href="./skin5/mm451c.css">
+<style>
+	html, body{margin:0;overflow:hidden;width:100%;height:100%;}
+	body{background-color:#404040;}
+	#lowersect{display:block;}
+</style>
+<script src="./common.js"></script>
+<script src="./util.js"></script>
+<script src="./action.js"></script>
+<script src="./info.js"></script>
+<script src="./ani.js"></script>
+<script src="./link.js" async></script>
+<!--<script src="./link2.js" async></script>-->
+<script src="./smc.js" async></script>
+<script src="./skin5/smc002.js" async></script>
+<script>
+function init_param(){
+set_catainfo('C','',true,'normal','utf-8','color','#404040','','d',true,'N','ko');
+set_action(false,true, true);
+set_serverinfo('.','html','','','',0,'N','/make/v992h');
+set_skininfo('451c','002','490b','000','005','001','012','004','016','001','002','loadeach','deco',false,'001','001');
+set_screeninfo(594,840,1188,1680,0,false,'S',5,'#FFFFFF',0,'top','I',false,false);
+set_unifyinfo(false, false);
+set_pageinfo('0104000000','31',0,46,0,0,'number','20210810_텐씨씨','','31',false);
+set_guideinfo(80);
+set_menuinfo('','1','N',70,false,false,false,'N','Y','R',60,35,220,270,'','C');
+set_fileinfo(true,true,false,false,false,true,false,false,false,true,'','CD','N','J','.xml');
+set_moveinfo('F',false,true,false,true,false,800,1600,false,false,false);
+set_searchinfo('A','','',false,'#ff6600',0.5,false,false);
+set_soundinfo('N','','N',false,'[mp3]',true,true,true,false,false);
+set_linkinfo('','#FF0000',0.2,false,'','H',false,'한돈이 주는 가치','','','View Image','http://make.aiibook.net/make/v992h/catImage/31/s001.jpg',594,840);
+set_printinfo('fit');				// partPrintMode
+set_spacerinfo();
+set_wininfo();
+set_connman();
+set_perman();
+set_screenman();
+set_debugman();
+set_optioninfo('','','ko','');
+
+window.onresize = onresize_func;
+if(document.addEventListener){
+	document.addEventListener("mousedown", function(e){
+		Action.do_mouseDown("root", e);
+	}, false);
+	document.addEventListener("mousemove", function(e){
+		Action.mouseDragged = Action.do_mouseDrag(e);
+		if(Action.mouseDragged === false){
+			if(Action.drawCondition < -1) return;
+			if(Action.drawCondition > 0 && Action.drawCondition < 10) return;
+			Action.do_mouseMove("root", e);
+		}
+	}, false);
+	document.addEventListener("mouseup", function(e){Action.do_mouseUp("root", e);}, false);
+	document.addEventListener("mousewheel", function(e){Action.do_mouseWheel("root", e); }, false);
+	document.addEventListener("DOMMouseScroll", function(e){Action.do_mouseWheel("root", e);}, false);	// firefox
+	document.addEventListener("keydown", function(e){Action.do_keyDown("root", e);}, false);
+	document.addEventListener("keyup", function(e){Action.do_keyUp("root", e);}, false);
+	document.addEventListener("contextmenu", function(e){
+		e.preventDefault();
+		return false;
+	}, false);
+}
+}
+function objLoaded(s, obj){			// for opening object
+	loaded++;
+	if(loaded === loadto){
+		if(UnifyInfo.classUnify === true){
+			if(UnifyInfo.outpage === true) ConnectMan.load_unifyOutData();
+			else ConnectMan.load_unifyData();
+		}
+		else{
+			if(FileInfo.seqFile[PageInfo.cataDir] == "F") ConnectMan.load_fileseqData(PageInfo.cataDir);
+			else if(FileInfo.seqFile[PageInfo.cataDir] == "X") ConnectMan.load_bookxmlData(PageInfo.cataDir);
+			else onload_func2();
+		}
+	}
+}
+function objLoaded2(s, obj, bool){		// for new window object
+	//if(bool == true) obj.onload_func2();
+	if(s === "partprint") ushapeDiv.style.visibility = "visible";
+}
+function objLoaded3(s, obj){			// for link object
+	if(s === "linkimg") linkoutObj.push(obj);
+	obj.onload_func2();
+}
+
+function onload_func(){
+	if(redirect_cdmake('','ko') === false) return;
+
+	console.log("root : loaded");
+	init_param();
+	linkoutObj = new Array();
+	stageWidth = document.documentElement.clientWidth;
+	stageHeight = document.documentElement.clientHeight;
+	ScreenInfo.innerOriWidth = window.innerWidth;
+
+	if(document.getElementById("mmsect")) menuSide = document.getElementById("mmsect");
+	if(document.getElementById("lowersect")) lowerSide = document.getElementById("lowersect");
+	smcDiv = document.getElementById("smcsect1");
+	linkoutDiv = document.getElementById("linkoutsect");
+
+	set_cursorObj();
+	if(mediaPlayer) set_mediaObj();
+
+	encDiv = document.getElementById("encsect");
+	guideDiv = document.getElementById("guidesect");
+	newinDiv = document.getElementById("newinsect");
+	newin2Div = document.getElementById("newin2sect");
+	indexDiv = document.getElementById("indexsect");
+	glassesDiv = document.getElementById("glassessect");
+	soundDiv = document.getElementById("soundsect");
+	combopopDiv = document.getElementById("combopopsect");
+	descriptDiv = document.getElementById("descriptsect");
+	hideDiv = document.getElementById("hidesect");
+	bbwDiv = document.getElementById("bbwsect");
+	memoDiv = document.getElementById('memosect');
+	ushapeDiv = document.getElementById("usershape");
+	alertDiv = document.getElementById("alertsect");
+	debugDiv = document.getElementById("debugsect");
+	expandDiv = document.getElementById("expandsect");
+
+	set_cataRect(0,60,0,60,0,0,0,0);			// x, y, right, bottom
+	load_license();
+}
+function after_loadLicense(){
+	if(licenseSvg.check_domain() === false) return;
+	if(PermitMan.get_openingPerm() === false) return;
+	console.log("License approved : " + CataInfo.useDomain);
+	objLoaded("root", this);
+}
+
+function onload_func2(){
+	maincnvDiv = document.getElementById("maincnvsect");
+	mainCnv = document.getElementById("maincnv");
+
+	init_link('');
+	//init_link2();
+	init_smc();
+	init_smc2();
+	MenuObj.onload_func2();
+
+	SmcObj.onload_func2();
+
+
+	SpacerObj.onload_func2();
+	if(DecoObj) DecoObj.onload_func2();
+	set_location();
+
+	//debugDiv.style.visibility = "visible";
+	ConnectMan.load_cataboxData();
+}
+function after_openingData(){			// from ConnectMan.load_flashData()
+	if(SkinInfo.smc === "007"){
+		Action.drawCondition = 0;
+	}
+	else{
+		Action.drawCondition = (PageInfo.currentPage === 0 && CataInfo.openingAnimation === true) ? -1 : 0;
+		if((PageInfo.currentPage !== 0 || CataInfo.openingAnimation === false) && smctrDiv){
+			smctrDiv.style.visibility = "visible";
+		}
+	}
+
+	if(MoveInfo.pairEnlarge === true) Action.set_togetherEnlarge();
+	MenuObj.show_pageNumber();
+	SmcObj.do_afterMainFinish();
+
+	if(MenuInfo.menuAutoHide === true){
+		if(menuSide) do_menuAnimate('hide');
+		if(lowerSide) do_lowerAnimate('hide');
+	}
+	if(ScreenInfo.smImageDiff === true) onresize_func();
+	if(MenuInfo.indexType === "R" && MenuInfo.openingIndexView === true) indexbtnClick();
+	focus();
+
+	
+	var spno = "";
+		var params = document.defaultView.location.href;
+	if(params != undefined && params.indexOf("?") > 0){
+		var ar = params.split("?")[1].split("&");
+		for(var i = 0;i < ar.length;i++){
+			var t = ar[i].split("=");
+			if(t[0] == "start"){
+				spno = t[1];
+				break;
+			}
+		}
+	}
+	
+	if(spno !== ""){
+		if(spno.substr(0,1) === "a") MoveInfo.move_systemPage(parseInt(spno.substr(1)));
+		else MoveInfo.move_strPage(spno);
+	}
+}
+function set_location(){
+	CoverObj.smcX = smRect.x;
+	smcDiv.style.left = smRect.x + "px";
+	smcDiv.style.top = smRect.y + "px";
+	smcDiv.style.width = smRect.width + "px";
+	smcDiv.style.height = smRect.height + "px";
+
+	if(Action.drawCondition < 1){
+		linkoutDiv.style.left = smRect.x + "px";
+		linkoutDiv.style.top = smRect.y + "px";
+	}
+	else{
+		linkoutDiv.style.left = EncObj.encX + "px";
+		linkoutDiv.style.top = EncObj.encY + "px";
+	}
+
+	if(DecoObj) DecoObj.set_location();
+
+	smctrDiv.style.height = ScreenInfo.smImageHeight + "px";
+	smctrDiv.style.left = (smRect.centerPt.x-24) + "px";
+	smctrDiv.style.top = smRect.y + "px";
+
+	if(OnsmObj) OnsmObj.set_location();
+	if(SpacerObj) SpacerObj.set_location();
+	if(soundctrlSvg) loc_soundcontrol();
+
+	if(LinkInfo.showDescript == true){
+		descriptDiv.style.left = (cataRect.centerPt.x - descriptDiv.clientWidth/2) + "px";
+		descriptDiv.style.top = (SkinInfo.smc == "008") ? (smRect.bottom+25) + "px" : (smRect.bottom+5) + "px";
+	}
+
+
+	if(Action.drawCondition < 0 && PageInfo.currentPage === 0 && CataInfo.openingAnimation === true){
+		CoverObj.loc_openingCover();
+	}
+	else if(ScreenInfo.onesmc === true){
+		if(splbtnDiv) splbtnDiv.style.visibility = "hidden";
+	}
+}
+function onresize_func(){
+	if(Action.drawCondition < -1) return;
+
+	stageWidth = document.documentElement.clientWidth;
+	stageHeight = document.documentElement.clientHeight;
+
+	set_cataRect(0,60,0,60,0,0,0,0);			// x, y, right, bottom
+	MenuObj.onresize_func();
+	NewinObj.onresize_func();
+
+
+	ScreenMan.onresize_func();
+	if(EncObj){
+		encDiv.style.left = winRect.x+"px";
+		encDiv.style.top = winRect.y+"px";
+		encDiv.style.width = winRect.width+"px";
+		encDiv.style.height = winRect.height+"px";
+		EncObj.onresize_func();
+	}
+
+	SmcObj.onresize_func();
+	LinkObj.loc_linkData();
+	if(DecoObj) DecoObj.onresize_func();
+	set_location();
+}
+function set_galleryProperty(w, h){
+	ScreenInfo.set_gallerySmProperty(w, h);
+	set_cataRect(0,60,0,60,0,0,0,0);			// x, y, right, bottom
+	set_location();
+}
+</script>
+<noscript>
+<style> 
+	body{margin:0;overflow:hidden;width:100%;height:100%;background-color:#777777;color:#FFFFFF;}
+</style>
+</noscript>
+</head>
+
+<body onload="onload_func();">
+
+<noscript>
+<div style="position:fixed;z-index:200;width:100%;height:100%;background-color:#777777;color:#FFFFFF;">
+<p style="text-align:center;width:100%;margin-top:30%;">
+브라우저가 자바스크립트를 지원하지 않으면 현재 페이지를 보실 수 없습니다.</p>
+</div>
+</noscript>
+
+
+<!-- logo -->
+<div id="logosect" style="left:0px;top:0px;">
+<img src="catImage/logo.png" alt="로고">
+</div>
+
+<!-- main menu -->
+<!-- 451c -->
+
+<!-- background -->
+<div id="backsect" class="back5d451c"></div>
+
+<!-- navigation -->
+<nav id="mmsect" class="mm5dD451c-idxR">
+<div class="mm_div5dD451c">
+
+<ul class="mm_ulE001">
+
+<li id="firstbtn" class="firstbtn5dD451c"><a href="javascript:firstbtnClick();" title="처음 페이지로 이동"><img src="./skin5/mm451c/firstbtn.png" width="15" height="23" class="hover_opac8" alt="처음 페이지"></a></li>
+<li id="prevbtn" class="prevbtn5dD451c"><a href="javascript:prevbtnClick();" title="이전 페이지로 이동"><img src="./skin5/mm451c/prevbtn.png" width="15" height="23" class="hover_opac8" alt="이전 페이지"></a></li>
+<li id="pageshow" class="pshow5dD451c">
+<form name="pageshowform" method="get" action="ecatalog.php" onsubmit="return MenuObj.do_pagenoFormSubmit();" title="페이지 이동">
+<p class="pshow_p5dD451c"><input type="text" name="pageno" value="" onfocus="MenuObj.do_pagenoFocusIn(event);" onblur="MenuObj.do_pagenoFocusOut(event)"
+  pattern="[0-9-]+" title="숫자만 입력 가능합니다." required></p>
+<p id="pshow_totalpage"></p>
+</form>
+</li>
+<li id="nextbtn" class="nextbtn5dD451c"><a href="javascript:nextbtnClick();" title="다음 페이지로 이동"><img src="./skin5/mm451c/nextbtn.png" width="15" height="23" class="hover_opac8" alt="다음 페이지"></a></li>
+<li id="lastbtn" class="lastbtn5dD451c"><a href="javascript:lastbtnClick();" title="마지막 페이지로 이동"><img src="./skin5/mm451c/lastbtn.png" width="15" height="23" class="hover_opac8" alt="마지막 페이지"></a></li>
+
+ </ul>
+</div>
+
+
+<ul class="mm_ulE002">
+<li id="indexbtn" class="indexbtn5dD451c"><a href="javascript:indexbtnClick();" title="목차 보기"><img src="./skin5/mm451c/indexbtn.png" width="27" height="43" class="hover_opac8" alt="목차 보기"></a></li>
+<li id="printbtn" class="printbtn5dD451c"><a href="javascript:printbtnClick();" title="인쇄하기"><img src="./skin5/mm451c/printbtn.png" width="27" height="43" class="hover_opac8" alt="인쇄하기"></a></li>
+
+<li id="expbtn" class="expbtn5dD451c"><a href="javascript:expbtnClick();"title="탐색기 보기"><img src="./skin5/mm451c/expbtn.png" width="44" height="43" class="hover_opac8" alt="탐색기 보기"></a></li>
+<li id="glassesbtn" class="glassesbtn5dD451c"><a href="javascript:glassesbtnClick();" title="돋보기로 보기"><img src="./skin5/mm451c/glassesbtn.png" width="38" height="43" class="hover_opac8" alt="돋보기로 보기"></a></li>
+<li id="slidebtn" class="slidebtn5dD451c"><a href="javascript:slidebtnClick();" title="자동넘김"><img src="./skin5/mm451c/slidebtn.png" width="34" height="43" class="hover_opac8" alt="자동넘김"></a></li>
+<li id="fullscrbtn" class="fullscrbtn5dD451c"><a href="javascript:fullscrbtnClick();" title="전체화면으로 보기"><img src="./skin5/mm451c/fullscrbtn.png" width="28" height="43" class="hover_opac8" alt="전체화면으로 보기"></a></li>
+
+<li id="helpbtn" class="helpbtn5dD451c"><a href="javascript:helpbtnClick();" title="도움말 페이지 보기"><img src="./skin5/mm451c/helpbtn.png" width="26" height="48" class="hover_opac8" alt="도움말 페이지 보기"></a></li>
+<li id="closebtn" class="closebtn5dD451c"><a href="javascript:closebtnClick();" title="창닫기"><img src="./skin5/mm451c/closebtn.png" width="11" height="11" class="hover_opac8" alt="창닫기"></a></li>
+</ul>
+
+</nav>
+
+<div id="lowersect" class="lower5dD451c">
+
+<!-- sns -->
+<nav id="snssect" class="sns_nav5dD451c">
+<ul class="sns_ul5dD451c">
+<!--li id="kakaobtn" class="sns_liE451c hover_opac8 kakao"><a href="javascript:kakaobtnClick();" 
+  title="카카오톡 공유"><img src="./skin5/mm451c/kakaobtn.png" class="sns_liE451c" alt="카카오톡"></a></li-->
+<li id="facebookbtn" class="sns_liE451c hover_opac8 facebook"><a href="javascript:facebookbtnClick();" 
+  title="페이스북 공유"><img src="./skin5/mm451c/facebookbtn.png" class="sns_liE451c" alt="페이스북"></a></li>
+<li id="twitterbtn" class="sns_liE451c hover_opac8 twitter"><a href="javascript:twitterbtnClick();" 
+  title="트위터 공유"><img src="./skin5/mm451c/twitterbtn.png" class="sns_liE451c" alt="트위터"></a></li>
+</ul>
+</nav>
+
+<!-- download -->
+
+<!-- search 
+<div id="searchsect" class="search5dD451c">
+<form name="searchform" method="get" action="#" onsubmit="return do_searchbtnClick(document.searchform.qtxt.value)" title="페이지 검색">
+<input type="search" class="searchtxt5dD451c" name="qtxt" title="검색어 입력" onfocus="do_qtxtFocusIn(this)">
+<input type="image" class="searchbtn5dD451c hover_opac8" src="./skin5/mm451c/search_btn.png" alt="검색 시작">
+</form>
+</div>
+-->
+
+<!-- combobox -->
+
+</div>
+
+<script>
+MenuObj = {storedStr:''};
+MenuObj.onload_func2 = function(){
+	var n = (PageInfo.showStartPage == 0) ? PageInfo.cataPages : PageInfo.get_showPageFromReal(PageInfo.cataPages);
+	document.getElementById("pshow_totalpage").innerHTML = n;
+
+	if(document.getElementById("horidx")){
+		indexDiv = document.getElementById("horidx");
+		AniObj.horidxY = 47;
+	}
+
+	if(LinkInfo.snstext === ""){
+		if(document.getElementById("facebookbtn")) document.getElementById("facebookbtn")/*.style.visibility = "hidden"*/;
+		if(document.getElementById("twitterbtn")) document.getElementById("twitterbtn")/*.style.visibility = "hidden"*/;
+	}
+	if(MenuInfo.mailButtonHide === "Y" && document.getElementById("mailbtn")) document.getElementById("mailbtn").style.display = "none";
+	if((MenuInfo.indexType === "H" || FileInfo.idxFile === false) && document.getElementById("indexbtn")) document.getElementById("indexbtn");
+	if(SkinInfo.printkind === "000" && document.getElementById("printbtn")) document.getElementById("printbtn").style.display = "none";
+}
+MenuObj.show_pageNumber = function(){
+	document.pageshowform.pageno.value = MoveInfo.get_showPageNumber();
+}
+MenuObj.do_pagenoFocusIn = function(e){
+	MenuObj.storedStr = document.pageshowform.pageno.value;
+	document.pageshowform.pageno.value = "";
+}
+MenuObj.do_pagenoFocusOut = function(e){
+	document.pageshowform.pageno.value = MenuObj.storedStr;
+}
+MenuObj.do_pagenoFormSubmit = function(){
+	var n = PermitMan.get_directGoPerm("showboard", document.pageshowform.pageno.value, "", "");			// device, spage, pageshow, state
+	if(n < 0) return false;
+	go_general(n, "user");
+	return false;
+}
+MenuObj.onresize_func = function(){}
+MenuObj.finish_enlarge = function(){}
+MenuObj.prepare_downsize = function(){}
+
+if(document.getElementById("combosect")) comboDiv = document.getElementById("combosect");
+if(document.getElementById("downsect")) downDiv = document.getElementById("downsect");
+if(document.getElementById("searchsect")) searchDiv = document.getElementById("searchsect");
+if(document.getElementById("mediasect")){
+	mediaDiv = document.getElementById("mediasect");
+	mediaPlayer = document.getElementById("mediactrl");
+}
+if(document.getElementById("snssect")) snsDiv = document.getElementById("snssect");
+</script>
+
+<!-- onsmimage -->
+<div id="onsmlsect" class="onsmlE451c">
+<a href="javascript:leftOnsmClick();" title="이전 페이지로 이동"><img src="./skin5/mm451c/onsmimageL451c.png" width="55" height="89" alt="이전 페이지" class="hover_opac8"></a>
+</div>
+<div id="onsmrsect" class="onsmrE451c">
+<a href="javascript:rightOnsmClick();" title="다음 페이지로 이동"><img src="./skin5/mm451c/onsmimageR451c.png" width="55" height="89" alt="다음 페이지" class="hover_opac8"></a>
+</div>
+<script>
+onsmlDiv = document.getElementById("onsmlsect");
+onsmrDiv = document.getElementById("onsmrsect");
+OnsmObj = {};
+OnsmObj.set_location = function(){
+	onsmlDiv.style.left = winRect.x+22 + "px";
+	onsmlDiv.style.top = (smRect.centerPt.y-35) + "px";
+	onsmrDiv.style.left = (winRect.right-75) + "px";
+	onsmrDiv.style.top = (smRect.centerPt.y-35) + "px";
+}
+OnsmObj.set_visible = function(b1, b2){
+	onsmlDiv.style.visibility = b1;
+	onsmrDiv.style.visibility = b2;
+}
+OnsmObj.prepare_enlarge = function(){}
+OnsmObj.finish_enlarge = function(){}
+OnsmObj.prepare_downsize = function(){}
+</script>
+
+<!-- bookdeco -->
+<div id="bookdecosect">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<image id="decoImgTL" x="0" y="0" width="14" height="11" xlink:href="./skin5/bookdeco/topleft016.png" />
+<image id="decoImgTC" x="14" y="0" width="100" height="11" xlink:href="./skin5/bookdeco/topcenter016.png" preserveAspectRatio="none" />
+<image id="decoImgTR" x="100" y="0" width="15" height="11" xlink:href="./skin5/bookdeco/topright016.png" />
+
+<image id="decoImgML" x="0" y="11" width="14" height="50" xlink:href="./skin5/bookdeco/midleft016.png" preserveAspectRatio="none" />
+<rect id="decoRectMC" x="6" y="6" width="1" height="1" fill="#ffffff" />
+<image id="decoImgMR" x="100" y="11" width="15" height="50" xlink:href="./skin5/bookdeco/midright016.png" preserveAspectRatio="none" />
+
+<image id="decoImgBL" x="0" y="11" width="14" height="17" xlink:href="./skin5/bookdeco/btmleft016.png" />
+<image id="decoImgBC" x="14" y="0" width="100" height="17" xlink:href="./skin5/bookdeco/btmcenter016.png" preserveAspectRatio="none" />
+<image id="decoImgBR" width="15" height="17" xlink:href="./skin5/bookdeco/btmright016.png" />
+</svg>
+</div>
+<script>
+bookdecoDiv = document.getElementById("bookdecosect");
+DecoObj = {drawC:0};			// drawC : both_show:0, left_hide:1, right_hide:2, onesmc:3
+DecoObj.onload_func2 = function(){
+	DecoObj.drawC = 0;
+	if(ScreenInfo.onesmc === true){
+		DecoObj.drawC = 3;
+	}
+	else{
+		if(CataInfo.openingAnimation === true){
+			if(PageInfo.currentPage === 0){
+				DecoObj.drawC = 1;
+			}
+			else if(PageInfo.blank_imageFromLeft(PageInfo.currentPage) === 1){		// if the last page's right side is blank
+				DecoObj.drawC = 2;
+			}
+		}
+	}
+
+	DecoObj.draw_deco(-1);
+}
+DecoObj.draw_deco = function(n){
+	if(n != -1) DecoObj.drawC = n;
+
+	//alert(DecoObj.drawC);
+	if(DecoObj.drawC === 0 || DecoObj.drawC === 3){
+		document.getElementById('decoImgTL').setAttribute("x", 0);
+		document.getElementById('decoImgML').setAttribute("x", 0);
+		document.getElementById('decoImgML').setAttribute("height", smRect.height-10);
+		document.getElementById('decoImgBL').setAttribute("x", 0);
+		document.getElementById('decoImgBL').setAttribute("y", smRect.height+1);
+
+		document.getElementById('decoImgTC').setAttribute("x", 14);
+		document.getElementById('decoImgTC').setAttribute("width", smRect.width-11);
+		document.getElementById('decoRectMC').setAttribute("x", 6);
+		document.getElementById('decoRectMC').setAttribute("width", smRect.width);
+		document.getElementById('decoRectMC').setAttribute("height", smRect.height);
+		document.getElementById('decoImgBC').setAttribute("x", 14);
+		document.getElementById('decoImgBC').setAttribute("y", smRect.height+1);
+		document.getElementById('decoImgBC').setAttribute("width", smRect.width-11);
+
+		document.getElementById('decoImgTR').setAttribute('x', smRect.width+3);
+		document.getElementById('decoImgMR').setAttribute('x', smRect.width+3);
+		document.getElementById('decoImgMR').setAttribute("height", smRect.height-10);
+		document.getElementById('decoImgBR').setAttribute("x", smRect.width+3);
+		document.getElementById('decoImgBR').setAttribute("y", smRect.height+1);
+	}
+	else if(DecoObj.drawC === 1){
+		document.getElementById('decoImgTL').setAttribute("x", ScreenInfo.smImageWidth);
+		document.getElementById('decoImgML').setAttribute("x", ScreenInfo.smImageWidth);
+		document.getElementById('decoImgML').setAttribute("height", smRect.height-10);
+		document.getElementById('decoImgBL').setAttribute("x", ScreenInfo.smImageWidth);
+		document.getElementById('decoImgBL').setAttribute("y", smRect.height+1);
+
+		document.getElementById('decoImgTC').setAttribute("x", ScreenInfo.smImageWidth+14);
+		document.getElementById('decoImgTC').setAttribute("width", ScreenInfo.smImageWidth-11);
+		document.getElementById('decoRectMC').setAttribute("x", ScreenInfo.smImageWidth+6);
+		document.getElementById('decoRectMC').setAttribute("width", ScreenInfo.smImageWidth);
+		document.getElementById('decoRectMC').setAttribute("height", smRect.height);
+		document.getElementById('decoImgBC').setAttribute("x", ScreenInfo.smImageWidth+14);
+		document.getElementById('decoImgBC').setAttribute("y", smRect.height+1);
+		document.getElementById('decoImgBC').setAttribute("width", ScreenInfo.smImageWidth-11);
+
+		document.getElementById('decoImgTR').setAttribute('x', smRect.width+3);
+		document.getElementById('decoImgMR').setAttribute('x', smRect.width+3);
+		document.getElementById('decoImgMR').setAttribute("height", smRect.height-10);
+		document.getElementById('decoImgBR').setAttribute("x", smRect.width+3);
+		document.getElementById('decoImgBR').setAttribute("y", smRect.height+1);
+	}
+	else if(DecoObj.drawC === 2){
+		document.getElementById('decoImgTL').setAttribute("x", 0);
+		document.getElementById('decoImgML').setAttribute("x", 0);
+		document.getElementById('decoImgML').setAttribute("height", smRect.height-10);
+		document.getElementById('decoImgBL').setAttribute("x", 0);
+		document.getElementById('decoImgBL').setAttribute("y", smRect.height+1);
+
+		document.getElementById('decoImgTC').setAttribute("x", 14);
+		document.getElementById('decoImgTC').setAttribute("width", ScreenInfo.smImageWidth-11);
+		document.getElementById('decoRectMC').setAttribute("x", 6);
+		document.getElementById('decoRectMC').setAttribute("width", ScreenInfo.smImageWidth);
+		document.getElementById('decoRectMC').setAttribute("height", smRect.height);
+		document.getElementById('decoImgBC').setAttribute("x", 14);
+		document.getElementById('decoImgBC').setAttribute("y", smRect.height+1);
+		document.getElementById('decoImgBC').setAttribute("width", ScreenInfo.smImageWidth-11);
+
+		document.getElementById('decoImgTR').setAttribute('x', ScreenInfo.smImageWidth+3);
+		document.getElementById('decoImgMR').setAttribute('x', ScreenInfo.smImageWidth+3);
+		document.getElementById('decoImgMR').setAttribute("height", smRect.height-10);
+		document.getElementById('decoImgBR').setAttribute("x", ScreenInfo.smImageWidth+3);
+		document.getElementById('decoImgBR').setAttribute("y", smRect.height+1);
+	}
+}
+DecoObj.onresize_func = function(){
+	DecoObj.draw_deco(-1);
+}
+DecoObj.set_location = function(){
+	CoverObj.bookdecoX = smRect.x - 6;
+	bookdecoDiv.style.left = CoverObj.bookdecoX + "px";
+	bookdecoDiv.style.top = (smRect.y-6) + "px";
+	bookdecoDiv.style.width = (smRect.width+18) + "px";				// 6 + 12
+	bookdecoDiv.style.height = (smRect.height+18) + "px";			// 6 + 12
+	splbtnX = smRect.x, splbtnY = smRect.y+2;
+	sprbtnX = smRect.right-12, sprbtnY = splbtnY;
+}
+</script>
+
+
+<!-- spacerbutton -->
+<div id="splbtnsect">
+<img src="./skin5/spacer/spacerbuttonL004.png" width="27" height="46" usemap="#spacerMap1" 
+  alt="책갈피 버튼">
+<map name="spacerMap1">
+<area shape="rect" coords="8,6,19,19" href="javascript:spacerbtnClick('view')" 
+  alt="책갈피 보기" title="책갈피 보기">
+<area shape="rect" coords="8,26,19,38" href="javascript:spacerbtnClick('left')" 
+  alt="책갈피 추가" title="책갈피 추가">
+</map>
+</div>
+<div id="sprbtnsect">
+<img src="./skin5/spacer/spacerbuttonR004.png" width="27" height="46" usemap="#spacerMap2" 
+  alt="책갈피 버튼">
+<map name="spacerMap2">
+<area shape="rect" coords="8,6,19,19" href="javascript:spacerbtnClick('view')" 
+  alt="책갈피 보기" title="책갈피 보기">
+<area shape="rect" coords="8,26,19,38" href="javascript:spacerbtnClick('right')" 
+  alt="책갈피 추가" title="책갈피 추가">
+</map>
+</div>
+
+<script>
+splbtnDiv = document.getElementById("splbtnsect");
+sprbtnDiv = document.getElementById("sprbtnsect");
+CoverObj.splbtnX = 0;
+CoverObj.sprbtnX = 0;
+
+SpacerObj = {};
+SpacerObj.onload_func2 = function(){}
+SpacerObj.finish_turnover = function(){}
+SpacerObj.set_location = function(){
+	splbtnDiv.style.left = (splbtnX-26) + "px";
+	splbtnDiv.style.top = splbtnY + "px";
+	sprbtnDiv.style.left = (sprbtnX+12) + "px";
+	sprbtnDiv.style.top = sprbtnY + "px";
+}
+SpacerObj.finish_enlarge = function(){
+	if(ScreenInfo.onesmc === false) splbtnDiv.style.visibility = "hidden";
+	sprbtnDiv.style.visibility = "hidden";
+}
+SpacerObj.prepare_downsize = function(){
+	if(ScreenInfo.onesmc === false) splbtnDiv.style.visibility = "visible";
+	sprbtnDiv.style.visibility = "visible";
+}
+</script>
+
+
+
+<!-- onsmimage -->
+
+<div id="smcsect0"></div>
+<div id="smcsect2"></div>
+<div id="smcsect1">
+<svg version="1.1" id="smcsvg1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<filter id="approveMatrix">
+<feColorMatrix in="SourceGraphic" type="matrix" values="0.1 0 0 0 0  0 0.1 0 0 0  0 0 0.1 0 0  0 0 0 1 0" />
+</filter>
+<g id="smcntg1">
+<g id="smcImgL1" ></g>
+<g id="smcImgR1" ></g>
+<g id="smcSearchL1"></g>
+<g id="smcSearchR1"></g>
+<g id="smcLinkL1"></g>
+<g id="smcLinkR1"></g>
+</g>
+</svg>
+<div id="smc_enlargeL"><a href="javascript:enlargebtnClick('L');" title="좌측 페이지 확대"><img 
+  src="./skin5/icon/cursor_enlarge.png" width="17" height="17" alt="확대"></a></div>
+<div id="smc_enlargeR"><a href="javascript:enlargebtnClick('R');" title="우측 페이지 확대"><img 
+  src="./skin5/icon/cursor_enlarge.png" width="17" height="17" alt="확대"></a></div>
+<audio id="smcaudio" class="audio_ctrlr_hidden">브라우저가 audio를 지원하지 않습니다</audio>
+</div>
+
+<!-- main canvas -->
+<div id="maincnvsect"><canvas id="maincnv"></canvas></div>
+
+<!-- smcenter -->
+<div id="smctrsect"></div>
+
+<!-- ani canvas -->
+
+<!-- testing canvas -->
+<div id="testcnvsect"></div>
+
+<div id="linkoutsect"></div>
+<audio id="linkoutaudio" class="audio_ctrlr_hidden">브라우저가 audio를 지원하지 않습니다</audio>
+<div id="descriptsect"></div>
+<div id="soundsect"></div>
+<div id="combopopsect" class="combopop012"></div>
+<div id="glassessect"></div>
+<div id="encsect"></div>
+<div id="guidesect"></div>
+<div id="bbwsect"></div>
+<div id="memosect"></div>
+<div id="usershape"></div>
+<div id="expandsect"></div>
+
+<div id="hidesect"></div>
+<div id="licensesect"></div>
+<div id="fadesect"></div>
+
+<div id="newinsect" class="newinE001"></div>
+<div id="newin2sect"></div>
+<div id="indexsect" class="newinE001"></div>
+<div id="alertsect" class="newinE001"></div>
+
+<div id="debugsect"></div>
+<div id="tooltipsect"></div>
+<div id="cursorsect" class="cursor5d">
+<svg version="1.1" id="cursorsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<linearGradient id="cursor_backgrad">
+	<stop offset="0%" stop-color="#FFFFFF" />
+	<stop offset="100%" stop-color="#CCCCCC" />
+</linearGradient>
+</defs>
+<g>
+	<rect id="cursor_backrect" x="0.5" y="0.5" width="150" height="35" rx="4" fill="url(#cursor_backgrad)" stroke="#444444" stroke-width="1" />
+	<image xlink:href="./skin5/icon/altlink_back.png" x="3" y="3" width="30" height="30" />
+	<rect x="14" y="13" width="8" height="13" rx="4" stroke="#000000" stroke-width="2" fill="none" />
+	<line x1="18" y1="9" x2="18" y2="17" stroke="#000000" stroke-width="2" />
+	<line x1="14" y1="18" x2="22" y2="18" stroke="#000000" stroke-width="2" />
+	<circle id="cursor_leftcc" r="2" cx="16" cy="16" fill="#ff6600" visibility="hidden" />
+	<circle id="cursor_rightcc" r="2" cx="20" cy="16" fill="#00ff00" visibility="hidden" />
+</g>
+</svg>
+<div id="cursor_text"></div>
+</div>
+
+<!-- url copy -->
+<div class="url_copy"><input type="text" name="urlcopy" id="urlcopy" value=""></div>
+
+<script>
+	loadto = 2;
+	if(document.getElementById("logosect")) logoDiv = document.getElementById("logosect");
+	if(document.getElementById("smctrsect")) smctrDiv = document.getElementById("smctrsect");
+	if(document.getElementById("anicnvsect")) anicnvDiv = document.getElementById("anicnvsect");
+</script>
+</body>
+</html>

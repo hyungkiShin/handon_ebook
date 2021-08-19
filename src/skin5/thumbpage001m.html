@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - thumbpage001m</title>
+<style>
+	html, body{width:100%;margin:0;overflow:scroll;}
+	*{font-family:굴림,Arial,Tahoma;font-size:12px;}
+
+	#mainsvg{display:block;position:absolute;left:2px;top:2px;width:auto;}
+
+	.thitem{cursor:pointer;}
+	.thitem:hover rect:first-child{fill:#777777;}
+
+	.thshadow{fill:#BBBBBB;}
+	.thshadow301{fill:#000000;}
+	.thback{stroke:#000000;stroke-width:1;fill:none;}
+	.currback{stroke:#ff6600;stroke-width:1;fill:none;}
+</style>
+<script>
+var selfName = "thumbpage001m.html", winCnt = "thumbpage";
+var p;
+
+var mainSvg, thumbGrpObj;
+var aniTimer;
+var animating = 0;
+var uxdist = 1.0;
+var moveQty = 4;			// when first/last page moving
+
+var arThumbItem = new Array();
+var arThumbPage = new Array();
+var currItem1;
+var thumbLen;
+
+var transInterval = 15;
+var transPercent = [0.08, 0.22, 0.34, 0.45, 0.55, 0.63, 0.71, 0.77, 0.83, 0.88, 0.92, 0.96, 0.98, 0.99, 1.0];
+var transLen = transPercent.length;
+
+var pc, colQty, thumbWidth, thumbHeight, uwidth;
+var sArticle, fArticle;
+var spacingII = 5;				// thumb bet. page
+// button's width is(left and right side), 90, left side 45(incudes first/previous button and spaces), right side 45
+// in 301(gallery), because button doesnot exist, is 10
+var befScrollX, diffX;
+
+function onload_func(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+	p.thumbSvg = this;
+	window.parent.objLoaded2('thumbpage', this, false);
+
+	mainSvg = document.getElementById("mainsvg");
+	thumbGrpObj = document.getElementById('thumbGrp');
+
+	thumbHeight = p.MenuInfo.m_thumbHeight;
+	thumbWidth = Math.round(thumbHeight*p.ScreenInfo.ratioWH);
+	colQty = p.ScreenInfo.get_thumbQtyFromWidth(p.MenuObj.thobjWidth, 0, thumbWidth, spacingII);				// w, winpad, thumbWidth, imgspacing
+	uwidth = thumbWidth + spacingII;
+	befScrollX = 0;
+
+	mainSvg.style.width = uwidth*p.PageInfo.cataPages + "px";
+	mainSvg.style.height = (thumbHeight+2) + "px";
+
+	for(var i = 0;i < p.PageInfo.cataPages;i++){
+		make_thumbItem(i+1, uwidth*i, 0);
+	}
+
+	check_image();
+	show_currentItem(p.PageInfo.currentPage-1);
+}
+function make_thumbItem(pno, tx, ty){
+	var alink = document.createElementNS("http://www.w3.org/2000/svg","a");
+	alink.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","javascript:do_itemClick("+pno+")");
+	thumbGrpObj.appendChild(alink);
+
+	var titleObj = document.createElementNS("http://www.w3.org/2000/svg","title");
+	if(p.CataInfo.cataLang == "en") titleObj.textContent = pno+"page";
+	else titleObj.textContent = pno+"페이지";
+	alink.appendChild(titleObj);
+
+	var gObj = document.createElementNS("http://www.w3.org/2000/svg","g");
+	gObj.setAttribute("class", "thitem");
+	gObj.setAttribute('transform','translate('+tx+','+ty+')');
+	gObj.setAttribute('onclick',"do_itemClick('"+pno+"')");
+
+	// a rectangle for black outline
+	var rectObj = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	rectObj.setAttribute("class", "thback");
+	rectObj.setAttribute("width", thumbWidth+2);
+	rectObj.setAttribute("height", thumbHeight+2);
+	gObj.appendChild(rectObj);
+
+	arThumbItem.push(gObj);
+	arThumbPage.push(pno);
+
+	alink.appendChild(gObj);
+}
+
+function load_image(gObj, pno){
+	var appdix = "s";
+	if(p.SkinInfo.smcgallery === true || p.MoveInfo.bigImageOnly === true) appdix = "";
+	var aaa = p.FileInfo.thumbFilePath(pno,appdix,"","*");
+	var urlstr = (p.CataInfo.cdmake === true) ? "../" + aaa[0] : aaa[0];
+
+	var imageObj = document.createElementNS("http://www.w3.org/2000/svg","image");
+	if(p.ServerInfo.applyCipher === true) p.load_cipherImage('thpage', pno, urlstr, after_cipherLoaded);
+	else imageObj.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", urlstr);
+	imageObj.setAttribute("id", "anime1_"+pno);
+	imageObj.setAttribute("x", 1);
+	imageObj.setAttribute("y", 1);
+	imageObj.setAttribute("width", thumbWidth);
+	imageObj.setAttribute("height", thumbHeight);
+	gObj.appendChild(imageObj);
+}
+function after_cipherLoaded(skd, npage, urlsrc){
+	document.getElementById("anime1_"+npage).setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", urlsrc);
+}
+function check_image(){
+	var tx, item;
+	var checkFirst = false;
+	var showQty = 0;
+	for(var i = 0;i < p.PageInfo.cataPages;i++){
+		item = arThumbItem[i];
+		tx = uwidth*i;
+		if((befScrollX < tx || befScrollX < tx+thumbWidth) && tx < befScrollX+p.MenuObj.thobjWidth){
+			if(checkFirst === false){
+				sArticle = i;
+				checkFirst = true;
+			}
+			else{
+				showQty++;
+			}
+			if(item.childNodes.length == 1) load_image(item, i+1);
+		}
+		else{
+			if(item.childNodes.length == 2) item.removeChild(item.childNodes[1]);
+		}
+	}
+	fArticle = sArticle + showQty;
+}
+function check_scrolling(){
+	var thscroll = window.scrollX;
+	if(thscroll === befScrollX){
+		clearInterval(aniTimer);
+		aniTimer = undefined;
+		check_image();
+	}
+	else{
+		befScrollX = thscroll;
+	}
+}
+
+/// ############################## moving utility ############################## ///
+function show_currentItem(ano){
+	if(animating != 0) return;
+
+	if(currItem1){
+		currItem1.childNodes[0].setAttribute("class", "thback");
+		currItem1 = undefined;
+	}
+
+	for(var i = 0;i < p.PageInfo.cataPages;i++){
+		if(i == ano){
+			currItem1 = arThumbItem[i];
+			currItem1.childNodes[0].setAttribute("class", "currback");
+			break;
+		}
+	}
+}
+
+// page = article+1
+function check_currPage(pno){
+	if(animating != 0) return;
+
+	var ano = pno - 1;
+	if(contain_article(ano) == true){
+		show_currentItem(ano);
+		return;
+	}
+
+	p.Action.aniLocking = true;
+	var thscroll = window.scrollX;
+	var aimscroll = ano*uwidth - p.MenuObj.thobjWidth/2;
+	diffX = aimscroll - thscroll;
+
+	animating = 1;
+	SEQ = 0;
+	aniTimer = setInterval(move_animate, 15);
+}
+function move_animate(){
+	var percent = transPercent[SEQ];
+	window.scrollTo(diffX*percent,0);
+
+	SEQ++;
+	if(SEQ == transLen){
+		clearInterval(aniTimer);
+		aniTimer = undefined;
+
+		p.Action.aniLocking = false;
+		befScrollX = window.scrollX;
+		check_image();
+		show_currentItem(p.PageInfo.currentPage-1);
+	}
+}
+
+function contain_article(ano){
+	for(var i = sArticle;i < fArticle;i++){
+		if(i == ano) return true;
+	}
+	return false;
+}
+
+function do_itemClick(pno){
+	var n = p.PermitMan.get_directGoPerm("thumbpaging", pno, "", "");			// device, spage, pageshow, state
+	if(n < 0) return;
+	p.go_general(n, "system");
+}
+
+window.onscroll = function(e){
+	if(aniTimer == undefined){
+		aniTimer = setInterval(check_scrolling, 200);			// for checking finish of scrolling
+	}
+}
+
+/// ############################## resizing window ############################## ///
+function onresize_func(tw){
+	//colQty = p.ScreenInfo.get_thumbQtyFromWidth(tw, 0, thumbWidth, spacingII);				// w, winpad, thumbWidth, imgspacing
+	check_image();
+}
+function finish_turnover(){			// from p.ScreenMan.finish_turnover()
+	show_currentItem(p.PageInfo.currentPage-1);
+	//check_currPage(p.PageInfo.currentPage);
+}
+</script>
+</head>
+
+<body onload="onload_func()">
+
+<svg version="1.1" id="mainsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="thumbGrp"></g>
+</svg>
+
+</body>
+</html>

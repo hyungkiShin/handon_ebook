@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>ecatalog - print</title>
+<style>
+	body{margin:0;width:100%;}
+	@page{size:portrait;margin:0px;}
+	div{display:block;page-break-after:always;}
+	img{display:block;border:0;}
+</style>
+<script src="../common.js"></script>
+<script src="./newin.js"></script>
+<script>
+var selfName = "printpage001.html", winCnt = "printpage";
+var p;
+
+var maxwidth = 770, maxheight = 1100;
+var ratioWH, ratioWHI;
+var shwidth, shheight;
+var loadto, loaded;
+var sumstr;
+
+function onload_func(){
+	if(window.opener) p = window.opener;
+	else p = window.parent;
+
+	if(p.PrintInfo.newinPage === true) p = window.opener;
+	else p = window.parent;
+
+	console.log(selfName+" : loaded");
+	p.printpageSvg = this;
+	p.objLoaded2('printpage', this, false);
+
+	if(navigator.userAgent.toLowerCase().indexOf("chrome") != -1){
+		maxheight = 1080;
+	}
+
+	ratioWH = maxwidth / maxheight;
+	//alert(ratioWH);
+	if(p.PrintInfo.partPrint === true){
+		partPrint();
+	}
+	else{
+		sectionPrint();
+	}
+}
+function load_image(npage){
+	var urlstr = "";
+	if(p.PageInfo.pageshowKind === "filename"){
+		var aaa = p.FileInfo.cimg2FilePath(npage,"","","*");
+		urlstr = aaa[0];
+	}
+	else{
+		var aaa = p.FileInfo.cimgFilePath(npage,"","","*");
+		urlstr = aaa[0];
+	}
+
+	if(p.CataInfo.cdmake === true) urlstr = "../"+urlstr+"?h=br";
+	sumstr += "<div><img src='"+urlstr+"' width='"+shwidth+"' height='"+shheight+"'></div>\n";
+
+	var image = new Image();
+	image.onload = function(){
+		loaded++;
+		if(loaded >= loadto){
+			document.body.innerHTML = sumstr;
+			focus();
+			if((isIE() === true || isIE11() === true) && p.PrintInfo.newinPage === false) document.execCommand('print', false, null);
+			else window.print();
+		}
+	}
+	image.src = urlstr;
+}
+function load_imageCipher(npage){
+	var urlstr = "";
+	if(p.PageInfo.pageshowKind === "filename"){
+		var aaa = p.FileInfo.cimg2FilePath(npage,"","","*");
+		urlstr = aaa[0];
+	}
+	else{
+		var aaa = p.FileInfo.cimgFilePath(npage,"","","*");
+		urlstr = aaa[0];
+	}
+
+	if(p.CataInfo.cdmake === true) urlstr = "../"+urlstr+"?h=br";
+	p.load_cipherImage('print', 0, urlstr, load_imageCipher2);
+}
+function load_imageCipher2(skd, npage, urlsrc){
+	var image = new Image();
+	image.onload = function(){
+		sumstr += "<div><img src='"+urlsrc+"' width='"+shwidth+"' height='"+shheight+"'></div>\n";
+		loaded++;
+		if(loaded >= loadto){
+			document.body.innerHTML = sumstr;
+			focus();
+			if((isIE() === true || isIE11() === true) && p.PrintInfo.newinPage === false) document.execCommand('print', false, null);
+			else window.print();
+		}
+	}
+	image.src = urlsrc;
+}
+function sectionPrint(){
+	var nw = p.ScreenInfo.bigImageWidth;
+	var nh = p.ScreenInfo.bigImageHeight;
+
+	shwidth = nw;
+	shheight = nh;
+	ratioWHI = nw / nh;
+
+	var wideType = (p.CataInfo.cataLang == "en") ? "Landscape" : "가로";
+	if(nw > nh){
+		if(nw > maxheight || nh > maxwidth){
+			if(nw*ratioWH < nh){
+				shheight = maxwidth;
+				shwidth = Math.floor(shheight / ratioWHI);
+			}
+			else{
+				shwidth = maxheight;
+				shheight = Math.floor(shwidth * ratioWHI);
+			}
+		}
+	}
+	else{
+		wideType = (p.CataInfo.cataLang == "en") ? "Portrait" : "세로";
+		if(nw > maxwidth || nh > maxheight){
+			if(nh*ratioWH < nw){
+				shwidth = maxwidth;
+				shheight = Math.floor(shwidth / ratioWHI);
+			}
+			else{
+				shheight = maxheight;
+				shwidth = Math.floor(shheight * ratioWHI);
+				//alert(shwidth+":"+shheight);
+			}
+		}
+	}
+
+	console.log(selfName+" : width("+shwidth+"), height("+shheight+")");
+
+	if(p.PrintInfo.newinPage === true){
+		if(p.CataInfo.cataLang == "en") alert('The '+wideType+' is suitable for paper orientation.\nPlease confirm and press the Print button.');
+		else alert('현재 인쇄할 페이지의 용지방향은 '+wideType+'가 적당합니다.\n확인하시고 인쇄버튼을 눌러 주시기 바랍니다.');
+	}
+
+	sumstr = "";
+	loaded = 0;
+	loadto = p.PrintInfo.toPageNo - p.PrintInfo.frPageNo + 1;
+	if(p.ServerInfo.applyCipher === true){
+		for(var i = p.PrintInfo.frPageNo;i <= p.PrintInfo.toPageNo;i++){
+			load_imageCipher(i);
+		}
+	}
+	else{
+		for(var i = p.PrintInfo.frPageNo;i <= p.PrintInfo.toPageNo;i++){
+			load_image(i);
+		}
+	}
+}
+function partPrint(){
+	var aaa = p.FileInfo.cimgFilePath(p.PrintInfo.frPageNo,"","","*");
+	var urlstr = aaa[0] + "?h=br";
+	if(p.CataInfo.cdmake === true) urlstr = "../" + urlstr;
+
+	if(p.ServerInfo.applyCipher === true){
+		p.load_cipherImage('print', 0, urlstr, partPrint2);
+	}
+	else{
+		partPrint2(urlstr);
+	}
+}
+function partPrint2(skd, npage, urlsrc){
+	var image = new Image();
+	image.onload = function(){
+		var nw = p.PrintInfo.partWidth;
+		var nh = p.PrintInfo.partHeight;
+		var partWH = nw / nh;
+
+		var prnCanvas = document.createElement('canvas');
+		document.body.appendChild(prnCanvas);
+		var cntx = prnCanvas.getContext("2d");
+
+		if(p.PrintInfo.partPrintMode === "actual"){
+			if(nw > nh){
+				prnCanvas.width = maxheight;
+				prnCanvas.height = maxwidth;
+			}
+			else{
+				prnCanvas.width = maxwidth;
+				prnCanvas.height = maxheight;
+			}
+			cntx.drawImage(image, p.PrintInfo.partX, p.PrintInfo.partY, nw, nh, p.PrintInfo.partX, p.PrintInfo.partY, nw, nh);
+			focus();
+			print();
+		}
+		else{			// fit
+			var wideType = (p.CataInfo.cataLang == "en") ? "Landscape" : "가로";
+			if(nw > nh){
+				shwidth = maxheight;
+				shheight = Math.floor(shwidth / partWH);
+
+				if(shheight > maxwidth){
+					shheight = maxwidth;
+					shwidth = Math.floor(shheight * partWH);
+				}
+				prnCanvas.width = maxheight;
+				prnCanvas.height = maxwidth;
+			}
+			else{
+				wideType = (p.CataInfo.cataLang == "en") ? "Portrait" : "세로";
+				shwidth = maxwidth;
+				shheight = Math.floor(shwidth / partWH);
+
+				if(shheight > maxheight){
+					shheight = maxheight;
+					shwidth = Math.floor(shheight * partWH);
+				}
+				prnCanvas.width = maxwidth;
+				prnCanvas.height = maxheight;
+			}
+		
+			console.log(selfName+" : width("+shwidth+"), height("+shheight+")");
+			if(p.PrintInfo.newinPage === true){
+				if(p.CataInfo.cataLang == "en") alert('The '+wideType+' is suitable for paper orientation.\nPlease confirm and press the Print button.');
+				else alert('현재 인쇄할 페이지의 용지방향은 '+wideType+'가 적당합니다.\n확인하시고 인쇄버튼을 눌러 주시기 바랍니다.');
+			}
+
+			cntx.drawImage(image, p.PrintInfo.partX, p.PrintInfo.partY, nw, nh, 0, 0, shwidth, shheight);
+			focus();
+			print();
+		}
+	}
+	image.src = urlsrc;
+}
+window.addEventListener("unload", function(e){
+	if(p.PrintInfo.newinPage === true) p.PrintInfo.newinObj = undefined;
+}, false);
+</script>
+</head>
+
+<body onload="onload_func()">
+</body>
+</html>
+

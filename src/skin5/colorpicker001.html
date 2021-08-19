@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ecatalog - colorpicker001</title>
+<style>
+	html, body{margin:0px;width:100%;height:100%;overflow:hidden;background-color:#666666;}
+
+@media screen and (min-width:395px) {
+	*{font-family:Tahoma;font-size:11px;}
+
+	#colorpicker{display:block;width:400px;height:274px;background-color:#666666;border:1px solid #444444;}
+	#colpkfield{display:block;float:left;width:256px;height:256px;margin:8px;border:1px solid #aaaaaa;}
+	#colpkslide{display:block;float:left;width:20px;height:256px;margin:8px 0 8px 10px;border:1px solid #aaaaaa;}
+	#colpkfieldbtn{display:block;position:absolute;left:260px;top:40px;width:14px;height:14px;margin:0;}
+	#colpkslidebtn{display:block;position:absolute;left:272px;top:40px;width:48px;height:14px;margin:0;}
+
+	.colpkshowcnt{display:block;width:45px;height:30px;margin:20px 0 0 0;background-color:#ffffff;border:1px solid #999999;}
+	#colpkshow{display:block;float:left;width:23px;height:30px;margin:0;background-color:#ffffff;}
+	#colbefshow{display:block;float:left;width:22px;height:30px;margin:0;background-color:#ffffff;}
+
+	.colpkinput{display:block;float:left;width:60px;margin:0 0 8px 25px;}
+	.colpkinput > label{display:block;margin-top:8px;}
+	.colpkinput > label:first-child{color:#ff0000;}
+	.colpkinput > label:nth-of-type(2){color:#00ff00;}
+	.colpkinput > label:nth-of-type(3){color:#0000ff;}
+	.colpkinput > label:nth-of-type(4){color:#ffffff;}
+
+	.rgbinput{width:30px;height:15px;border:1px solid #999999;}
+	.hexinput{width:45px;height:15px;border:1px solid #999999;}
+	.btninput{display:inline;margin:20px 0 0 0;}
+}
+@media screen and (max-width:394px) {
+	*{font-size:11px;}
+
+	#colorpicker{display:block;width:320px;height:374px;background-color:#666666;}
+	#colpkfield{display:block;float:left;width:256px;height:256px;margin:8px;border:1px solid #aaaaaa;}
+	#colpkslide{display:block;float:left;width:20px;height:256px;margin:8px 0 8px 10px;border:1px solid #aaaaaa;}
+	#colpkfieldbtn{display:block;position:absolute;left:260px;top:40px;width:14px;height:14px;margin:0;}
+	#colpkslidebtn{display:block;position:absolute;left:272px;top:40px;width:48px;height:14px;margin:0;}
+
+	.colpkinput{display:block;width:100%;margin:0 0 0 8px;clear:both;}
+	.colpkinput > label{display:block;float:left;margin:0 20px 0 0;}
+	.colpkinput > label:first-child{color:#ff0000;}
+	.colpkinput > label:nth-of-type(2){color:#00ff00;}
+	.colpkinput > label:nth-of-type(3){color:#0000ff;}
+	.colpkinput > label:nth-of-type(4){color:#ffffff;}
+
+	.clear{clear:both;}
+	.colpkshowcnt{display:block;float:left;width:45px;height:30px;margin:20px 0 0 0;background-color:#ffffff;border:1px solid #999999;}
+	#colpkshow{display:block;float:left;width:23px;height:30px;margin:0;background-color:#ffffff;}
+	#colbefshow{display:block;float:left;width:22px;height:30px;margin:0;background-color:#ffffff;}
+
+	.colpkbtn{display:block;float:left;width:80px;height:25px;;margin:25px 0 0 50px;}
+	.colpkbtn > input{width:80px;height:25px;}
+
+	.rgbinput{width:30px;height:15px;border:1px solid #999999;-webkit-border-radius:0px;}
+	.hexinput{width:45px;height:15px;border:1px solid #999999;-webkit-border-radius:0px;}
+}
+</style>
+<script src="newin.js"></script>
+<script>
+var selfName = "colorpicker001.html", winCnt = "colpk";
+var newin_titletext = "색상 선택";
+var svgObj = "colpkSvg";
+var plusID = "";
+
+var fullscrbtn = 0, closebtn = 1;
+var skind = "";
+var dragGap = 0;
+
+var downKind = 0;
+var currX, currY;
+var sntc = ["원버튼","화살표버튼","배경","확인"];
+
+// sr/sg/sb : slider's rgb, cr/cg/cb : field's rgb
+var cpickObj = {befHexval:'', slideMinY:3, slideMaxY:259, slideCurY:3, slideDownY:0, slidePos:1, 
+	fieldMinX:3, fieldMaxX:259, fieldMinY:3, fieldMaxY:259, fieldCurX:0, fieldCurY:0, fieldDownX:0, fieldDownY:0,
+	sr:0, sg:0, sb:0, cr:0, cg:0, cb:0, uheight:0, arslideY:[0,0,0,0,0,0,0]};
+
+function onload_func(){
+	var ar = parse_qstring(document.defaultView.location.href);
+	if(eclang === "en"){
+		newin_titletext = "Select Color";
+		sntc = ["circle button","arrow button","background","Confirm"];
+	}
+
+	set_userSkin(mainmenu, incview);
+}
+function after_userSkin(){
+	p = window.parent;
+	console.log(selfName+" : loaded");
+
+	p.colpkSvg = this;
+	window.parent.objLoaded2('colpk', this, false);
+	dragGap = p.WinInfo.get_dragGap(nw2class);
+
+	p.document.getElementById('newin_frame').innerHTML = getNewinElement(nwclass, mainmenu, svgWidth, svgHeight);
+
+	cpickObj.uheight = (cpickObj.slideMaxY - cpickObj.slideMinY) / 6;
+	cpickObj.arslideY[0] = cpickObj.slideMinY;							// Red
+	cpickObj.arslideY[1] = cpickObj.slideMinY + Math.floor(cpickObj.uheight);		// Yellow
+	cpickObj.arslideY[2] = cpickObj.slideMinY + Math.floor(cpickObj.uheight*2);		// Green
+	cpickObj.arslideY[3] = cpickObj.slideMinY + Math.floor(cpickObj.uheight*3);		// Margenta
+	cpickObj.arslideY[4] = cpickObj.slideMinY + Math.floor(cpickObj.uheight*4);		// Blue
+	cpickObj.arslideY[5] = cpickObj.slideMinY + Math.floor(cpickObj.uheight*5);		// Cyan
+	cpickObj.arslideY[6] = cpickObj.slideMaxY;							// Red
+
+	var hval = p.BBwObj.defColor.substr(1);
+	set_inputColor2(hval);
+
+	if(p.CataInfo.incview === "m"){
+		document.getElementById('colpkfieldbtn').addEventListener("touchstart", touchstart_fieldbtn, false);
+		document.getElementById('colpkslidebtn').addEventListener("touchstart", touchstart_slidebtn, false);
+		document.addEventListener("touchmove", do_touchmove, false);
+		document.addEventListener("touchend", do_mouseup, false);
+	}
+	else{
+		document.getElementById('colpkfieldbtn').addEventListener("mousedown", mousedown_fieldbtn, false);
+		document.getElementById('colpkslidebtn').addEventListener("mousedown", mousedown_slidebtn, false);
+		document.addEventListener("mousemove", do_mousemove, false);
+		document.addEventListener("mouseup", do_mouseup, false);
+	}
+}
+// parseInt(hexString, 16);
+function set_slideColor(ty){
+	cpickObj.slidePos = 0;
+	var dr = 0, dg = 0, db = 0;
+	if(ty <= cpickObj.arslideY[1]){						// FF00[00-FF](Red ~ Magenta)
+		dr = 255;
+		db = get_decimalvar((ty - cpickObj.slideMinY) * 256 / cpickObj.uheight);
+		cpickObj.slidePos = 1;
+	}
+	else if(ty <= cpickObj.arslideY[2]){				// [FF-00]00FF(Magenta ~ Blue)
+		dr = get_decimalvar(256 - (ty - cpickObj.arslideY[1]) * 256 / cpickObj.uheight);
+		db = 255;
+		cpickObj.slidePos = 2;
+	}
+	else if(ty <= cpickObj.arslideY[3]){				// 00[00-FF]FF(Blue ~ Cyan)
+		dg = get_decimalvar((ty - cpickObj.arslideY[2]) * 256 / cpickObj.uheight);
+		db = 255;
+		cpickObj.slidePos = 3;
+	}
+	else if(ty <= cpickObj.arslideY[4]){				// 00FF[FF-00](Cyan ~ Green)
+		dg = 255;
+		db = get_decimalvar(256 - (ty - cpickObj.arslideY[3]) * 256 / cpickObj.uheight);
+		cpickObj.slidePos = 4;
+	}
+	else if(ty <= cpickObj.arslideY[5]){				// [00-FF]FF00(Green ~ Yellow)
+		dr = get_decimalvar((ty - cpickObj.arslideY[4]) * 256 / cpickObj.uheight);
+		dg = 255;
+		cpickObj.slidePos = 5;
+	}
+	else if(ty <= cpickObj.arslideY[6]){				// FF[FF-00]00(Yellow ~ Red)
+		dr = 255;
+		dg = get_decimalvar(256 - (ty - cpickObj.arslideY[5]) * 256 / cpickObj.uheight);
+		cpickObj.slidePos = 6;
+	}
+
+	cpickObj.sr = dr;
+	cpickObj.sg = dg;
+	cpickObj.sb = db;
+
+	var decs = get_hexvar(dr)+get_hexvar(dg)+get_hexvar(db);
+	document.getElementById('colpkfield').style.background = "linear-gradient(to right, #ffffff, #"+decs+")";
+}
+function set_fieldColor(tx, ty){
+	var dr, dg, db;
+	var nx = 256 - tx + cpickObj.fieldMinX;
+	var ny = 256 - ty + cpickObj.fieldMinY;
+
+	if(cpickObj.slidePos === 1){						// FF00[00-FF](Red ~ Magenta)
+		dr = get_decimalvar(ny);		// base(FF)
+		db = get_decimalvar(ny * cpickObj.sb / 256);
+
+		dg = get_decimalvar(nx * dr / 256);		// full(00)
+		db = db + get_decimalvar(nx * (dr-db) / 256);
+
+	}
+	else if(cpickObj.slidePos === 2){					// [FF-00]00FF(Magenta ~ Blue)
+		dr = get_decimalvar(ny * cpickObj.sr / 256);
+		db = get_decimalvar(ny);		// base(FF)
+
+		dg = get_decimalvar(nx * db / 256);		// full(00)
+		dr = dr + get_decimalvar(nx * (db-dr) / 256);
+	}
+	else if(cpickObj.slidePos === 3){					// 00[00-FF]FF(Blue ~ Cyan)
+		dg = get_decimalvar(ny * cpickObj.sg / 256);
+		db = get_decimalvar(ny);		// base(FF)
+
+		dr = get_decimalvar(nx * db / 256);		// full(00)
+		dg = dg + get_decimalvar(nx * (db-dg) / 256);
+	}
+	else if(cpickObj.slidePos === 4){					// 00FF[FF-00](Cyan ~ Green)
+		dg = get_decimalvar(ny);		// base(FF)
+		db = get_decimalvar(ny * cpickObj.sb / 256);
+
+		dr = get_decimalvar(nx * dg / 256);		// full(00)
+		db = db + get_decimalvar(nx * (dg-db) / 256);
+	}
+	else if(cpickObj.slidePos === 5){					// [00-FF]FF00(Green ~ Yellow)
+		dr = get_decimalvar(ny * cpickObj.sr / 256);
+		dg = get_decimalvar(ny);		// base(FF)
+
+		db = get_decimalvar(nx * dg / 256);		// full(00)
+		dr = dr + get_decimalvar(nx * (dg-dr) / 256);
+	}
+	else if(cpickObj.slidePos === 6){					// FF[FF-00]00(Yellow ~ Red)
+		dr = get_decimalvar(ny);		// base(FF)
+		dg = get_decimalvar(ny * cpickObj.sg / 256);
+
+		db = get_decimalvar(nx * dr / 256);		// full(00)
+		dg = dg + get_decimalvar(nx * (dr-dg) / 256);
+	}
+
+	cpickObj.cr = dr;
+	cpickObj.cg = dg;
+	cpickObj.cb = db;
+
+	document.colpkform.redval.value = dr;
+	document.colpkform.greenval.value = dg;
+	document.colpkform.blueval.value = db;
+
+	var decs = get_hexvar(dr)+get_hexvar(dg)+get_hexvar(db);
+	document.colpkform.hexval.value = decs;
+	document.getElementById('colpkshow').style.backgroundColor = "#"+decs;
+}
+function set_slidePos(){
+	var ty = 0;
+	var dr = 0, dg = 0, db = 0;
+	if(cpickObj.slidePos === 1){					// FF00[00-FF](Red ~ Magenta)
+		dr = 255;
+		ty = (cpickObj.cr === 0) ? cpickObj.slideMinY : Math.floor(cpickObj.cb * 256 / cpickObj.cr);
+		db = ty - Math.floor((256-ty-cpickObj.cb)*cpickObj.cg/256);
+		if(db > 255) db = 255;
+		ty = cpickObj.slideMinY + Math.floor(db * cpickObj.uheight / 256);
+	}
+	else if(cpickObj.slidePos === 2){				// [FF-00]00FF(Magenta ~ Blue)
+		db = 255;
+		ty = (cpickObj.cb === 0) ? cpickObj.slideMinY : Math.floor(cpickObj.cr * 256 / cpickObj.cb);
+		dr = ty - Math.floor((256-ty-cpickObj.cr)*cpickObj.cg/256);
+		if(dr > 255) dr = 255;
+		ty = Math.floor((256 - dr) * cpickObj.uheight / 256) + cpickObj.arslideY[1];
+	}
+	else if(cpickObj.slidePos === 3){				// 00[00-FF]FF(Blue ~ Cyan)
+		db = 255;
+		ty = (cpickObj.cb === 0) ? cpickObj.slideMinY : Math.floor(cpickObj.cg * 256 / cpickObj.cb);
+		dg = ty - Math.floor((256-ty-cpickObj.cg)*cpickObj.cr/256);
+		if(dg > 255) dg = 255;
+		ty = Math.floor(dg * cpickObj.uheight / 256) + cpickObj.arslideY[2];
+	}
+	else if(cpickObj.slidePos === 4){				// 00FF[FF-00](Cyan ~ Green)
+		dg = 255;
+		ty = (cpickObj.cg === 0) ? cpickObj.slideMinY : Math.floor(cpickObj.cb * 256 / cpickObj.cg);
+		db = ty - Math.floor((256-ty-cpickObj.cb)*cpickObj.cr/256);
+		if(db > 255) db = 255;
+		ty = Math.floor((256 - db) * cpickObj.uheight / 256) + cpickObj.arslideY[3];
+	}
+	else if(cpickObj.slidePos === 5){				// [00-FF]FF00(Green ~ Yellow)
+		dg = 255;
+		ty = (cpickObj.cg === 0) ? cpickObj.slideMinY : Math.floor(cpickObj.cr * 256 / cpickObj.cg);
+		dr = ty - Math.floor((256-ty-cpickObj.cr)*cpickObj.cb/256);
+		if(dr > 255) dr = 255;
+		ty = Math.floor(dr * cpickObj.uheight / 256) + cpickObj.arslideY[4];
+	}
+	else if(cpickObj.slidePos === 6){				// FF[FF-00]00(Yellow ~ Red)
+		dr = 255;
+		ty = (cpickObj.cr === 0) ? cpickObj.slideMinY : Math.floor(cpickObj.cg * 256 / cpickObj.cr);
+		dg = ty - Math.floor((256-ty-cpickObj.cg)*cpickObj.cb/256);
+		if(dg > 255) dg = 255;
+		ty = Math.floor((256 - dg) * cpickObj.uheight / 256) + cpickObj.arslideY[5];
+	}
+
+	cpickObj.sr = dr;
+	cpickObj.sg = dg;
+	cpickObj.sb = db;
+
+	var decs = get_hexvar(dr)+get_hexvar(dg)+get_hexvar(db);
+	document.getElementById('colpkfield').style.background = "linear-gradient(to right, #ffffff, #"+decs+")";
+	document.getElementById('colpkslidebtn').style.top = ty + "px";
+	cpickObj.slideCurY = ty;
+}
+function set_fieldPos(){
+	var dr = cpickObj.cr, dg = cpickObj.cg, db = cpickObj.cb;
+	var tx, ty;
+
+	if(cpickObj.slidePos === 1){						// FF00[00-FF](Red ~ Magenta)
+		ty = 256 - dr + cpickObj.fieldMinY;				// base(dr)
+		tx = (dr === 0) ? cpickObj.fieldMinX : cpickObj.fieldMinX + 256 - Math.floor(dg * 256 / dr);		// full(00)
+	}
+	else if(cpickObj.slidePos === 2){					// [FF-00]00FF(Magenta ~ Blue)
+		ty = 256 - db + cpickObj.fieldMinY;				// base(db)
+		tx = (db === 0) ? cpickObj.fieldMinX : cpickObj.fieldMinX + 256 - Math.floor(dg * 256 / db);		// full(00)
+	}
+	else if(cpickObj.slidePos === 3){					// 00[00-FF]FF(Blue ~ Cyan)
+		ty = 256 - db + cpickObj.fieldMinY;				// base(db)
+		tx = (db === 0) ? cpickObj.fieldMinX : cpickObj.fieldMinX + 256 - Math.floor(dr * 256 / db);		// full(00)
+	}
+	else if(cpickObj.slidePos === 4){					// 00FF[FF-00](Cyan ~ Green)
+		ty = 256 - dg + cpickObj.fieldMinY;				// base(dg)
+		tx = (dg === 0) ? cpickObj.fieldMinX : cpickObj.fieldMinX + 256 - Math.floor(dr * 256 / dg);		// full(00)
+	}
+	else if(cpickObj.slidePos === 5){					// [00-FF]FF00(Green ~ Yellow)
+		ty = 256 - dg + cpickObj.fieldMinY;				// base(dg)
+		tx = (dg === 0) ? cpickObj.fieldMinX : cpickObj.fieldMinX + 256 - Math.floor(db * 256 / dg);		// full(00)
+	}
+	else if(cpickObj.slidePos === 6){					// FF[FF-00]00(Yellow ~ Red)
+		ty = 256 - dr + cpickObj.fieldMinY;				// base(dr)
+		tx = (dr === 0) ? cpickObj.fieldMinX : cpickObj.fieldMinX + 256 - Math.floor(db * 256 / dr);		// full(00)
+	}
+	document.getElementById('colpkfieldbtn').style.left = tx + "px";
+	document.getElementById('colpkfieldbtn').style.top = ty + "px";	
+	cpickObj.fieldCurX = tx;
+	cpickObj.fieldCurY = ty;
+}
+function set_inputColor(dr, dg, db){
+	if(dr < 0) dr = 0;
+	else if(dr > 255) dr = 255;
+
+	if(dg < 0) dg = 0;
+	else if(dg > 255) dg = 255;
+
+	if(db < 0) db = 0;
+	else if(db > 255) db = 255;
+
+	cpickObj.cr = dr;
+	cpickObj.cg = dg;
+	cpickObj.cb = db;
+
+	var pos = 0;
+	var maxval = Math.max(dr, dg, db);
+	if(dr === maxval){
+		pos = (dg > db) ? 6 : 1;
+	}
+	else if(dg === maxval){
+		pos = (dr > db) ? 5 : 4;
+	}
+	else{
+		pos = (dr > dg) ? 2 : 3;
+	}
+	cpickObj.slidePos = pos;
+
+	set_slidePos(dr, dg, db);
+	set_fieldPos();
+
+	var decs = get_hexvar(dr)+get_hexvar(dg)+get_hexvar(db);
+	document.colpkform.hexval.value = decs;
+	document.getElementById('colpkshow').style.backgroundColor = "#"+decs;
+}
+function set_inputColor2(hval){
+	var dr = parseInt(hval.substr(0,2), 16);
+	var dg = parseInt(hval.substr(2,2), 16);
+	var db = parseInt(hval.substr(4,2), 16);
+	if(dr == NaN || dg == NaN || db == NaN) return;
+
+	document.colpkform.redval.value = dr;
+	document.colpkform.greenval.value = dg;
+	document.colpkform.blueval.value = db;
+
+	set_inputColor(dr, dg, db);	
+}
+function get_decimalvar(n){
+	if(n <= 0) return 0;
+	else if(n >= 255) return 255;
+	return Math.floor(n);
+}
+function get_hexvar(n){
+	if(n < 10) return "0"+n.toString(16);
+	return n.toString(16);
+}
+function get_slidevar(ty){
+	if(ty < cpickObj.slideMinY) return cpickObj.slideMinY;
+	else if(ty > cpickObj.slideMaxY) return cpickObj.slideMaxY;
+	return ty;
+}
+function get_fieldvarX(tx){
+	if(tx < cpickObj.fieldMinX) return cpickObj.fieldMinX;
+	else if(tx > cpickObj.fieldMaxX) return cpickObj.fieldMaxX;
+	return tx;
+}
+function get_fieldvarY(ty){
+	if(ty < cpickObj.fieldMinY) return cpickObj.fieldMinY;
+	else if(ty > cpickObj.fieldMaxY) return cpickObj.fieldMaxY;
+	return ty;
+}
+function finish_selection(){
+	p.BBwObj.finish_selColor(document.colpkform.hexval.value);
+	newin_close();
+}
+
+/// ############################## event ############################## ///
+function mousedown_slidebtn(e){
+	cpickObj.slideDownY = e.clientY;
+	downKind = 1;
+}
+function touchstart_slidebtn(e){
+	cpickObj.slideDownY = e.touches[0].clientY;
+	downKind = 1;
+}
+
+function mousedown_fieldbtn(e){
+	cpickObj.fieldDownX = e.clientX;
+	cpickObj.fieldDownY = e.clientY;
+	downKind = 2;
+}
+function touchstart_fieldbtn(e){
+	cpickObj.fieldDownX = e.touches[0].clientX;
+	cpickObj.fieldDownY = e.touches[0].clientY;
+	downKind = 2;
+}
+function do_slideClick(e){
+	var ty = get_slidevar(e.clientY-7);
+	document.getElementById('colpkslidebtn').style.top = ty + "px";
+	set_slideColor(ty);
+	set_fieldColor(cpickObj.fieldCurX, cpickObj.fieldCurY);	
+	cpickObj.slideCurY = ty;
+}
+function do_fieldClick(e){
+	var tx = get_fieldvarX(e.clientX-7);
+	var ty = get_fieldvarY(e.clientY-7);
+	document.getElementById('colpkfieldbtn').style.left = tx + "px";
+	document.getElementById('colpkfieldbtn').style.top = ty + "px";
+
+	set_fieldColor(tx, ty);
+	cpickObj.fieldCurX = tx;
+	cpickObj.fieldCurY = ty;
+}
+function focus_hexval(){
+	cpickObj.befHexval = document.colpkform.hexval.value;
+}
+
+function do_mousemove(e){
+	currX = e.clientX;
+	currY = e.clientY;
+	e.preventDefault();
+	do_mousemove2();
+}
+function do_touchmove(e){
+	currX = e.touches[0].clientX;
+	currY = e.touches[0].clientY;
+	//e.preventDefault();
+	do_mousemove2();
+}
+
+function do_mousemove2(){
+	var tx, ty;
+	if(downKind === 1){
+		ty = get_slidevar(cpickObj.slideCurY+currY-cpickObj.slideDownY);
+		document.getElementById('colpkslidebtn').style.top = ty + "px";
+		set_slideColor(ty);
+		set_fieldColor(cpickObj.fieldCurX, cpickObj.fieldCurY);
+	}
+	else if(downKind == 2){
+		tx = get_fieldvarX(cpickObj.fieldCurX+currX-cpickObj.fieldDownX);
+		ty = get_fieldvarY(cpickObj.fieldCurY+currY-cpickObj.fieldDownY);
+		document.getElementById('colpkfieldbtn').style.left = tx + "px";
+		document.getElementById('colpkfieldbtn').style.top = ty + "px";
+		set_fieldColor(tx, ty);
+	}
+}
+function do_mouseup(e){
+	if(downKind === 1){
+		cpickObj.slideCurY = get_slidevar(cpickObj.slideCurY+currX-cpickObj.slideDownY);
+	}
+	else if(downKind === 2){
+		cpickObj.fieldCurX = get_fieldvarX(cpickObj.fieldCurX+currX-cpickObj.fieldDownX);
+		cpickObj.fieldCurY = get_fieldvarY(cpickObj.fieldCurY+currY-cpickObj.fieldDownY);
+	}
+	downKind = 0;
+}
+document.addEventListener("keydown", function(e){
+	if(e.keyCode !== 13) return;
+
+	var dr, dg, db;
+	var focused = document.activeElement;
+	if(focused == document.colpkform.redval || focused == document.colpkform.greenval || focused == document.colpkform.blueval){
+		dr = parseInt(document.colpkform.redval.value);
+		dg = parseInt(document.colpkform.greenval.value);
+		db = parseInt(document.colpkform.blueval.value);
+		if(dr == NaN || dg == NaN || db == NaN) return;
+
+		set_inputColor(dr, dg, db);
+	}
+	if(focused == document.colpkform.hexval){
+		var hval = document.colpkform.hexval.value;
+		if(hval.length != 6){
+			document.colpkform.hexval.value = cpickObj.befHexval;
+			return;
+		}
+		set_inputColor2(hval);
+	}
+}, false);
+
+/// ############################## window ############################## ///
+function newin_close(){
+	p.BBwObj.undo_selColor();
+	p.colpkSvg = undefined;
+	p.unload_newin(winCnt);
+}
+function do_mouseDrag(e){
+	e.preventDefault();
+
+	var posX = e.clientX - p.clickX + p.befX;
+	var posY = e.clientY - p.clickY + p.befY;
+
+	if(posX < p.cataRect.x) posX = p.cataRect.x;
+	else if(posX > p.cataRect.right-svgWidth-dragGap) posX = p.cataRect.right - svgWidth - dragGap;
+
+	if(posY < p.cataRect.y) posY = p.cataRect.y;
+	else if(posY > p.cataRect.bottom-svgHeight-dragGap) posY = p.cataRect.bottom - svgHeight - dragGap;
+
+	p.newinDiv.style.left = posX + "px";
+	p.newinDiv.style.top = posY + "px";
+
+	return true;
+}
+function do_mouseUp(e){
+	p.befX += e.clientX - p.clickX;
+	p.befY += e.clientY - p.clickY;
+}
+</script>
+</head>
+
+<body onload="onload_func();">
+
+<div id="colorpicker">
+<div id='colpkfieldbtn'><img src='./bbw/colpk_btncc.png' width='14' height='14' alt='원버튼'></div>
+<div id='colpkslidebtn'><img src='./bbw/colpk_btnarw.png' width='48' height='14' alt='화살표버튼'></div>
+
+<div id="colpkfield" onclick="do_fieldClick(event)"><img src='./bbw/colpk_bwa.png' width='256' height='256' alt='배경'></div>
+<div id='colpkslide' onclick="do_slideClick(event)"><img src='./bbw/colpk_rgb.png' width='20' height='256' alt='배경'></div>
+
+<form name="colpkform">
+<div class='colpkinput'>
+	<label>Red<br><input type="text" name="redval" value="" class='rgbinput'></label>
+	<label>Green<br><input type="text" name="greenval" value="" class='rgbinput'></label>
+	<label>Blue<br><input type="text" name="blueval" value="" class='rgbinput'></label>
+	<label>#<br><input type="text" name="hexval" value="" class='hexinput' onfocus="focus_hexval();"></label>
+	<div class="clear"></div>
+	<div class="colpkshowcnt">
+		<div id='colpkshow'></div>
+		<div id='colbefshow'></div>
+	</div>
+	<div class="colpkbtn"><input type="button" value="확인" onclick="finish_selection();" class='btninput'></div>
+</div>
+</form>
+</div>
+</body>
+</html>
